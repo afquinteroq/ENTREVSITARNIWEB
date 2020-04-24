@@ -1,0 +1,244 @@
+﻿@{
+    ViewBag.Title = "CargueSoporte";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+@Html.Partial("_DialogPopup")
+@using (Html.BeginForm("generacion", "GeneracionPdfs", FormMethod.Post, new { id = "formGeneracion" }))
+{
+
+    <br />
+    <div class="centrarDiv " id="contenedor">
+        <table class="marcoFormulario  efecto2 efecto1 " style="margin: auto; width: 1010px; text-transform: uppercase; font-family: 'Roboto'; font-size: 12px;margin-top:20px;">
+        <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>CARGAR SOPORTE</h5>
+                    <br />
+                </td>
+        </tr>
+        <tr>
+            <td>
+                   <div class="fondo " style="text-align:center;margin:0 auto; border: 1px solid #ccc; border-radius: 5px;width: 90%;text-align:center;padding:20px;">
+                        <table style="margin:0 auto; ">
+                            <tr>
+                                <td class="etiqueta" style="font-size: 11px;">Código del Hogar:&nbsp;&nbsp;&nbsp;</td>
+                                <td>
+                                    @Html.TextBox("CODIGO", "", new { id = "txtCodigo" , style = "width:100px;font-size:12px;text-transform:uppercase;font-family:Roboto;", maxlength="5"  })
+                                </td>
+                            </tr>
+                            <tr>
+                            </tr>
+                            <tr>
+                                
+                                <td colspan="2">
+                                     <br />
+                                    <input type="button" name="btnCargar" value="Cargar" id="btnCargar" style="margin: auto;width:180px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+            <br />
+           </td>
+        </tr>
+    </table>
+   </div>
+}
+<input id="idEncuesta" type="hidden" value="" />
+<div id="cargarSoporte" style="display: none">
+    <table>
+
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <img src="@Url.Content("~/Content/Caracterizacion/Modal-Alerta.png")"  height="50" alt="Cargar soporte"  />
+                        </td>
+                        <td>
+                            <label id="lblMensajeSop"></label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table class="tabla1" id="uploadtable">
+                    <tr>
+                        <td>
+                            <input id="fileUpload" type="file" name="fileUpload[0]" accept=".pdf" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('#btnCargar').click(function (e) {
+            $('#fileUpload').replaceWith($('#fileUpload').clone());
+            var conteo;
+            if ($("#txtCodigo").val() != "") {
+                var codi = obtenerCodHogar();
+                //console.log(codi);
+                if ($('#idEncuesta').val() != "") {
+                    $("#cargarSoporte").dialog('open');
+                    var spanEstado = "#lblMensajeSop";
+                    conteo = conteoSoporte();
+                    //   console.log("conteo"+conteo);
+                    if (conteo == 0) {
+                        $(spanEstado).html("Realize el cargue de la colilla.");
+                        $("#btnVerSopo").hide();
+                    } else {
+                        $(spanEstado).html("Usted ya realizo el cargue del Soporte. Si desea sobrescribirlo adjunte su archivo a cargar.");
+                        $("#btnVerSopo").show();
+                    }
+                } else {
+                    alert("La entrevista no existe en la Base de Datos.");
+                    //$("#btnVerSopo").hide();
+                    //$("#btnCargarCol").hide();
+                }
+            } else {
+                alert("Digite un codigo de Hogar.");
+            }
+
+        });
+
+        $("#cargarSoporte").dialog({
+            autoOpen: false,
+            resizable: false,
+            //height: 400,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            buttons: [{
+                text: "Cargar",
+                id: "btnCargarCol",
+                click: function () {
+                    cargarArchivo();
+                    $(this).dialog("close");
+                    // alert("clicked");
+                }
+            }, {
+                text: "Cancelar",
+                id: "btnCancelarCol",
+                click: function () {
+                    $(this).dialog("close");
+                }
+            }, {
+                text: "Ver Soporte",
+                id: "btnVerSopo",
+                click: function () {
+                    generacionInforme();
+                    // $(this).dialog("close");
+                }
+            }]
+        });
+
+    });
+
+    var id;
+    function obtenerCodHogar() {
+
+        var codigo = "";
+        $.ajax({
+            type: "GET",
+            datatype: "json",
+            // traditional: true,
+            contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("idEncuesta", "CargueSoporte")',
+            data: { "codHogar": $("#txtCodigo").val() },
+            async: false,
+            success: function (result) {
+                codigo = result;
+                $('#idEncuesta').val("" + result);
+            }
+
+        });
+        //alert($('#idEncuesta').val());
+        return codigo;
+    }
+
+    function conteoSoporte() {
+
+        var codigo = "";
+        $.ajax({
+            type: "GET",
+            datatype: "json",
+            //traditional: true,
+            contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("conteoSoporte", "CargueSoporte")',
+            data: { "codHogar": $("#txtCodigo").val() },
+            async: false,
+            //data: { "idTema": idUsuario[1] },
+            success: function (result) {
+                //   console.log(result);
+                codigo = result;
+                //$('#CargueDinamico').html(result);
+
+
+            }
+        });
+
+        return parseInt(codigo);
+    }
+
+
+    function cargarArchivo() {
+
+        var data = new FormData();
+        var files = $("#fileUpload").get(0).files;
+        //alert($("#txtCodigo").val());
+        if (files.length > 0) {
+            data.append("UploadedImage", files[0]);
+
+            data.append("codHogar", $("#txtCodigo").val());
+            // Make Ajax request with the contentType = false, and procesDate = false
+            var ajaxRequest = $.ajax({
+                type: "POST",
+                //url: "/api/fileupload/uploadfile",
+                //data: { "codHogar": $("#txtCodigo").val() },
+                url: '@Url.Action("cargarSoporte", "Encuesta")',
+                contentType: false,
+                processData: false,
+                data: data
+            });
+
+            ajaxRequest.done(function (xhr, textStatus) {
+                // Do other operation
+                $("#dialog-cargarSoporte").dialog('close');
+                alert("Cargue exitoso.");
+            });
+
+            ajaxRequest.error(function (xhr, textStatus) {
+                // Do other operation
+                alert("Error en el cargue. Verifique la ruta, donde se almacena el archivo");
+            });
+
+        } else {
+            alert("Seleccione un archivo.");
+        }
+    }
+
+    function generacionInforme() {
+        // alert("entro ge" + $('#codigoHog').val());
+        window.location = 'CargueSoporte/DescargarSoporte?codigoHogar=' + $("#txtCodigo").val();
+
+    }
+
+
+
+
+</script>

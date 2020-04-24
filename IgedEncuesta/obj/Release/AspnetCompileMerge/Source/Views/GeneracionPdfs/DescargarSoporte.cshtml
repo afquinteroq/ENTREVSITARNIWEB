@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Generación";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+@*<form id="frmGeneracion">*@
+@Html.Partial("_DialogPopup")
+@*</form>*@
+<br />
+@using (Html.BeginForm("Generacion", "GeneracionPdfs"))
+{
+    
+    <br />
+    <div class="centrarDiv " id="contenedor">
+        <table class="marcoFormulario  efecto2 efecto1 " style="margin: auto; width: 1010px; text-transform: uppercase; font-family: 'Roboto'; font-size: 12px;margin-top:20px;">
+
+            <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>Descargar Soporte</h5>
+                    <br />
+                </td>
+            </tr>
+
+        <tr>
+
+                <td >
+                    <div class="fondo " style="text-align:center;margin:0 auto; border: 1px solid #ccc; border-radius: 5px;width: 90%;text-align:center;padding:20px;">
+                        <table style="margin:0 auto;">
+                            <tr>
+                                <td style="text-align: center;font-family: 'Roboto'; font-size: 13px;">Cuando se vaya a entrevistar directamente en el aplicativo pero no se cuente con impresora,  <br/>  descargue previamente un soporte sin codificar y saque las fotocopias necesarias.
+                                    <br>
+                Recuerde! Cuando la víctima firme el soporte, se debe consignar el código de cuestionario en la parte superior derecha.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                     <br />
+                                    <input type="submit" name="btnGenerarSoporte" value="Descargar Soporte" id="btnGenerarSoporte" style="margin: auto;width:180px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                </td>
+        </tr>
+
+    </table>
+            </div>
+
+}
+
+
+<script type="text/javascript">
+
+    //$(document).ready(function () {
+    //    console.log("entrovalor" + $('#respuestaServidor').val());
+    //    if ($('#respuestaServidor').val() == "") {
+
+
+    //    } else if ($('#respuestaServidor').val() == "1") {
+
+    //        alert("Generación de cuestionario(s) exitosa.");
+    //    } else if ($('#respuestaServidor').val() == "2") {
+    //        alert("Generación de soporte exitosa.");
+    //    } else {
+    //        alert("Error en la descarga.");
+    //    }
+
+    //});
+
+
+    $('#btnGenerarCuestionario').click(function (e) {
+        if ($("#formGeneracion")[0].checkValidity()) {
+            $('#formGeneracion').submit();
+            alert("Generación de cuestionario(s) exitosa.");
+        }
+
+    });
+
+    $('#btnGenerarSoporte').click(function (e) {
+
+        alert("Generación de soporte exitosa.");
+
+
+    });
+</script>

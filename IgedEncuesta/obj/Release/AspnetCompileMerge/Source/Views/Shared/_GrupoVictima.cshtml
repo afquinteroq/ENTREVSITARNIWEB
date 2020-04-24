@@ -1,0 +1,1148 @@
+﻿@model IEnumerable<IgedEncuesta.Models.mdlEncuesta.Victima>
+
+@{ 
+    var listado = new List<SelectListItem>()
+    {
+        new SelectListItem()
+        {
+            Text = "Sí",
+            Value = "1"
+        },
+        new SelectListItem()
+        {
+            Text = "No",
+            Value = "2"
+        }
+    };
+}
+
+@{
+    ViewBag.Title = "GrupoVictimas";
+    AdministracionInstrumentos.Encuesta objSesion = new AdministracionInstrumentos.Encuesta();
+    string userIdApp;
+    userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
+    var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
+    List<IgedEncuesta.Models.mdlEncuesta.Victima> modeloHogar = Newtonsoft.Json.JsonConvert.DeserializeObject<List<IgedEncuesta.Models.mdlEncuesta.Victima>>(modeloHogarJson);    
+    var validaPerfil = objSesion.getValorCampoSesion("VALIDAPERFIL", userIdApp); //TempData["VALIDAPERFIL"].ToString();
+    var validaIncluido = objSesion.getValorCampoSesion("VALINCLUIDO", userIdApp);//TempData["VALINCLUIDO"].ToString();        
+}
+
+<style>
+    .ui-widget-overlay {
+        opacity: .50;
+        filter: alpha(opacity=50);
+        -moz-opacity: 0.5;
+        -khtml-opacity: 0.5;
+        z-index: 1040;
+    }
+</style>
+<br />
+
+<div id="gridContentGrupo" class="marcoGrid" style="width: 100%">
+    @{        
+        // Instanciamiento del helper webgrid
+        WebGrid grid = new WebGrid(Model, /*canPage: false, rowsPerPage: 5,*/ canSort: false,
+        selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContentGrupo");        
+    }
+
+    @grid.GetHtml(
+
+            htmlAttributes: new { id = "gvGrupoVictima" },
+
+                        tableStyle: "grid-view",
+                        headerStyle: "grid-view-header",
+                        rowStyle: "grid-view-tr-normal",
+                        alternatingRowStyle: "grid-view-tr-alternate",
+                        footerStyle: "grid-view-pgr",
+                        columns: grid.Columns(
+                        grid.Column("TIPO_DOC", "TIPO DOC"),
+                        grid.Column("DOCUMENTO", "DOCUMENTO"),
+                        //grid.Column("DOCUMENTO_CARACTERIZACION" , "DOCUMENTO CARACTERIZACION"),
+                        grid.Column("NOMBRES_COMPLETOS", "NOMBRES"),
+                        grid.Column("F_NACIMIENTO", "FECHA NACIMIENTO" ),
+                        grid.Column(header: "", format: @<text><input type="hidden"  class="clasefecha" value="@item.F_NACIMIENTO" id = "idpersonafechanacimiento_@item.CONS_PERSONA" style="width:150px"   ></text>),
+                        grid.Column("TIPO_VICTIMA", "ESTADO"),
+                        grid.Column(header: "", format: @<text><input type="hidden" class="claseestado" value="@item.TIPO_VICTIMA" id="idpersonaestado_@item.CONS_PERSONA" width="48"></text>),
+                        //grid.Column("FECHA_ULT_CARACTERIZACION" , "FECHA ULTIMA ENCUESTA"),
+                        grid.Column("GENERO_HOM", "GENERO"),
+
+                        //grid.Column(header: "RESPONSABLE", format: <text><input class="css-checkbox requerido radiobutton" type="radio" required="required" value="@item.CONS_PERSONA" name="jefeHogar" id="Jefe_@item.CONS_PERSONA|@item.DOCUMENTO" style="width:15px" onchange="jefeHogarChk(this)" @if (TempData["SelectList"] != null)
+                        // { @Html.Raw(((((List<string>)TempData["SelectList"]).Contains(@item.CONS_PERSONA + "|" + @item.DOCUMENTO))) ? "checked" : "")} /><label for="Jefe_@item.CONS_PERSONA|@item.DOCUMENTO" class="css-label radGroup1"></label></text>),
+                        //grid.Column(header: "RESPONSABLE", format: @<text><input class="css-radio requerido radiobutton" type="radio"  value="@item.CONS_PERSONA" name="jefeHogar" id="Jefe_@item.CONS_PERSONA|@item.DOCUMENTO" style="width:15px" onchange="jefeHogarChk(this)" @Html.Raw(@item.JEFE_HOGAR == true ? "checked" : "") /><label for="Jefe_@item.CONS_PERSONA|@item.DOCUMENTO" class="css-labelRadio radGroup1"></label></text>),
+                        grid.Column(header: "TIPO PERSONA", format: @item => Html.DropDownList("idTipoPersona", ViewBag.Opciones as List<SelectListItem>, new { @class = "classTipoPersona", onchange = "tipoPersona(this)", id = "combotipopersona_" + @item.CONS_PERSONA + "_" + @item.F_NACIMIENTO + "_" + @item.TIPO_VICTIMA + "_"+@item.DOCUMENTO, style = "width:150px" })),//
+                        grid.Column(header: "GRUPO",
+                        format: (item =>
+                        {
+                            if (@item.TIPO_VICTIMA == "NO INCLUIDO")
+                            {
+                                return Html.Raw("<img src='" + Url.Content("~/Content/Icons/group_family_off.png") + "' title='Grupo Familiar' style='height:22px;'>");
+                            }
+                            else
+                            {
+                                //conteo = conteo + 1;
+                                return Html.Raw("<a href='#' id='btnGrupoFamiliar_" + @item.CONS_PERSONA + "' class='grupoFamiliar' alt='" + @item.NOMBRES_COMPLETOS + "' > <img src='" + Url.Content("~/Content/Icons/group_family.png") + "' title='Grupo Familiar' style='height:22px;'></a>");
+                            }
+                        })),
+                        //format: @<text><a href="#" id="btnGrupoFamiliar_@item.CONS_PERSONA" class="grupoFamiliar" alt="@item.NOMBRES_COMPLETOS"><img src="../Content/Icons/group_family.png" title="Grupo Familiar"></a></text>),
+
+                        grid.Column(header: "EXCLUIR", format: @<text><a href="#" id="Excluir_@item.CONS_PERSONA|@item.ID_TBPERSONA" class="excluir @item.DOCUMENTO" onclick="excluir(this);"><img src="@Url.Content("~/Content/Icons/delete_person.png")" title="Excluir Víctima" style='height: 22px;'></a></text>))
+                        )
+   
+</div>
+
+<br />
+<input type="button" class="" value="Iniciar Entrevista"  id="btnIniciarEntrevista" style="margin: auto; height: 30px; padding: 3px; width: 200px; font-family: Roboto;" />
+<input type="hidden" id="hdValidaPerfil" value="@validaPerfil" />
+<input type='hidden' id='hdValidaIncluido' value='@validaIncluido'>
+
+
+<div id="dialog" style="display: none; overflow-y: hidden; /*height: 400px*/">
+
+    <div id="panelGrupo" style="/*padding: 10px;*/ /*border: 1px solid #ccc; border-radius: 5px; */" align="center"@* class="bordesDiv2"*@ >
+        <table>
+            <tr id="filaGridGrupo" style="display: block">
+                <td style="text-align: center;">
+                    @* @if (grid.HasSelection)
+         {
+             IgedEncuesta.Models.mdlEncuesta.Victima fila = new IgedEncuesta.Models.mdlEncuesta.Victima();
+             fila = (IgedEncuesta.Models.mdlEncuesta.Victima)grid.Rows[grid.SelectedIndex].Value;
+           
+             
+         }*@
+                    <h5 id="tituloEmergente" style="font-size: 14px; font-family: 'Roboto';">GRUPO FAMILIAR DE LA VICTIMA </h5>
+
+                    <div style="">
+                        <div id="maestroGrupo" style="width: 900px; /*height: 250px; */overflow: scroll; overflow-x: hidden; overflow-y: auto;">
+                        </div>
+
+                    </div>
+
+                    @*   <br />
+                                        <input type="button" value="Volver" id="btnVolverHogar" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />*@
+
+                </td>
+            </tr>
+            @*                            <tr>
+                                <td style="text-align: center;">
+                                    <div id="CargandoDatosHogar2" style="display: none;">
+                                        <img alt="" src="~/Content/Imagenes/ajax-loader.gif" />
+                                    </div>
+                                </td>
+                            </tr>*@
+        </table>
+    </div>
+</div>
+
+<div id="dialog2" style="display: none;">
+    <br />
+</div>
+
+<div id="dialog3" style="display: none;">
+    <form id="myDialog" class="validateDontSubmit">
+        <br />
+        ¿La encuesta fue diligenciada en papel y ahora será transcrita?
+    <br />
+        <input class="css-radio requerido radiobutton" type="radio" value="Si" name="codigoHogar" id="rdbSi" style="width: 15px" onchange="codHogarChk(this)" /><label for="rdbSi" class="css-labelRadio ">Si</label>
+        <input class="css-radio requerido radiobutton" type="radio" value="No" name="codigoHogar" id="rdbNo" style="width: 15px" onchange="codHogarChk(this)" /><label for="rdbNo" class="css-labelRadio ">No</label>
+        <br />
+        <br />
+        <div id="divCodHogar" style="display: none">
+            <label class="etiqueta">Código del Hogar:</label>
+            <input id="txtCodigoHogar" name="txtCodigoHogar" type="text" placeholder="" style="width: 70px;" maxlength="5" />
+        </div>
+    </form>
+</div>
+
+@*<div id="dialog" title="Basic dialog">
+  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>*@
+
+<script>
+    var total = '@(Model != null ? Model.Count() : 0)';
+    var id = "";
+    var tr = "";
+    var opcionDialogoGrupo = "";
+
+
+    //    alert('entro ' + total);
+    if (total == '0') $('#panelHogar').hide();
+
+    //$(document).on('submit', '.validateDontSubmit', function (e) {
+
+    //    //prevent the form from doing a submit
+    //    //alert('entro1');
+    //    event.preventDefault();
+    //    return false;
+
+    //});
+
+    // $('.excluir').click(function () {
+    function jefeHogarChk(jefe) {
+        var consecutivo = jefe.value;
+        console.log('ingreso para actualizar jefe de hogar consecutivo: ' + consecutivo)
+        //alert(consecutivo);
+
+        $.ajax(
+             {
+                 //type: 'POST',
+                 data: { consPersona: consecutivo },
+                 dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("actualizarJefeHogar", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+
+                 },
+                 error: function (error) {
+
+                     alert('Se presento un error para la persona con Id ' + id);
+                 }
+             });
+    }
+
+    function jefeHogarChk1(jefe) {
+        var consecutivo = jefe.value;
+        consecutivo = jefe.split("_")[1];
+        console.log('ingreso para actualizar jefe de hogar consecutivo: ' + consecutivo)
+        //alert(consecutivo);
+
+        $.ajax(
+             {
+                 //type: 'POST',
+                 data: { consPersona: consecutivo },
+                 dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("actualizarJefeHogar", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+
+                 },
+                 error: function (error) {
+
+                     alert('Se presento un error para la persona con Id ' + id);
+                 }
+             });
+    }
+
+     function tipoPersona(objeto) {
+         var idTipoPersona = objeto.value;
+         var iddropdowlist = objeto.id;
+         var idPersona = objeto.id.split("_")[1];
+         var documento = objeto.id.split("_")[4];;
+         var idpersonafechanacimiento = 'idpersonafechanacimiento_' + idPersona;
+         //var idpersonaestado = 'idpersonaestado_' + idPersona;
+         console.log(idpersonafechanacimiento);
+         var fechanacimientoConHora = objeto.id.split("_")[2];
+         var estado = objeto.id.split("_")[3];
+         var fechanacimiento = fechanacimientoConHora.split(" ")[0];
+         var hoy = new Date();
+         var diaActual = hoy.getDate();
+         var mesActual = hoy.getMonth() + 1;
+         var yearActual = hoy.getFullYear();
+         var array_fecha = fechanacimiento.split("/");
+         var year = parseInt(array_fecha[2]);
+         var mes = parseInt(array_fecha[1]);
+         var dia = parseInt(array_fecha[0]);
+         var totalMiembrosHogar = 0;
+         var mayoresedad = 0;
+         var menoresedad = 0;
+         var menoresedadnoincluido = 0;
+         var menoresedadestadoincluido = 0;
+         var validaFecha = "";
+         var idJefe = "Jefe_" + idPersona + "_" + documento;
+         var varloTipoPersonaSeleccionada = "";
+         var tipoPersonaSeleccionada = 0;
+         var tiPersonaSeleccionadaAutorizado = 0;
+         var tiPersonaSeleccionadaTutor = 0;
+         var tiPersonaSeleccionadaCuidadorPermanente = 0;
+         var tiPersonaSeleccionadaMiembroHogar = 0;
+
+
+
+         if (idTipoPersona == 2) {
+             $(objeto).addClass("tutor");
+         } else {
+             $(objeto).removeClass("tutor");
+         }
+
+         //Cuenta el total de miembros de hogar
+         $('.classTipoPersona').each(function () {
+             totalMiembrosHogar = totalMiembrosHogar + 1;
+             varloTipoPersonaSeleccionada = $(this).val();
+             if (varloTipoPersonaSeleccionada == '1') {
+                 console.log('Tipo pesona sel:: ' + varloTipoPersonaSeleccionada);
+                 tiPersonaSeleccionadaAutorizado = tiPersonaSeleccionadaAutorizado + 1;
+             }
+             if (varloTipoPersonaSeleccionada == '2') {
+                 console.log('Tipo pesona sel:: ' + varloTipoPersonaSeleccionada);
+                 tiPersonaSeleccionadaTutor = tiPersonaSeleccionadaTutor + 1;
+             }
+             if (varloTipoPersonaSeleccionada == '3') {
+                 console.log('Tipo pesona sel:: ' + varloTipoPersonaSeleccionada);
+                 tiPersonaSeleccionadaCuidadorPermanente = tiPersonaSeleccionadaCuidadorPermanente + 1;
+             }
+             if (varloTipoPersonaSeleccionada == '4') {
+                 console.log('Tipo pesona sel:: ' + varloTipoPersonaSeleccionada);
+                 tiPersonaSeleccionadaMiembroHogar = tiPersonaSeleccionadaMiembroHogar + 1;
+             }
+         });
+
+         if (tiPersonaSeleccionadaAutorizado > 0 && tiPersonaSeleccionadaTutor > 0) {
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             alert("No puede seleccionar Autorizado y Tutor en el mismo Hogar");             
+             return;
+         }
+
+         if (tiPersonaSeleccionadaAutorizado > 0 && tiPersonaSeleccionadaCuidadorPermanente > 0) {
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             alert("No puede seleccionar Autorizado y Cuidador Permanente en el mismo Hogar");
+             return;
+         }
+
+         if (tiPersonaSeleccionadaTutor > 0 && tiPersonaSeleccionadaCuidadorPermanente > 0) {
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             alert("No puede seleccionar Tutor y Cuidador Permanente en el mismo Hogar");
+             return;
+         }
+
+         if (tiPersonaSeleccionadaAutorizado > 1 ) {
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             alert("No puede seleccionar mas de un Autorizado");
+             return;
+         }
+
+         if (tiPersonaSeleccionadaTutor > 1) {
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             alert("No puede seleccionar mas de un Tutor");
+             return;
+         }
+
+         if (tiPersonaSeleccionadaCuidadorPermanente > 1) {
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             alert("No puede seleccionar mas de un Cuidiador Permanente");
+             return;
+         }
+
+         console.log('Total miembros hogar: ' + totalMiembrosHogar);
+
+         //Cuenta el total de mayores y menores de edad
+         $('.clasefecha').each(function () {
+             validaFecha = $(this).val();
+             console.log('Validafecha:::::::::::::' + validaFecha);
+             var array_fechaVF = validaFecha.split("/");
+             var yearVF = parseInt(array_fechaVF[2]);
+             var mesVF = parseInt(array_fechaVF[1]);
+             var diaVF = parseInt(array_fechaVF[0]);
+
+             if (yearVF >= yearActual) {
+                 console.log('La fecha de Nacimiento no puede ser mayor o igual a la fecha Actual...');
+                 return;
+             } else if ((mesVF >= mesActual) && (diaVF > diaActual)) {
+
+                 edad = (yearActual - 1) - yearVF;
+             }
+             else {
+                 edad = yearActual - yearVF;
+             }
+             if (edad > 17 ) {
+                 mayoresedad = mayoresedad + 1;
+             }
+             if (edad < 18 ) {
+                 menoresedad = menoresedad + 1;
+             }
+
+         });
+
+
+
+
+         //Valida que la fecha de nacimiento no sea mayor a la fecha actual
+         if (year >= yearActual) {
+             console.log('La fecha de Nacimiento no puede ser mayor o igual a la fecha Actual...');
+             return;
+         } else if ((mes >= mesActual) && (dia > diaActual)) {
+
+             edad = (yearActual - 1) - year;
+         }
+         else {
+             edad = yearActual - year;
+         }
+
+         console.log('Datos persona seleccionada:' + 'fecha nacimiento = ' + fechanacimiento + ' edad = ' + edad + ' estado = ' + estado);
+         console.log('Total mayores de edad = ' + mayoresedad)
+         console.log('Total menores de edad = ' + menoresedad)
+
+         //Andrés Quintero 21/10/2019 valida la edad para la persona seleccionada
+         //id="combotipopersona_+item.CONS_PERSONA"
+
+         if (edad < 18 && (idTipoPersona == 1 || idTipoPersona == 2 || idTipoPersona == 3)) {
+             //document.getElementById("Jefe_" + idPersona + "|" + documento).checked = false;
+             alert("El Autorizado, Tutor y Cuidador Permanente no puede ser menor de edad");
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             /*
+             fechanacimiento = $("#" + idpersonafechanacimiento).val();
+             console.log(fechanacimiento);
+             */
+             //estado = $("#" + idpersonaestado).val();
+             //console.log(estado);
+             return;
+         }
+
+         if (estado == "NO INCLUIDO"  && idTipoPersona == 1 ) {
+             //document.getElementById("Jefe_" + idPersona + "|" + documento).checked = false;
+             alert("El Autorizado debe estar Incluido en el RUV");
+             //$("[name*='idTipoPersona']").val(0);
+             $("[id*="+"'"+iddropdowlist+"'"+"]").val(0);
+             return;
+         }
+
+         if (totalMiembrosHogar < 2 && idTipoPersona == 2) {
+             
+             alert("Para seleccionar Tutor debe haber minimo 2 miembros de hogar en el grupo familiar");
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             return;
+         }
+
+         if (totalMiembrosHogar > 1 && idTipoPersona == 2 && menoresedad < 1 ) {
+             
+             alert("Para seleccionar Tutor debe haber minimo 1 menor de edad en el grupo familiar");
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             return;
+         }
+
+         if (idTipoPersona == 2 && mayoresedad > 1) {
+             
+             alert("Para seleccionar Tutor debe haber maximo una persona mayor de 18 años");
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             return;
+         }
+
+         if (idTipoPersona == 3 && mayoresedad < 2) {
+             alert("Para seleccionar Cuidador Permanente debe haber minimo un miembro de hogar mayor de edad diferente del Cuidador");
+             $("[id*=" + "'" + iddropdowlist + "'" + "]").val(0);
+             return;
+         }
+
+         if (idTipoPersona == 1 || idTipoPersona == 2 || idTipoPersona == 3 /*|| idTipoPersona == 4*/) {
+             jefeHogarChk1(idJefe);
+         }
+         
+
+
+        $.ajax(
+             {
+                 //type: 'POST',
+                data: { consPersona: idPersona, idTipoPersona: idTipoPersona},
+                 dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("asignarTipoPersona", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+
+                 },
+                 error: function (error) {
+                     alert('Se presento un error para la persona con Id ' + id);
+                 }
+             });
+         }
+
+         function excluir(obj) {
+             id = obj.id;
+             opcionDialogo = 1;
+             $("#CargandoDatosMaestro").show();
+             window.confirm("¿Esta seguro de excluir esta persona de la conformación del hogar?");
+
+        @*      if (confirm("¿Esta seguro de excluir esta persona de la conformación del hogar?")) {
+
+            var id = this.id;
+            id = id.substring(8);
+             alert(id + " " + this.id);
+            rbClick = true;
+            var div = $('#maestroHogar');
+
+            $.ajax(
+                 {
+                     type: 'POST',
+                     data: { idVictima: id },
+                     dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                     url: '@Url.Action("excluirVictima", "ConformacionHogar")',
+                     //URL del action result que cargara la vista parcial
+                     success: function (result) {
+                         //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+                         document.getElementById("maestroHogar").innerHTML = "";
+                         // $('#filaGridMaestro').hide('slow');
+                         div.append(result);
+                     },
+                     error: function (error) {
+                         // si hay un error lanzara el mensaje de error
+                         alert('Se presento un error para la persona con Id ' + id);
+                     }
+                 });*@
+             return false;
+             //  };
+             //    });
+         }
+
+@*    window.confirm = function (message) {
+
+        $(document.createElement('div'))
+            .attr({ 'class': 'dialog' })
+            .html(message)
+            .dialog({
+                buttons: {
+                    OK: { id: 'Ok', text: 'Aceptar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); excluirVictima(); } },
+                    Cancel: { id: 'Cancel', text: 'Cancelar', 'class': 'butonAlert', click: function () { $(this).dialog("close");} },
+                    //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                },
+                close: function () { $(this).remove(); },
+                resizable: false,
+                height: 150,
+                width: 300,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: false,
+                dialogClass: 'dialog butonAlert',
+                hide: 'explode'
+            });
+    };
+    *@
+    function excluirVictima() {
+
+       // alert(id);
+        var idTemp = id;
+        id = id.substring(8);
+        id = id.substring(0, id.indexOf('|'));
+        document.body.style.cursor = "wait";
+        var idPersona = idTemp.substring(idTemp.indexOf('|')+1);
+   //     alert(idPersona);
+        rbClick = true;
+        var div = $('#maestroHogar');
+        var nombres;
+
+
+        //        alert('xxxxx');
+        $.ajax(
+             {
+                 //type: 'POST',
+                 data: { idVictima: id, idPersona: idPersona, opcion: '2' },
+                 dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("actualizarMaestroHogar", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+                     //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+                     document.getElementById("maestroHogar").innerHTML = "";
+                     $('#filaGridMaestro').hide('slow');
+                     $("#CargandoDatosMaestro").hide();
+                     div.append(result);
+                     document.body.style.cursor = "default";
+                     //alert('zazazaza');
+                     //total = total - 1;
+                     //tr.remove();
+                     //if (total == '0') $('#panelHogar').hide();
+
+                 },
+                 error: function (error) {
+                     // si hay un error lanzara el mensaje de error
+                     alert('Se presento un error para la persona con Id ' + id);
+                 }
+             });
+         }
+
+         //$(document).ready(function () {
+         $('.grupoFamiliar').click(function () {
+             $('html, body').animate({ scrollTop: 0 }, 0);
+             document.body.style.cursor = "wait";
+             $("#CargandoDatos").show();
+             var consPers = $(this).attr("id").substring(17);
+             var div = $('#maestroGrupo');
+
+
+             $('#gvGrupoVictima tbody tr').on('click', function (e) {
+                 nombres = $(this).find('td:nth-child(3)').text();
+                 //alert(id);
+             });
+
+             $.ajax(
+                  {
+                      //type: 'POST',
+                      data: { consPersona: consPers },
+                      dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html  grupoFamiliarModeloIntegrado
+                      //url: '@Url.Action("grupoFamiliar", "ConformacionHogar")',
+                      url: '@Url.Action("grupoFamiliarModeloIntegrado", "ConformacionHogar")',
+                      //URL del action result que cargara la vista parcial
+                      success: function (result) {
+                          //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+                          document.getElementById("maestroGrupo").innerHTML = "";
+                          div.append(result);
+                          document.body.style.cursor = "default";
+                          $("#CargandoDatos").hide();
+                          //  $('#maestroGrupo').show();
+                          //var titulo;
+                          //titulo = nombres;
+                          //alert(titulo)
+                          $("#tituloEmergente").text("GRUPO FAMILIAR DE " + nombres);
+                          $("#dialog").dialog(
+                                                  {
+                                                      dialogClass: 'dialog fondo2',
+                                                      //  height: 400,
+                                                      width: 1000,
+                                                      shadow: true,
+                                                      show: { effect: 'drop', direction: "up" },
+                                                      modal: true,
+                                                      draggable: false,
+                                                      hide: 'explode',
+                                                      //open: function (event, ui) {
+                                                      //    $(".ui-dialog-titlebar-close").hide();
+                                                      //    $('.ui-widget-overlay').addClass('custom-overlay');
+                                                      //},
+                                                      close: function (event, ui) {
+                                                          //    $('.ui-widget-overlay').removeClass('custom-overlay');
+                                                          //   $('#dialog').dialog('close');
+
+                                                          //     $(this).dialog('destroy').remove();
+                                                      },
+                                                      buttons: {
+                                                          "OK": function () {
+                                                              $(this).dialog("close");
+                                                              $(this).dialog('destroy').remove();
+                                                              actualizarMaestroHogarVGF();
+                                                          }
+
+                                                      }
+
+                                                  }
+                          );
+                      },
+                      error: function (error) {
+                          // si hay un error lanzara el mensaje de error
+                          alert('Se presento un error para la persona con consecutivo ' + consPersona);
+                      }
+                  });
+         });
+
+              function actualizarMaestroHogarVGF() {
+
+                  id = id.substring(8);
+                  //          alert(id + " " + this.id);
+                  rbClick = true;
+                  var div = $('#maestroHogar');
+
+                  //        alert('xxxxx');
+                  $.ajax(
+                       {
+                           //type: 'POST',
+                           data: { idVictima: "", opcion: '3' },
+                           dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                           url: '@Url.Action("actualizarMaestroHogar", "ConformacionHogar")',
+                           //URL del action result que cargara la vista parcial
+                           success: function (result) {
+                               //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+                               document.getElementById("maestroHogar").innerHTML = "";
+                               $('#filaGridMaestro').hide('slow');
+                               div.append(result);
+
+                           },
+                           error: function (error) {
+                               // si hay un error lanzara el mensaje de error
+                               alert('Se presento un error al actualizar la estructura del hogar.');
+                           }
+                       });
+                   }
+
+              $('#btnIniciarEntrevista').on('click', function (e) {
+                  document.body.style.cursor = "wait";
+                  var validaPerfil = $("#hdValidaPerfil").val();
+                  var validaIncluido = $("#hdValidaIncluido").val();
+
+                  //var validaTipoPersona = $("#idTipoPersona").val();
+                  var validaTipoPersona = "0";
+                  var autorizado = 0;
+                  var tutor = 0;
+                  var cuidador_permanente = 0;
+                  var miembro_hogar = 0;
+                  var noseleccionopersona = 0;
+                  var totalIncluidos = 0;
+                  var totalNoIncluidos = 0;
+                  var validaestado = "";
+                  var hoy = new Date();
+                  var diaActual = hoy.getDate();
+                  var mesActual = hoy.getMonth() + 1;
+                  var yearActual = hoy.getFullYear();
+                  var validaFecha = "";
+                  var validadorparapermitirTutur = 0;
+                  var menoresdeedad = 0;
+                  var mayoresdeedad = 0;
+
+
+
+                  console.log('Dió click en el boton iniciar entrevista');
+
+                  //cuenta el total de estados por estado
+                  $('.claseestado').each(function () {
+                      validaestado = $(this).val();
+                      if (validaestado == 'INCLUIDO') {
+                          totalIncluidos = totalIncluidos + 1;
+
+                          /*
+                          $('.clasefecha').each(function () {
+                              validaFecha = $(this).val();
+                              var array_fechaVF = validaFecha.split("/");
+                              var yearVF = parseInt(array_fechaVF[2]);
+                              var mesVF = parseInt(array_fechaVF[1]);
+                              var diaVF = parseInt(array_fechaVF[0]);
+
+                              if (yearVF >= yearActual) {
+                                  console.log('La fecha de Nacimiento no puede ser mayor o igual a la fecha Actual...');
+                                  return;
+                              } else if ((mesVF >= mesActual) && (diaVF > diaActual)) {
+
+                                  edad = (yearActual - 1) - yearVF;
+                              }
+                              else {
+                                  edad = yearActual - yearVF;
+                              }
+                              if (edad < 17 ) {
+
+                                  console.log('Se cumplio la bendita regla: edad = ' + edad + ' estado = ' + validaestado);
+
+                              }
+                          });
+                          */
+
+
+                      }
+                      if (validaestado == 'NO INCLUIDO') {
+                          totalNoIncluidos = totalNoIncluidos + 1;
+                      }
+
+                  });
+
+                  $('.clasefecha').each(function () {
+                      validaFecha = $(this).val();
+                      var array_fechaVF = validaFecha.split("/");
+                      var yearVF = parseInt(array_fechaVF[2]);
+                      var mesVF = parseInt(array_fechaVF[1]);
+                      var diaVF = parseInt(array_fechaVF[0]);
+
+                      if (yearVF >= yearActual) {
+                          console.log('La fecha de Nacimiento no puede ser mayor o igual a la fecha Actual...');
+                          return;
+                      } else if ((mesVF >= mesActual) && (diaVF > diaActual)) {
+
+                          edad = (yearActual - 1) - yearVF;
+                      }
+                      else {
+                          edad = yearActual - yearVF;
+                      }
+                      if (edad > 17) {
+                          mayoresdeedad = mayoresdeedad + 1;
+                      }
+                      if (edad < 18) {
+                          menoresdeedad = menoresdeedad + 1;
+                      }
+                  });
+
+                  console.log('Total incluidos = ' + totalIncluidos);
+                  console.log('Total no incluidos = ' + totalNoIncluidos);
+
+                  $('.classTipoPersona').each(function () {
+                      validaTipoPersona = $(this).val();
+                      console.log('Entro al for de clasetipopersona::'+validaTipoPersona);
+
+                      if (validaTipoPersona == "0") {
+                          noseleccionopersona = noseleccionopersona + 1;
+                          console.log('No selecciono persona: ' + noseleccionopersona);
+                      }
+
+                      if (validaTipoPersona == "1") {
+                          autorizado = autorizado + 1;
+                          console.log('Autorizado: ' + autorizado);
+
+                      }
+                      if (validaTipoPersona == "2") {
+                          tutor = tutor + 1;
+                          console.log('TUTOR: ' + tutor);
+
+                      }
+                      if (validaTipoPersona == "3") {
+                          cuidador_permanente = cuidador_permanente + 1;
+                          console.log('CUIDADOR PERMANENTE: ' + cuidador_permanente);
+
+                      }
+                      if (validaTipoPersona == "4") {
+                          miembro_hogar = miembro_hogar + 1;
+                          console.log('MIEMBRO HOGAR: ' + miembro_hogar);
+
+                      }
+
+                  });
+
+                  if (noseleccionopersona > 0) {
+                      alert("Seleccione tipo persona........");
+                      return;
+                  }
+
+                  if (validaTipoPersona == "0") {
+                      alert("Seleccione tipo persona");
+                      return;
+
+                  }
+
+                  if (autorizado > 1) {
+                      alert("Seleccionó mas de un Autorizado");
+                      return;
+                  }
+
+                  if (tutor > 1) {
+                      alert("Seleccionó mas de un Tutor");
+                      return;
+                  }
+
+                  if (cuidador_permanente > 1) {
+                      alert("Seleccionó mas de un Cuidador permanente");
+                      return;
+                  }
+
+                  if (autorizado > 0 && tutor > 0) {
+                      alert("No puede seleccionar un autorizado y un tutor en el mismo grupo familiar");
+                      return;
+                  }
+
+                  if (autorizado > 0 && cuidador_permanente > 0) {
+                      alert("No puede seleccionar un autorizado y un cuidador permanente en el mismo grupo familiar");
+                      return;
+                  }
+
+                  if (tutor > 0 && cuidador_permanente > 0) {
+                      alert("No puede seleccionar un tutor y un cuidador permanente en el mismo grupo familiar");
+                      return;
+                  }
+
+                  if (autorizado == 0 && tutor == 0 && cuidador_permanente == 0) {
+                      alert("Debe seleccionar un miembro de hogar como Autorizado, Tutor o Cuidador Permanente");
+                      return;
+                  }
+
+                  if (validaPerfil == "NO" && validaIncluido == "SI") {
+                      alert("Por favor seleccione al menos una persona incluida en el Hogar preliminar.");
+                      return;
+                  }
+
+                  if (tutor > 0 && tutor < 2) {
+
+                      if (mayoresdeedad > 1) {
+                          alert("Para poder seleccionar Tutor solo debe haber 1 miebro de hogar mayor de 18 años.");
+                          return;
+                      }
+                      if (mayoresdeedad < 2){
+                          var retornorFuncion = validarEstadoyEdad();
+                          console.log('Retorno funcion::: ' + retornorFuncion)
+
+                          if (retornorFuncion == 0) {
+                              alert("Para conformar grupo familiar con Tutor, debe haber minimo un menor de edad con estado Incluido y maximo una persona mayor de edad como tutor.");
+                              return;
+                          }
+                      }
+
+
+                  }
+
+
+                        //Comentado andres quintero el 21/10/2019, esta validación es para verificar el check de jefe de hogar
+                       /*if ($("input[name='jefeHogar']:checked").length > 0) {*/
+                           $('input:radio[name="codigoHogar"]').filter('[value="No"]').prop('checked', true);
+                           $('#divCodHogar').hide();
+                           $("#dialog3").dialog(
+                                                   {
+
+                                                       height: 220,
+                                                       width: 450,
+                                                       dialogClass: 'dialog butonAlert',
+                                                       show: { effect: 'drop', direction: "up" },
+                                                       modal: true,
+                                                       draggable: false,
+                                                       hide: 'explode',
+                                                       buttons: [
+                                                           {
+                                                               text: "Aceptar",
+                                                               type: "submit",
+                                                               form: "myDialog",
+                                                               click: function () {
+                                                                   var isValid = $("#myDialog")[0].checkValidity();
+                                                                   if (isValid) {
+                                                                       $(this).dialog("close");
+                                                                       if (jQuery("input[name=codigoHogar]:checked").val() == 'Si') {
+                                                                           opcionDialogoGrupo = 2;
+                                                                           enrutarOpcionDialogo();
+                                                                       }
+                                                                       else {
+                                                                           opcionDialogoGrupo = 1;
+                                                                           enrutarOpcionDialogo();
+                                                                       }
+
+                                                                   }
+                                                               }
+                                                           },
+                                                           {
+                                                               text: "Cancelar",
+                                                               click: function () {
+                                                                   $(this).dialog("close");
+                                                               }
+                                                           }
+
+                                                       ]
+
+                                                   }
+                           );
+                       /*}
+                       // comentado andres quintero el 21/10/2019
+                       else {
+                           alert('Por favor seleccione a una persona como Responsable del Hogar.')
+                       }*/
+
+
+
+
+
+              });
+
+
+                   function mostrarDialogo(mensaje) {
+                       $("#dialog2").html(mensaje);
+
+                       if (opcionDialogoGrupo == 1)
+                           $("#dialog2").height = '20px';
+                       else
+                           $("#dialog2").height = '160px';
+
+                       $("#dialog2").dialog(
+                                               {
+                                                   height: opcionDialogoGrupo == 1 ? 130 : 160,
+                                                   width: 450,
+                                                   dialogClass: 'dialog butonAlert',
+                                                   // html :mensaje,
+                                                   // shadow: true,
+                                                   show: { effect: 'drop', direction: "up" },
+                                                   modal: true,
+                                                   draggable: false,
+                                                   hide: 'explode',
+                                                   buttons: {
+                                                       "Si": function () {
+                                                           $(this).dialog("close");
+                                                           enrutarOpcionDialogo();
+                                                           //actualizarMaestroHogarVGF();
+                                                       },
+                                                       "No": function () {
+                                                           $(this).dialog("close");
+
+
+                                                       }
+                                                   }
+                                               }
+                       );
+
+                   }
+
+                   function enrutarOpcionDialogo() {
+                       console.log('entro aqui1');
+                       switch (opcionDialogoGrupo) {
+                           case 1:
+                               opcionDialogoGrupo = 3;
+                               mostrarDialogo("Una vez iniciada la entrevista no se podrán realizar cambios en la conformación del hogar.<br />¿Esta seguro de que la conformación del hogar es la correcta?")
+                               return false;
+                           case 2:
+                               verificarCodigoHogar();
+                               return false;
+                           case 3:
+                               iniciarEntrevista();
+                               return false;
+
+                       }
+                   };
+
+                   function codHogarChk(r) {
+                       codigo = $('#txtCodigoHogar').val('');
+                       if (r.value == 'Si') {
+                           $('#divCodHogar').show('slow');
+                           $("input").prop('required', true);
+
+                       }
+                       else {
+                           $('#divCodHogar').hide('slow');
+                           $("input").prop('required', false);
+                       }
+                   }
+
+                   function verificarCodigoHogar() {
+                       document.body.style.cursor = "wait";
+                       var codigo;
+                       // alert('1');
+                       codigo = $('#txtCodigoHogar').val();
+
+                       $.ajax(
+                            {
+                                //type: 'POST',
+                                data: { codHogar: codigo },
+                                dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa json
+                                url: '@Url.Action("verificarCodigoHogar", "ConformacionHogar")',
+                                success: function (result) {
+                                    if (result == "") {
+                                        opcionDialogoGrupo = 1;
+                                        enrutarOpcionDialogo();
+                                        document.body.style.cursor = "default";
+                                    }
+                                    else
+                                        alert(result);
+
+                                },
+                                error: function (error) {
+                                    alert('Se presento un error al verificar el código de Hogar ' + error);
+                                }
+                            });
+                        }
+
+                    function iniciarEntrevista() {
+                                var codigo;
+                                codigo = $('#txtCodigoHogar').val();
+                                console.log(codigo+'......');
+                                $.ajax(
+                                     {
+                                         //type: 'POST',
+                                         data: { codHogar: codigo },
+                                         dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa json
+                                         url: '@Url.Action("iniciarEntrevista", "ConformacionHogar")',
+                                         success: function (result) {
+                                             if (result == "1") {
+                                                 alert("Comenzar entrevista");
+                                                 window.location.href = '@Url.Action("Encuesta", "Encuesta")';
+                                             }
+                                             else
+                                                 alert(result);
+
+                                         },
+                                         error: function (error) {
+                                             //alert('Se presento un error al verificar el código de Hogar ' + error);
+                                         }
+                                     });
+                   }
+
+         $(document).on('submit', '.validateDontSubmit', function (e) {
+             //prevent the form from doing a submit
+             e.preventDefault();
+             return false;
+                    });
+
+         function doSearch(r) {
+             console.log('entro al dosearch '+ r);
+             const tableReg = document.getElementById('gvGrupoVictima');
+             const searchText = r;
+             let total = 0;
+
+
+             // Recorremos todas las filas con contenido de la tabla
+             for (let i = 1; i < tableReg.rows.length; i++) {
+                 // Si el td tiene la clase "noSearch" no se busca en su cntenido
+                 if (tableReg.rows[i].classList.contains("noSearch")) {
+                     continue;
+                 }
+
+                 let found = false;
+                 const cellsOfRow = tableReg.rows[i].getElementsByTagName('td');
+                 // Recorremos todas las celdas
+                 for (let j = 0; j < cellsOfRow.length && !found; j++) {
+                     const compareWith = cellsOfRow[j].innerHTML.toLowerCase();
+                     console.log('valor de la celda = ' + compareWith);
+                     // Buscamos el texto en el contenido de la celda
+                     if (searchText.length == 0 || compareWith.indexOf(searchText) > -1) {
+                         found = true;
+                         total++;
+                     }
+
+                 }
+
+
+                 if (found) {
+                     //tableReg.rows[i].style.display = '';
+                     console.log('Encontro coincidencia entre ' + searchText);
+                 } else {
+                     // si no ha encontrado ninguna coincidencia, esconde la
+                     // fila de la tabla
+                     //tableReg.rows[i].style.display = 'none';
+                     console.log('No encontro coincidencia');
+                 }
+             }
+
+             console.log('total encontrados ' + total);
+
+             // mostramos las coincidencias
+             const lastTR = tableReg.rows[tableReg.rows.length - 1];
+             const td = lastTR.querySelector("td");
+             lastTR.classList.remove("hide", "red");
+             if (searchText == "") {
+                 lastTR.classList.add("hide");
+             } else if (total) {
+                 //td.innerHTML = "Se ha encontrado " + total + " coincidencia" + ((total > 1) ? "s" : "");
+                 console.log("Se ha encontrado " + total + " coincidencia" + ((total > 1) ? "s" : ""));
+             } else {
+                 lastTR.classList.add("red");
+                 td.innerHTML = "No se han encontrado coincidencias";
+             }
+         }
+
+         function validarEstadoyEdad() {
+             var retorno = 0;
+             var estado = "";
+             var fechanacimiento = "";
+             var hoy = new Date();
+             var diaActual = hoy.getDate();
+             var mesActual = hoy.getMonth() + 1;
+             var yearActual = hoy.getFullYear();
+             //cuenta el total de estados por estado
+             $('.classTipoPersona').each(function () {
+                 if (!($(this).hasClass("tutor"))) {
+                     estado = $(this).val();
+                     var im = $(this).attr("id");
+                     console.log('ID completo => '+im);
+                     var estado = im.split('_')[3];
+                     fechanacimiento = im.split('_')[2];
+                     console.log('Imprimir solo estado => ' + estado);
+                     if (estado == 'INCLUIDO') {
+                         console.log('Acá validar la edad que tiene, si es  menor de edad aplica la regla: fecha nacimiento = ' + fechanacimiento);
+
+                            var array_fechaVF = fechanacimiento.split("/");
+                            var yearVF = parseInt(array_fechaVF[2]);
+                            var mesVF = parseInt(array_fechaVF[1]);
+                            var diaVF = parseInt(array_fechaVF[0]);
+
+                             if (yearVF >= yearActual) {
+                                 console.log('La fecha de Nacimiento no puede ser mayor o igual a la fecha Actual...');
+                                 return;
+                             } else if ((mesVF >= mesActual) && (diaVF > diaActual)) {
+
+                                 edad = (yearActual - 1) - yearVF;
+                             }
+                             else {
+                                 edad = yearActual - yearVF;
+                             }
+                             if (edad < 18) {
+
+                                 console.log('Se cumplio la bendita regla: edad = ' + edad + ' estado = ' + estado);
+                                 retorno = 1;
+
+                             } else {
+                                 console.log('Tiene ' + edad + ' años de edad y su  estado = ' + estado+', no cumplio la regla');
+                             }
+
+
+                     }
+                     if (estado == 'NO INCLUIDO') {
+                         console.log('No aplica para seleccionar tutor  ' + fechanacimiento);
+                     }
+                 }
+
+
+             });
+             console.log('Imprimir el retorno antes de salir de la funcion:: ==> '+retorno)
+             return retorno;
+         }
+
+</script>
+
+

@@ -1,0 +1,193 @@
+﻿@{
+    Layout = null;
+    var cookie = Request.Cookies.Get("SesionIged");
+    string NOMBRES = cookie["NombresUsuario"].ToString();
+}
+
+<!DOCTYPE html>
+
+<html style="background-color: white">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IGED Encuesta</title>
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/Jquery/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/general")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+     @Scripts.Render("~/bundles/loading")
+
+    <style>
+        .ui-tooltip {
+            background: #58ACFA;
+            color: white;
+            border: none;
+            padding: 0;
+            opacity: 1;
+            width: 100px;
+            text-align: center;
+            position: absolute;
+        }
+
+        .ui-tooltip-content {
+            position: relative;
+            padding: 1em;
+        }
+
+            .ui-tooltip-content::after {
+                content: '';
+                position: absolute;
+                border-style: solid;
+                display: block;
+                width: 0;
+            }
+
+        .right .ui-tooltip-content::after {
+            top: 18px;
+            left: -10px;
+            border-color: transparent #58ACFA;
+            border-width: 10px 10px 10px 0;
+        }
+
+        .left .ui-tooltip-content::after {
+            top: 18px;
+            right: -10px;
+            border-color: transparent #58ACFA;
+            border-width: 10px 0 10px 10px;
+        }
+
+        .top .ui-tooltip-content::after {
+            bottom: -10px;
+            left: 72px;
+            border-color: #58ACFA transparent;
+            border-width: 10px 10px 0;
+        }
+
+        .bottom .ui-tooltip-content::after {
+            top: -10px;
+            left: 72px;
+            border-color: #58ACFA transparent;
+            border-width: 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <div>
+                <img alt="" src="@Url.Content("~/Content/Imagenes/headerRound.png")" height="110" />
+            </div>
+        </div>
+        <div class="barraMenu" style="vertical-align: central;">
+            <table style="width: 100%">
+                <tr style="vertical-align: central;">
+                    <td style="text-align: left; width: 94%; padding-left: 1em; vertical-align: central;">
+                        @Html.Label(" BIENVENID@: " + @NOMBRES, new { style = "font: 13px Roboto, Helvetica, Arial, sans-serif; color:#424242; font-weight:600; width:700px; text-transform: uppercase;" })
+                    </td>
+                    <td style="text-align: center; width: 2%;">
+                        @* @Html.ActionLink("Cambiar Contraseña", "CambiarContrasenaMenu", "Login", null, new { style = "font: 11px Roboto, Helvetica, Arial, sans-serif; text-decoration:none;" })*@
+                        <a href='@Url.Action("DescargarManual", "Sesion")' id="imgDescargarManual" title ="Guía de Usuario">
+                            <img src='@Url.Content("~/Content/Icons/GuiaUsuario.png")' style="width:20px" />
+                        </a>
+                    </td>
+                    <td style="text-align: center; width: 2%;">
+                        @* @Html.ActionLink("Cambiar Contraseña", "CambiarContrasenaMenu", "Login", null, new { style = "font: 11px Roboto, Helvetica, Arial, sans-serif; text-decoration:none;" })*@
+                        <a href=@Url.Action("Inicio", "ConformacionHogar") id="imgVolver" title="Página de Inicio">
+                            <img src='@Url.Content("~/Content/Icons/home.png")' style="width:20px" />
+                        </a>
+                    </td>
+                    <td style="text-align: center; width: 3%;">
+                        <a href='@Url.Action("CerrarModulo", "Sesion")' title="Cerrar Módulo">
+                            <img src='@Url.Content("~/Content/Icons/logout.png")' style="width:20px" />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <div align="center">
+                @Html.Partial("_Menu")
+            </div>
+        </div>
+
+        <div id="content">            
+            @RenderBody()
+            <div class="push"></div>
+        </div>
+
+        <div id="footer">
+            <img alt="" src="@Url.Content("~/Content/Imagenes/FooterRound.png")" height="50">
+            <h4 class="textoPie">© Copyright 2012 - VIVANTO es una marca de la Unidad para la Atención y Reparación Integral a las Víctimas, desarrollada por la Organización Internacional para las Migraciones (OIM) gracias al apoyo financiero de la Agencia del Gobierno de Estados Unidos para el Desarrollo Internacional (USAID).<br />
+                Cualquier copia o adaptación de este Software es ilegal.
+Versión 1.0 - Resolución 1024*768 o superior.</h4>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var timeout = '@System.Web.Configuration.WebConfigurationManager.AppSettings["CicloVerificarFinSesion"]';
+
+    $(function () {
+        $(document).tooltip({
+            position: {
+                my: "center top",
+                at: "left bottom+10",
+                collision: "flipfit flip",
+            },
+            tooltipClass: "bottom"
+        })
+    });
+
+    $(document).ready(function () {
+        $(".notonbeforeunload").mousedown(function () {
+            window.onbeforeunload = null;
+        });
+    });
+
+    window.alert = function (message) {
+
+        $(document.createElement('div'))
+            .attr({ 'class': 'dialog' })
+            .html(message)
+            .dialog({
+                buttons: {
+                    "1": { id: 'Ok', text: 'OK', click: function () { $(this).dialog("close"); }, 'class': 'butonAlert' },
+                },
+                close: function () { $(this).remove(); },
+                resizable: false,
+                height: 150,
+                width: 300,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: false,
+                dialogClass: 'dialog butonAlert',
+                hide: 'explode'
+            });
+    };
+
+    var loop = timeout * 60000;
+    setInterval('VerificarFinSesion()', loop);
+
+    function VerificarFinSesion() {
+        console.log("ENTRO");
+        $.ajax({
+
+            dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa html
+            url: '@Url.Action("VerificarFinSesion", "Sesion")',
+
+            success: function (result) { // Variable return contains the data we get from serverside
+                console.log(result);
+                if (result == 'cerrada') {
+                    alert('Su sesión ha finalizado, vuelva a ingresar al módulo desde el Portal de Aplicaciones.');
+                    window.setInterval('window.close()', 2000);
+                    //window.close();
+                }
+            }
+        });
+    };
+
+</script>

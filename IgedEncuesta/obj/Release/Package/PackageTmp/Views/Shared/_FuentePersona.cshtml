@@ -1,0 +1,71 @@
+﻿@model IEnumerable<IgedEncuesta.Models.mdlFuente.FuentePersona>
+
+@{
+    ViewBag.Title = "MaestroVictimas";
+    var lista = (List<string>)TempData["SelectList"];
+    
+
+    // TempData["TotalConsulta"] = Model.Count();
+    var total = Model.Count();
+    TempData["TotalConsulta"] = total;
+
+    TempData["PERFILES"] = Model;
+    TempData.Keep("PERFILES");
+    List<IgedEncuesta.Models.mdlFuente.FuentePersona> modeloHogar = (List<IgedEncuesta.Models.mdlFuente.FuentePersona>)TempData["ModeloHogar"];
+    var modelo = ViewBag.ModeloSerializado;
+}
+
+
+<br />
+
+<input type="hidden" id="totalConsulta" value="@total">
+<input type="hidden" id="hdModelo" name="ModeloVictimas" value="@modelo">
+<div id="gridContentFuente" class="marcoGrid" style="width: 100%">
+    @{
+        //var filaGrid = new PortalAplicacionesRNI.Models.gridDatos();
+        //var grid = new WebGrid(Model);                         
+        // Instanciamiento del helper webgrid
+        WebGrid grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, canSort: false,
+        selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContentFuente");        
+
+        grid.Pager(WebGridPagerModes.NextPrevious);
+        //grid.Pager(WebGridPagerModes.All);
+        //grid.Bind(Model, rowCount: Model.Count(), autoSortAndPage: false);
+    }
+
+    @grid.GetHtml(
+                        //htmlAttributes: new { id = "gridContent" }, // id for ajaxUpdateContainerId parameter
+                        //htmlAttributes: new { id = "grid" },
+                        //mode: WebGridPagerModes.All,
+                        tableStyle: "grid-view",
+                        headerStyle: "grid-view-header",
+                        rowStyle: "grid-view-tr-normal",
+                        alternatingRowStyle: "grid-view-tr-alternate",
+                        footerStyle: "grid-view-pgr",
+                        columns: grid.Columns(
+                        grid.Column("FUENTE", "FUENTE"),
+                        grid.Column("TIPO_DOC", "TIPO DOCUMENTO"),
+                        grid.Column("NUMERO_DOC", "DOCUMENTO"),
+                        grid.Column("ESTADO_CEDULA", "ESTADO CEDULA"),                        
+                        grid.Column("NOMBRES_COMPLETOS", "NOMBRES"),
+                        grid.Column("PARENTESCO", "PARENTESCO"),
+                        grid.Column("GENERO", "GENERO"),
+                        grid.Column("FECHA_NACIMIENTO", "FECHA NACIMIENTO"),
+                        grid.Column("ESTADO_VALORACION", "ESTADO VALORACION"),
+                        grid.Column("NUMERO_FORMULARIO", "NÚMERO FORMULARIO"),
+                        grid.Column("CODIGO_DECLARACION", "NÚMERO DECLARACION"),
+                        grid.Column("FECHA_HECHO", "FECHA OCURRENCIA HECHO"),
+                        grid.Column("HECHO_VICTIMIZANTE", "HECHO"),
+                        grid.Column("CODIGO_HOGAR", "ENCUESTA"),
+                        grid.Column("ESTADO_ENCUESTA", "ESTADO ENCUESTA"),
+                        grid.Column("FECHA_ENCUESTA", "FECHA ENCUESTA"),
+                        grid.Column("VIGENCIA_ENCUESTA", "VIGENCIA ENCUESTA")
+
+                       )
+    )
+
+</div>
+
+
+
+

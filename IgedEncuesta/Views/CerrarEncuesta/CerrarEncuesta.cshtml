@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "CerrarEncuesta";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+@Html.Partial("_DialogPopup")
+@using (Html.BeginForm("cerrar", "CerrarEncuesta", FormMethod.Post, new { id = "formCerrarEncuesta" }))
+{
+
+    <br />
+    <div class="centrarDiv " id="contenedor">
+        <table class="marcoFormulario  efecto2 efecto1 " style="margin: auto; width: 1010px; text-transform: uppercase; font-family: 'Roboto'; font-size: 12px;margin-top:20px;">
+            <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>CERRAR ENCUESTA</h5>
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="fondo " style="text-align:center;margin:0 auto; border: 1px solid #ccc; border-radius: 5px;width: 90%;text-align:center;padding:20px;">
+                        <table style="margin:0 auto; ">
+                            <tr>
+                                <td class="etiqueta" style="font-size: 11px;">Código del Hogar:&nbsp;&nbsp;&nbsp;</td>
+                                <td>
+                                    @Html.TextBox("CODIGO", "", new { id = "txtCodigo", style = "width:100px;font-size:12px;text-transform:uppercase;font-family:Roboto;", maxlength = "5" })
+                                </td>
+                            </tr>
+                            <tr></tr>
+                            <tr>
+
+                                <td colspan="2">
+                                    <br />                                    
+                                    <input type="button" name="confirmar" value="Cerrar Encuesta" id="confirmarcerrar" style="margin: auto;width:180px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+<input id="idEncuesta" type="hidden" value="" />
+<div id="cerrarencuesta" style="display: none">
+    <table>
+
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <img src="@Url.Content("~/Content/Caracterizacion/Modal-Alerta.png")" height="50" alt="Cargar soporte" />
+                        </td>
+                        <td>
+                            <label id="lblMensajeSop"></label>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td><!--
+                <table class="tabla1" id="uploadtable">
+                    <tr>
+                        <td>
+                            <input id="fileUpload" type="file" name="fileUpload[0]" accept=".pdf" />
+                        </td>
+                    </tr>
+                </table>
+                -->
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#confirmarcerrar').click(function (e) {                        
+            if ($("#txtCodigo").val() != "") {                 
+                
+               $("#cerrarencuesta").dialog('open'); 
+                
+            } else {
+                alert("Digite un codigo de Hogar.");
+            }
+
+        });
+
+        $("#cerrarencuesta").dialog({
+            autoOpen: false,
+            resizable: false,
+            //height: 400,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            buttons: [{
+                text: "Cerrar",
+                id: "confirmarcerrar",
+                click: function () {
+                    cerrarEncuesta();
+                    $(this).dialog("close");
+                    
+                }
+            }, {
+                text: "Cancelar",
+                id: "btnCancelarCerrar",
+                click: function () {
+                    $(this).dialog("close");
+                }
+            }]
+        });
+
+    });
+
+    var id;
+    function cerrarEncuesta() {
+
+        var codigo = "";
+        $.ajax({
+            type: "GET",
+            datatype: "json",
+            // traditional: true,
+            contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("cerrar", "CerrarEncuesta")',
+            data: { "codHogar": $("#txtCodigo").val() },
+            async: false,
+            success: function (result) {
+               // console.log(result);                
+            }
+        });
+        
+        return codigo;
+    }
+
+
+</script>
+

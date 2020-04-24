@@ -1,0 +1,38 @@
+﻿@Styles.Render("~/Content/css")
+@Styles.Render("~/Content/themes/Jquery/css")
+@Styles.Render("~/Content/themes/base/css")
+@Scripts.Render("~/bundles/jquery")
+@*    @Scripts.Render("~/bundles/jqueryval")*@
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/modernizr")
+
+<script type="text/javascript">
+    window.alert = function (message) {
+
+        $(document.createElement('div'))
+            .attr({ 'class': 'dialog' })
+            .html(message)
+            .dialog({
+                buttons: {
+                    "1": { id: 'Ok', text: 'OK', click: function () { $(this).dialog("close"); }, 'class': 'butonAlert' },
+                    //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                },
+                close: function () { $(this).remove(); },
+                resizable: false,
+                height: 150,
+                width: 300,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: false,
+                dialogClass: 'dialog butonAlert',
+                hide: 'explode'
+            });
+    };
+</script>
+
+<body>
+    <script type="text/javascript">
+        alert('Su sesión ha finalizado, vuelva a ingresar al módulo desde el Portal de Aplicaciones.');
+        window.setInterval('window.close()', 2000);
+    </script>
+</body>

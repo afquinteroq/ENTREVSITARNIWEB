@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+  @*  <title>@ViewBag.Title</title>*@
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/Jquery/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+ @*   @Scripts.Render("~/bundles/pluginPopup")*@
+
+</head>
+<body>
+
+    <div id="wrapper" >
+        <div id="header" >
+        @*<h1>CSS Header (Cabecera de la Página)</h1>*@
+        @*<h2>Plantilla Desarrollo MVC. <br/><strong>Red Nacional de Información.</strong></h2>*@
+            <div>
+                <img alt="" src="@Url.Content("~/Content/Imagenes/headerRound.png")"  height="110"/>
+            </div>
+        </div>
+
+        <div id="content">
+            @RenderBody()
+           
+        </div>
+         
+        <div id="footer">
+            <img alt="" src="@Url.Content("~/Content/Imagenes/FooterRound.png")"  height="50" >
+				<h4 class="textoPie">© Copyright 2012 - VIVANTO es una marca de la Unidad para la Atención y Reparación Integral a las Víctimas, desarrollada por la Organización Internacional para las Migraciones (OIM) gracias al apoyo financiero de la Agencia del Gobierno de Estados Unidos para el Desarrollo Internacional (USAID).<br /> Cualquier copia o adaptación de este Software es ilegal.
+Versión 1.0 - Resolución 1024*768 o superior.</h4>
+        </div>
+    </div>
+   
+    @RenderSection("scripts", required: false)
+     
+</body>
+</html>
+    <script type="text/javascript">
+
+</script>

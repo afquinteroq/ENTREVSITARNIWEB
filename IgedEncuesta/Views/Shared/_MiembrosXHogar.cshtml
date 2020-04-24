@@ -1,0 +1,61 @@
+﻿@model IEnumerable<IgedEncuesta.Models.mdlGenerico.GIC_REPORTEXHOGAR>
+
+@{
+    ViewBag.Title = "MaestroVictimas";
+    var lista = (List<string>)TempData["SelectList"];
+
+
+    
+    var total = Model.Count();
+    TempData["TotalConsulta"] = total;
+
+    TempData["PERFILES"] = Model;
+    TempData.Keep("PERFILES");
+    List<IgedEncuesta.Models.mdlGenerico.GIC_REPORTEXHOGAR> modeloHogar = (List<IgedEncuesta.Models.mdlGenerico.GIC_REPORTEXHOGAR>)TempData["ModeloHogar"];
+    var modelo = ViewBag.ModeloSerializado;
+}
+
+<label id="resultado" name="resultado" style="display: none">@ViewBag.resultado</label> 
+<label id="mensaje" name="mensaje" style="display: none">@ViewBag.Mensaje</label> 
+
+<br />
+
+<input type="hidden" id="totalConsulta" value="@total">
+<input type="hidden" id="hdModelo" name="ModeloVictimas" value="@modelo">
+<div id="gridContenMiembrosXHogar" class="marcoGrid" style="width: 100%">
+    @{
+        
+        WebGrid grid = new WebGrid(Model, canPage: true, rowsPerPage: 20, canSort: false,
+        selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContenMiembrosXHogar");
+
+        grid.Pager(WebGridPagerModes.NextPrevious);
+        
+    }
+
+    @grid.GetHtml(
+
+                        tableStyle: "grid-view",
+                        headerStyle: "grid-view-header",
+                        rowStyle: "grid-view-tr-normal",
+                        alternatingRowStyle: "grid-view-tr-alternate",
+                        footerStyle: "grid-view-pgr",
+                        columns: grid.Columns(
+                        grid.Column("nombre_completo", "Nombre Completo"),
+                        grid.Column("tipo_documento", "TIPO DOCUMENTO"),                        
+                        grid.Column("numero_documento", "Númerod Documento"),
+                        grid.Column("brinda_informacion", "Responsable"),
+                        grid.Column("codigohogar", "Código Hogar"),
+                        grid.Column("estado_encuesta", "estado encuesta"),
+                        grid.Column("fecha_creacion_encuesta", "Fecha Creacion Encuesta"),
+                        grid.Column("usuario_creacion_encuesta", "Usuario Creacion Encuesta")
+
+
+                       )
+    
+    )
+
+</div>
+        
+        
+        
+        

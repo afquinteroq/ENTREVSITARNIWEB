@@ -1,0 +1,250 @@
+﻿<div id="dialog-error" style="display: none">
+    Se presento un error en la aplicación. <br/>
+    Por favor comuniquese con el administrador del sistema. <br/><br/>
+    Error: @TempData["err"]
+</div>
+
+<div id="dialog-mensaje" style="display: none" >
+    @TempData["msg"]
+</div>
+
+<div id="dialog-confirm" style="display: none">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        ¿Esta seguro de realizar la operación?
+    </p>
+</div>
+
+<div id="dialog-invalid" style="display: none" >
+    @TempData["inv"]
+</div>
+
+<div id="dialog-edit" style="display: none">
+</div>
+
+<div id="dialog-detail" style="display: none">
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        $("#dialog-error").dialog({
+            autoOpen: false,
+            resizable: false,
+            height:200,
+            width: 700,
+            shadow: true,
+            title: 'ATENCION',
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+                $('.ui-widget-overlay').addClass('custom-overlay');
+            },
+            close: function(event, ui) {
+                $('.ui-widget-overlay').removeClass('custom-overlay');
+                $('#dialog-error').dialog('close');
+
+                $(this).dialog('destroy').remove();
+            },   
+            buttons: {
+                "OK": function () {
+                    $(this).dialog("close");
+                }
+                //"Cancel": function () {
+                //    $(this).dialog("close");
+                //}
+            }
+        });
+
+        $("#dialog-mensaje").dialog({
+            autoOpen: false,
+            resizable: false,
+            height:160,
+            width: 330,
+            title: 'ATENCION',
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+                $('.ui-widget-overlay').addClass('custom-overlay');
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').removeClass('custom-overlay');
+
+                $(this).dialog('destroy').remove();
+            },
+            buttons: {
+                "OK": function () {
+                    $(this).dialog("close");
+
+                }
+                //"Cancel": function () {
+                //    $(this).dialog("close");
+                //}
+            }
+        });
+
+        $("#dialog-invalid").dialog({
+            autoOpen: false,
+            resizable: false,
+            height: 150,
+            width: 300,
+            title: 'ATENCION',
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+                $('.ui-widget-overlay').addClass('custom-overlay');
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').removeClass('custom-overlay');
+
+                $(this).dialog('destroy').remove();
+                window.open('', '_self', '');
+                window.close();
+            },
+            buttons: {
+                "OK": function () {
+
+                    $(this).dialog("close");
+
+                }
+                //"Cancel": function () {
+                //    $(this).dialog("close");
+                //}
+            }
+        });
+
+        var  temporalMensaje;
+        temporalMensaje = '@TempData["msg"]'; 
+        if (temporalMensaje != "") {
+            //  alert(@TempData["msg"]);
+            console.log('@TempData["msg"]');
+            $("#dialog-mensaje").dialog('open');
+        }
+
+        var  temporalError;
+        temporalError = '@TempData["err"]'; 
+        if (temporalError != "") {
+                 //  alert(@TempData["err"]);
+            console.log('@TempData["err"]');
+            $("#dialog-error").dialog('open');
+            }
+
+        var temporalInvalido;
+        temporalInvalido = '@TempData["inv"]';
+        if (temporalInvalido != "") {
+            //  alert(@TempData["err"]);
+            $("#dialog-invalid").dialog('open');
+        }
+
+        var url = "";
+
+        $("#dialog-edit").dialog({
+            title: 'Create User',
+            autoOpen: false,
+            resizable: false,
+            width: 400,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+                $(this).load(url);
+            }
+        });
+
+        $("#dialog-confirm").dialog({
+            autoOpen: false,
+            resizable: false,
+            height: 170,
+            width: 350,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+
+            },
+            buttons: {
+                "OK": function () {
+                    $(this).dialog("close");
+                    window.location.href = url;
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialog-detail").dialog({
+            title: 'View User',
+            autoOpen: false,
+            resizable: false,
+            width: 400,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+                $(this).load(url);
+            },
+            buttons: {
+                "Close": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#lnkCreate").on("click", function (e) {
+            //e.preventDefault(); //use this or return false
+            url = $(this).attr('href');
+            $("#dialog-edit").dialog('open');
+
+            return false;
+        });
+
+        $(".lnkEdit").on("click", function (e) {
+            // e.preventDefault(); use this or return false
+            url = $(this).attr('href');
+            $(".ui-dialog-title").html("Update User");
+            $("#dialog-edit").dialog('open');
+
+            return false;
+        });
+
+        $(".lnkDelete").on("click", function (e) {
+            // e.preventDefault(); use this or return false
+            url = $(this).attr('href');
+            $("#dialog-confirm").dialog('open');
+
+            return false;
+        });
+
+        $(".lnkDetail").on("click", function (e) {
+            // e.preventDefault(); use this or return false
+            url = $(this).attr('href');
+            $("#dialog-detail").dialog('open');
+
+            return false;
+        });
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-edit").dialog("close");
+            return false;
+        });
+
+
+
+    });
+
+</script>

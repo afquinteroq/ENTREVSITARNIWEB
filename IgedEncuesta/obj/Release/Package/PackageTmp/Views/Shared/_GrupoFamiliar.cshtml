@@ -1,0 +1,224 @@
+﻿@model IEnumerable<IgedEncuesta.Models.mdlEncuesta.Victima>
+
+@{
+    ViewBag.Title = "GrupoFamiliar";
+    int totalVictimas = Model.Count();
+    
+    
+    //List<IgedEncuesta.Models.mdlEncuesta.Victima> modeloHogar = (List<IgedEncuesta.Models.mdlEncuesta.Victima>)TempData["ModeloHogar"];
+    AdministracionInstrumentos.Encuesta objSesion = new AdministracionInstrumentos.Encuesta();
+    string userIdApp;
+    userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
+    var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
+    List<IgedEncuesta.Models.mdlEncuesta.Victima> modeloHogar = Newtonsoft.Json.JsonConvert.DeserializeObject<List<IgedEncuesta.Models.mdlEncuesta.Victima>>(modeloHogarJson);
+
+    List<IgedEncuesta.Models.mdlEncuesta.Victima> modeloHogarGrilla = (List<IgedEncuesta.Models.mdlEncuesta.Victima>)Model;
+    //var verificacion = modeloHogar.Any(x => x.CONS_PERSONA != item.CONS_PERSONA && x.ID_TBPERSONA != item.ID_TBPERSONA);
+}
+
+
+<br />
+
+@if (Model.Count() != 0)
+{
+    <div id="gridContentGrupoFamiliar" class="marcoGrid" style="width: 100%">
+        @{
+    //var filaGrid = new PortalAplicacionesRNI.Models.gridDatos();
+    //var grid = new WebGrid(Model);                         
+    // Instanciamiento del helper webgrid
+    WebGrid grid = new WebGrid(Model, canPage: false, /*rowsPerPage: 5,*/ canSort: false,
+    selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContentGrupoFamiliar");
+    //grid.Pager(WebGridPagerModes.NextPrevious);
+    //grid.Pager(WebGridPagerModes.All);
+    //grid.Bind(Model, rowCount: Model.Count(), autoSortAndPage: false);
+        }
+
+        @grid.GetHtml(
+        //htmlAttributes: new { id = "gridContent" }, // id for ajaxUpdateContainerId parameter
+        //htmlAttributes: new { id = "grid" },
+        //mode: WebGridPagerModes.All,
+                        tableStyle: "grid-view",
+                        headerStyle: "grid-view-header",
+                        rowStyle: "grid-view-tr-normal",
+                        alternatingRowStyle: "grid-view-tr-alternate",
+                        footerStyle: "grid-view-pgr",
+                        columns: grid.Columns(
+                        grid.Column("TIPO_DOC", "TIPO DOC"),
+                        grid.Column("DOCUMENTO"),
+                        grid.Column("NOMBRES_COMPLETOS", "NOMBRES"),
+                        grid.Column("F_NACIMIENTO", "FECHA NACIMIENTO"),
+        //grid.Column("PERT_ETNICA", "ETNIA"),
+                        grid.Column("TIPO_VICTIMA", "ESTADO"),
+                        grid.Column("GENERO_HOM", "GENERO"),
+        //href="Url.Action("ExcluirVictima", "ConformacionHogar", new { idVictima = @item.CONS_PERSONA})"
+                        grid.Column(header: "INCLUIR",
+
+                        format: (item =>
+                        {
+                            //var prueba = modeloHogar.Where(x => x.CONS_PERSONA == item.CONS_PERSONA && x.ID_TBPERSONA == item.ID_TBPERSONA);
+                            //var ti = item.CONS_PERSONA;
+
+                            //if (modeloHogar.Any(x => x.CONS_PERSONA == item.CONS_PERSONA && x.ID_TBPERSONA == item.ID_TBPERSONA))
+                            //    return Html.Raw("<a href='#' id='Incluir_" + @item.CONS_PERSONA + "-" + @item.DOCUMENTO + "' class='incluir'  name='" + @item.ID_TBPERSONA + "'> <img src='" + @Url.Content("~/Content/Icons/add_person.png") + "' title='Incluir Víctima' id='imgIncluir_" + @item.CONS_PERSONA + "' style='height:22px;width:22px;'></a>");
+                            //else if (@item.HABILITADO_PARA_CARACTERIZACION == "NO")
+                            //    return Html.Raw("<img src='" + Url.Content("~/Content/Icons/add_person_off.png") + "' title='Persona ya encuestada con código " + @item.COD_HOGAR + " en estado  " + @item.ESTADO_ENCUESTA + ".' id='imgIncluirMaestroEx_" + @item.CONS_PERSONA + "' style='height:22px;width:22px;'>");
+                            //    //return Html.Raw("<a href='#' id= 'incluirMaestro_" + @item.CONS_PERSONA + "-" + @item.DOCUMENTO + "' class='incluirMaestro'  name='" + @item.ID_TBPERSONA + "'> <img src='" + Url.Content("~/Content/Icons/add_person_off.png") + "' title='No habilitado por ultima encuesta activa.' id='imgIncluirMaestro_" + @item.CONS_PERSONA + "' style='height:22px;width:22px;'></a>");
+                            //else
+                            if (modeloHogar.Any(x => x.CONS_PERSONA == item.CONS_PERSONA && x.ID_TBPERSONA == item.ID_TBPERSONA))
+                            {
+
+                                return Html.Raw("<img src='" + Url.Content("~/Content/Icons/check-3.png") + "' title='Incluir Víctima' id='ImgIncluir_" + @item.CONS_PERSONA + "' style='height:22px;width:22px;'>");
+                            }
+                            else 
+                            {
+                                if (item.HABILITADO_PARA_CARACTERIZACION == "SI")
+                                {
+                                    return Html.Raw("<a href='#' id='Incluir_" + @item.CONS_PERSONA + "-" + @item.DOCUMENTO + "' class='incluir'  name='" + @item.ID_TBPERSONA + "'> <img src='" + @Url.Content("~/Content/Icons/add_person.png") + "' title='Incluir Víctima' id='imgIncluir_" + @item.CONS_PERSONA + "' style='height:22px;width:22px;'></a>");
+                                }
+                                else {
+                                    return Html.Raw("<img src='" + Url.Content("~/Content/Icons/add_person_off.png") + "' title='Persona ya encuestada con código " + @item.COD_HOGAR + " en estado  " + @item.ESTADO_ENCUESTA + ".' id='imgIncluirMaestroEx_" + @item.CONS_PERSONA + "' style='height:22px;width:22px;'>");
+                                }
+                                
+                            }
+                        }))))   ;           
+                    
+
+    </div>
+}
+else
+{
+    <div style="border: 1px solid #ccc; border-radius: 5px; width: 100%; background-color: #F5F6CE">
+        <p style="font-family: 'Roboto',sans-serif; font-size: 12px; color: #424242; line-height: 20px; font-style: normal; padding: 5px 10px;">La víctima seleccionada no tiene grupo familiar asociado</p>
+    </div>
+}
+
+
+
+<script type="text/javascript">
+    // alert(@Model.Count());
+    //   alert(@totalVictimas);
+    var total = Number(@totalVictimas);
+    var id = "";
+    var idRef = '';
+
+    if (total >= 4) {
+        $('#maestroGrupo').css('height', '250px');
+        $('#maestroGrupo').css('overflow', 'scroll');
+        $('#maestroGrupo').css('overflow-x', 'hidden');
+    }
+    else {
+        $('#maestroGrupo').css('height', 'auto');
+        $('#maestroGrupo').css('overflow', 'none');
+        $('#maestroGrupo').css('overflow-x', '');
+        $('#maestroGrupo').css('overflow-y', '');
+    }
+
+    $('.incluir').click(function () {
+        // Valida que se hayan diligenciado los campos requeridos
+        // var camposValidos = true;
+
+        idRef = $(this).attr("id");
+
+        id = idRef.substring(8, idRef.indexOf('-'));
+        //alert('1');
+        //alert('id:' + id);
+
+        var existe = false;
+
+        //alert('idRef:' + idRef);
+        if (idRef != '')
+        {
+            //alert('integranteGRupo:' + idRef.substring(idRef.indexOf('-') + 1));
+            if (idRef.substring(idRef.indexOf('-') + 1) != "") {
+                integranteGrupo = $("." + idRef.substring(idRef.indexOf('-') + 1));
+                if (integranteGrupo.length) existe = true;
+            }
+            else existe = false;
+        }
+
+        //alert('2');
+
+        if (existe) {
+            // alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
+            opcionDialogo = 4;
+            ventanaConfirmacion('El número de documento <b>' + idRef.substring(idRef.indexOf('-') + 1) + '</b> ya existe en la conformación del hogar. ¿Esta seguro de incluir esta persona?');
+            // $('#txtNumDoc').val('');
+            //  $('#filaGridMaestro').hide('slow');
+            return;
+
+        }
+        else agregarVictimaIGF(id, idRef);
+
+        //agregarVictimaIGF(id) 
+        //   alert($(this).attr("id") + ' ' + $(this).attr("id").substring(8));
+        //$('#imgIncluir_' + id).hide(0);
+        //$('imgIncluir_' + id).attr("src", "xxx.png");
+
+        //$('#Incluir_' + id).bind('click', false);
+        // $('#imgIncluir_' + id).show(0);
+        //alert('paso');
+        //alert();
+    });
+
+    function agregarVictimaIGF(id, idRef) {
+        //if (idChequeados != '') {
+        //    document.getElementById("maestroHogar").innerHTML = "";
+        //    var div = $('#maestroHogar');
+
+        //     alert(consPersona);
+        //alert('3');
+        idPersona = $("#" + idRef).prop("name");
+      //  alert(id + ' * ' + idPersona);
+        //alert("IDTOTAL__"+idRef.substring(8));
+        $.ajax(
+             {
+                 type: 'POST',
+                 data: { idVictima: id, idPersona: idPersona },
+                 dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("agregarMaestroHogarGF", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+                     //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+
+                     //    $('#imgIncluir_' + id).hide(0);
+                     $('#imgIncluir_' + id).attr("src", "@Url.Content("~/Content/Icons/check-3.png")");
+                     //    $('#imgIncluir_' + id).show(0);
+                     $('#Incluir_' + idRef.substring(8)).off();
+                     $('#Incluir_' + idRef.substring(8)).css('cursor', 'default');
+                     
+                     //    alert(result);
+                 },
+                 error: function (error) {
+                     // si hay un error lanzara el mensaje de error
+                     alert('Se presento un error al agregar la persona con Id ' + id);
+                 }
+             });
+         };
+
+         function ventanaConfirmacion(message) {
+
+             $(document.createElement('div'))
+                 .attr({ 'class': 'dialog' })
+                 .html(message)
+                 .dialog({
+                     buttons: {
+                         OK: { id: 'Ok', text: 'Aceptar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); agregarVictimaIGF(id); } },
+                         Cancel: { id: 'Cancel', text: 'Cancelar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); } },
+                         //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                     },
+                     close: function () { $(this).remove(); },
+                     resizable: false,
+                     height: 150,
+                     width: 400,
+                     show: { effect: 'drop', direction: "up" },
+                     modal: true,
+                     draggable: false,
+                     dialogClass: 'dialog butonAlert',
+                     hide: 'explode'
+                 });
+         };
+         //else
+         //    alert('Seleccione al menos una persona para agregarla al hogar.');
+         //}
+
+</script>

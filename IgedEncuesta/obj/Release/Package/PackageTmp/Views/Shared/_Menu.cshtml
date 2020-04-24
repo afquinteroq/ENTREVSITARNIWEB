@@ -1,0 +1,503 @@
+﻿@*model*@
+@* IEnumerable<Autenticacion.NivelAcceso>*@
+
+
+@{
+    Layout = null;
+    //List<Autenticacion.NivelAcceso> nivelAcceso = (List<Autenticacion.NivelAcceso>)Session["NIVELACCESO"];
+    //List<Autenticacion.NivelAcceso> nivelAcceso = (List<Autenticacion.NivelAcceso>)TempData["NIVELACCESO"];
+    var cookie = Request.Cookies.Get("SesionIged");
+    string app = cookie["NIVELACCESO"].ToString();
+    //string objeto = cookie.Value;
+    List<Autenticacion.NivelAcceso> nivelAcceso = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Autenticacion.NivelAcceso>>(app);
+}
+
+<style>
+    *, html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, label, fieldset, p, blockquote, th, td {
+        /**,html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,label,fieldset,input,p,blockquote,th,td;
+
+    {*/
+        margin: 0;
+        padding: 0;
+    }
+
+    @*article,aside,figure,footer,header,hgroup,nav,section {
+        display: block;
+    }
+
+    *@ article, aside, figure, hgroup, nav, section {
+        display: block;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    html {
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .aMenu {
+        color: #BA0707;
+        text-decoration: none;
+    }
+
+        .aMenu:hover {
+            color: #BA0707;
+        }
+
+    .bodyMenu {
+        @* background: #e5e5e5;
+        *@ color: #374147;
+        @* font: 12px 'Oswald-Regular',Helvetica,Arial,sans-serif;
+        *@ -webkit-font-smoothing: antialiased;
+        line-height: 1;
+        width: 100%;
+    }
+
+    nav {
+        display: block;
+        background: #834E58;
+    }
+
+    li {
+        @* padding: 2px;
+        *@ text-align:left;
+    }
+
+    .menu {
+        display: block;
+        background: #834E58;
+    }
+
+        .menu li {
+            display: inline-block;
+            position: relative;
+            z-index: 100;
+        }
+
+            .menu li:first-child {
+                margin-left: 0;
+            }
+
+            .menu li .aMenu {
+                font: 11px 'Oswald-Regular',Helvetica,Arial,sans-serif;
+                font-weight: 600;
+                text-decoration: none;
+                padding: 10px 15px;
+                display: block;
+                color: #fff;
+                transition: all 0.2s ease-in-out 0s;
+            }
+
+                .menu li .aMenu:hover, .menu li:hover > a {
+                    @*color: #fff;
+                    *@ color: #555555;
+                    @*background: #9ca3da;
+                    *@ background: #dfc7ce;
+                }
+
+        .menu ul {
+            visibility: hidden;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+            width: 170px;
+            position: absolute;
+            left: 0px;
+            background: #fff;
+            z-index: 99;
+            transform: translate(0,20px);
+            transition: all 0.2s ease-out;
+        }
+
+            .menu ul:after {
+                bottom: 100%;
+                left: 20%;
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+                border-color: rgba(255, 255, 255, 0);
+                border-bottom-color: #fff;
+                border-width: 6px;
+                margin-left: -6px;
+            }
+
+            .menu ul li {
+                display: block;
+                float: none;
+                background: none;
+                margin: 0;
+                padding: 0;
+            }
+
+                .menu ul li .aMenu {
+                    font: 11px 'Oswald-Regular',Helvetica,Arial,sans-serif;
+                    @*font-size: 12px;
+                    *@ @*text-transform: uppercase;
+                    *@ font-weight: normal;
+                    display: block;
+                    @* color: #797979;
+                    *@ color: #fff;
+                    background: #834E58;
+                }
+
+                    .menu ul li .aMenu:hover, .menu ul li:hover > a {
+                        @* background: #9ca3da;
+                        *@ color: #555555;
+                        background: #dfc7ce;
+                    }
+
+        .menu li:hover > ul {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(0,0);
+        }
+
+        .menu ul ul {
+            left: 169px;
+            top: 0px;
+            visibility: hidden;
+            opacity: 0;
+            transform: translate(20px,20px);
+            transition: all 0.2s ease-out;
+        }
+
+            .menu ul ul:after {
+                left: -6px;
+                top: 10%;
+                border: solid transparent;
+                content: " ";
+                height: 0;
+                width: 0;
+                position: absolute;
+                pointer-events: none;
+                border-color: rgba(255, 255, 255, 0);
+                border-right-color: #fff;
+                border-width: 6px;
+                margin-top: 4px;
+                @*margin-top: -6px;
+                *@;
+            }
+
+        .menu li > ul ul:hover {
+            visibility: visible;
+            opacity: 1;
+            transform: translate(0,0);
+        }
+
+    .responsive-menu {
+        display: none;
+        width: 100%;
+        padding: 20px 15px;
+        background: #374147;
+        color: #fff;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+        .responsive-menu:hover {
+            background: #374147;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    a.homer {
+        background: #dfc7ce;
+        @* background: #dfc7ce;
+        *@ @* color: #fff;
+        *@ @* background: #dfc7ce;
+        *@;
+    }
+
+
+    .menu-fijo {
+        position: fixed;
+        top: 0;
+        @*width: 900px;
+        *@ z-index:10;
+        width: 100%;
+    }
+
+    @@media (min-width: 768px) and (max-width: 979px) {
+        .mainWrap {
+            width: 768px;
+        }
+
+        .menu ul {
+            top: 37px;
+        }
+
+        .menu li .aMenu {
+            font-size: 12px;
+        }
+
+        a.homer {
+            background: #374147;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .mainWrap {
+            width: auto;
+            padding: 50px 20px;
+        }
+
+        .menu {
+            display: none;
+        }
+
+        .responsive-menu {
+            display: block;
+        }
+
+        nav {
+            margin: 0;
+            background: none;
+        }
+
+        .menu li {
+            display: block;
+            margin: 0;
+        }
+
+            .menu li .aMenu {
+                background: #fff;
+                color: #797979;
+            }
+
+            .menu li a:hover, .menu li:hover > a {
+                background: #9ca3da;
+                color: #fff;
+            }
+
+        .menu ul {
+            visibility: hidden;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transform: initial;
+        }
+
+        .menu li:hover > ul {
+            visibility: visible;
+            opacity: 1;
+            position: relative;
+            transform: initial;
+        }
+
+        .menu ul ul {
+            left: 0;
+            transform: initial;
+        }
+
+        .menu li > ul ul:hover {
+            transform: initial;
+        }
+    }
+
+    @@media (max-width: 480px) {
+    }
+
+    @@media (max-width: 320px) {
+    }
+</style>
+
+<div id="menu-contenedor">
+    <nav class="bodyMenu">
+        <a id="resp-menu" class="responsive-menu aMenu" href="#"><i class="fa fa-reorder"></i>Menu</a>
+        <ul class="menu" align="center">
+            @*foreach (var data in Model)*@
+            @if (nivelAcceso != null)
+            {
+
+                foreach (var data in nivelAcceso)
+                {
+                    if (@data.idNivelAcceso != null)
+                    {
+                        if (@data.idNivelAcceso == data.idNivelAccesoPadre)
+                        {
+                            <li>
+                                <a class="aMenu" href="@data.Url" style="text-transform: uppercase;"><i class="fa @data.Imagen"></i> @data.Titulo</a>
+                                @*OrgTree(Model, data.idNivelAcceso)*@
+                                @OrgTree(nivelAcceso, @data.idNivelAcceso)
+                            </li>
+                        }
+                    }
+                }
+
+
+            }
+
+
+
+            @*<li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-question"></i> AYUDA</a></li>*@
+                @*<li><a href="#" class="aMenu" text-transform uppercase;>AYUDA<i class="fa fa-question"></i></a></li>*@
+                @*<li><a href="#" class="aMenu" text-transform uppercase;><i class="fa fa-power-off"></i> CERRAR MODULO</a></li>*@
+            </ul>
+
+        </nav>
+
+
+        @helper OrgTree(IEnumerable<Autenticacion.NivelAcceso> nodos, string parentId)
+{
+    if (nodos.Any(n => n.idNivelAccesoPadre == parentId && n.idNivelAcceso != n.idNivelAccesoPadre && n.tipo == "2"))
+    {
+        <ul class="sub-menu">
+            @foreach (var nodo in nodos.Where(n => n.idNivelAccesoPadre == parentId))
+            {
+                if (nodo.idNivelAcceso != nodo.idNivelAccesoPadre && nodo.tipo == "2")
+                {
+                    <li>
+                        <a href="@nodo.Url" class="aMenu"><i class="fa @nodo.Imagen"></i> @nodo.Titulo</a>
+                        @OrgTree(nodos, nodo.idNivelAcceso)
+                    </li>
+                }
+            }
+        </ul>
+    }
+}
+
+
+
+        @*                            @foreach (var data in Model)
+            {
+                if (@data.idNivelAcceso == data.idNivelAccesoPadre)
+                {
+                    <li>
+                        <a class="aMenu" href="#" style="text-transform: uppercase;"><i class="fa fa-home"></i> @data.Titulo</a>
+                         @{primeraVez = true;}
+                        @foreach (var data2 in Model)
+                        {
+                            if (@data2.idNivelAcceso != data2.idNivelAccesoPadre && @data.idNivelAcceso == data2.idNivelAccesoPadre && @data2.tipo != "3")
+                            {
+                                if (@primeraVez)
+                                {
+                                    primeraVez = false;
+                                    <ul class="sub-menu">
+                                        @foreach (var data3 in Model)
+                                        {
+                                            if (@data3.idNivelAcceso != data3.idNivelAccesoPadre && @data.idNivelAcceso == data3.idNivelAccesoPadre)
+                                            {
+                                                <li><a href="#" class="aMenu">@data3.Titulo</a></li>
+                                            }
+                                        }
+                                    </ul>
+                                }
+
+                            }
+                        }
+                    </li>
+                }
+            }*@
+
+
+
+        @*
+                                    <nav class="bodyMenu">
+                <a id="resp-menu" class="responsive-menu aMenu" href="#"><i class="fa fa-reorder"></i>Menu</a>
+                <ul class="menu">
+                            <li><a class="homer aMenu" href="#" style="color:#555555; text-transform: uppercase;"><i class="fa fa-home"></i> INICIO</a>
+                        <ul class="sub-menu">
+                            <li><a href="#" class="aMenu">Sub-Menu 1</a></li>
+                            <li><a href="#" class="aMenu">Sub-Menu 2</a></li>
+                            <li><a href="#" class="aMenu">Sub-Menu 3</a></li>
+                            <li><a href="#" class="aMenu">Sub-Menu 4</a></li>
+                            <li><a href="#" class="aMenu">Sub-Menu 5</a></li>
+                        </ul>
+                    </li>
+                   <li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-user"></i> ACERCA DE</a></li>
+                    <li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-camera"></i> PORTAFOLIO</a>
+                        <ul class="sub-menu">
+                            <li><a href="#" class="aMenu">Sub-Menu 1</a></li>
+                            <li><a href="#" class="aMenu">Sub-Menu 2</a>
+                                <ul>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 1</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 2</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 3</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 4</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 5</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="aMenu">Sub-Menu 3</a>
+                                <ul>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 1</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 2</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 3</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 4</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 5</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-bullhorn"></i> BLOG</a></li>
+                    <li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-tags"></i> CATEGORIAS</a>
+                        <ul class="sub-menu">
+                            <li><a href="#" class="aMenu">Sub-Menu 1</a></li>
+                            <li><a href="#" class="aMenu">Sub-Menu 2</a>
+                                <ul>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 1</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 2</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 3</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 4</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 5</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#" class="aMenu">Sub-Menu 3</a>
+                                <ul>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 1</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 2</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 3</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 4</a></li>
+                                    <li><a href="#" class="aMenu">Sub Sub-Menu 5</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-envelope"></i> CONTACTO</a></li>
+                    <li><a href="#" class="aMenu" text-transform: uppercase;><i class="fa fa-sitemap"></i> MAPA DEL SITIO</a></li>*
+                </ul>
+            </nav>*@
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var touch = $('#resp-menu');
+            var menu = $('.menu');
+
+            $(touch).on('click', function (e) {
+                e.preventDefault();
+                menu.slideToggle();
+            });
+
+            $(window).resize(function () {
+                var w = $(window).width();
+                if (w > 767 && menu.is(':hidden')) {
+                    menu.removeAttr('style');
+                }
+            });
+
+            ///var menu = $('.menu');
+            var contenedor = $('#menu-contenedor');
+            var menu = $('#menu-contenedor');
+            //var menu = $('#barra');
+            var menu_offset = menu.offset();
+            // Cada vez que se haga scroll en la página
+            // haremos un chequeo del estado del menú
+            // y lo vamos a alternar entre 'fixed' y 'static'.
+            $(window).on('scroll', function () {
+                if ($(window).scrollTop() > menu_offset.top) {
+                    menu.addClass('menu-fijo');
+                } else {
+                    menu.removeClass('menu-fijo');
+                }
+            });
+        });
+    </script>

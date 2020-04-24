@@ -1,0 +1,1115 @@
+﻿@{
+    ViewBag.Title = "ConformacionHogar";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+    string encuestaActiva = (string)ViewBag.EncuestaActiva;
+
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+
+
+
+<head>
+    <title>IGED Encuesta</title>
+    @* @Styles.Render("~/Content")*@
+
+    <style>
+        #tabs-min {
+            background: transparent;
+            border: none;
+        }
+
+            #tabs-min .ui-widget-header {
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid #c0c0c0;
+                -moz-border-radius: 0px;
+                -webkit-border-radius: 0px;
+                border-radius: 0px;
+            }
+
+            #tabs-min .ui-tabs-nav {
+                /*height: 2.95em;*/
+                height: 3.94em;
+                text-align: center;
+            }
+
+                #tabs-min .ui-tabs-nav li {
+                    display: inline-block;
+                    float: none;
+                    /*top: 1px;*/
+                    top: 4px;
+                    margin: 0em;
+                    /*padding-bottom: 6px;*/
+                    padding-bottom: 12px;
+                }
+
+                #tabs-min .ui-tabs-nav .ui-state-default {
+                    background: transparent;
+                    border: none;
+                }
+
+                #tabs-min .ui-tabs-nav .ui-state-active {
+                    background: transparent url('@Url.Content("~/Content/Icons/uiTabsArrow.png")') no-repeat top 1.8em center;
+                    border: none;
+                }
+
+                #tabs-min .ui-tabs-nav .ui-state-default a {
+                    /*color: #c0c0c0;*/
+                    color: #7A6F6F;
+                    /*background-color:lightgray;*/
+                    background: white url('@Url.Content("~/Content/Imagenes/f00c7bff.png")') repeat; /*#964b4b*/
+                }
+
+                #tabs-min .ui-tabs-nav .ui-state-active a {
+                    /*color: #459e00;*/
+                    /*color: #610B0B;*/
+                    color: white;
+                    /*background-color:#B40404;*/
+                    /*background-color:#B40404;*/
+                    /*background: #c22929;
+    background-image: -webkit-linear-gradient(top, #c22929, #c72525);
+    background-image: -moz-linear-gradient(top, #c22929, #c72525);
+    background-image: -ms-linear-gradient(top, #c22929, #c72525);
+    background-image: -o-linear-gradient(top, #c22929, #c72525);
+    background-image: linear-gradient(to bottom, #c22929, #c72525);*/
+                    background: white url('@Url.Content("~/Content/Imagenes/ed878c0d.png")') repeat; /*#964b4b*/
+                }
+
+        .grid-view-pgr a {
+            color: #fff;
+        }
+
+        .etiqueta {
+            font-family: 'Roboto',sans-serif;
+            /*font-size: 1.2em;*/
+            font-size: 11px;
+            text-align: left;
+            width: 90px;
+            padding: 6px;
+            text-transform: uppercase;
+        }
+
+        .fondo {
+            background: white url('@Url.Content("~/Content/Imagenes/pattern-6dzp.png")') repeat;
+            /*border: 1px solid #ccc;*/
+            border-radius: 5px;
+        }
+
+        .fondo2 {
+            background: white url('@Url.Content("~/Content/Imagenes/crossword.png")') repeat;
+            /*border: 1px solid #ccc;*/
+            border-radius: 5px;
+        }
+
+        
+
+    </style>
+    <script>
+        consPersona = "";
+    </script>
+</head>
+
+
+<body>
+    @*    @Html.Partial("_DialogPopup")*@
+
+       <form id="formulario" class="validateDontSubmit">
+        <br />
+        <input type="submit" class="submit" style="display: none;">
+        <div class="centrarDiv " id="contenedor">
+            <table class="marcoFormulario  efecto2 efecto1" style="width: 1010px; margin-top: 20px;">
+                <tr>
+                    <td>
+                        <h5>IGED ENCUESTA</h5>
+                        <h5 style="font-family: 'Century Gothic'; font-size: 17px; font-weight: 500">CONFORMACIÓN DEL HOGAR</h5>
+                        @*        <br />*@
+                        <br />
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="fondo">
+                        <div id="tabs-min" style="display: block; border: 1px solid #ccc; /*padding: 10px; */ border-radius: 5px;">
+                            <ul @*style="background-color:white;     border: 1px solid #ccc;    border-radius: 5px;"*@>
+                                <li id="tabIncluida"><a href="#panelBusqueda" style="font-family: 'Century Gothic'; font-size: 12px; border: 1px solid #ccc; border-radius: 15px;">VÍCTIMA</a></li>
+                                <li id="tabNoIncluida" style="display: none;"><a href="#panelNoIncluida" style="font-family: 'Century Gothic'; font-size: 12px; border: 1px solid #ccc; border-radius: 15px;">VICTIMA NO INCLUIDA</a></li>
+                            </ul>
+                            
+
+                               
+                                    
+                                    <div id="panelBusqueda" style="display: block; /*border: 1px solid #ccc; padding: 10px; border-radius: 5px; */" align="center" class="bordesDiv2">
+                                        <table>
+                                            <tr>
+                                                <td align="center">
+
+                                                    <table id="tablaBusqueda" style="border-color: black;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td style="width: 20%; text-align: left;">
+                                                                            @*Html.DropDownList("OpcionBusqueda", ViewBag.Opciones as List<SelectListItem>, new { id = "opcionBusqueda", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;", maxlength = "30" })*@
+                                                                            @Html.DropDownList("OpcionBusqueda", TempData["Opciones"] as List<SelectListItem>, new { id = "opcionBusqueda", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;", maxlength = "30" })
+                                                                        </td>
+                                                                        <td style="width: 70%; text-align: left;">
+                                                                            <div id="divBuscarDoc" style="display: block">
+
+                                                                                @*@Html.TextBox("txtNumDoc", "", new { required = "required", maxlength = 20, style = "width:180px;font-size:12px;text-transform:uppercase;font-family:Roboto;", type="text", placeholder = "Número de Documento", @class = "NumDoc" })*@
+                                                                                <input id="txtNumDoc" name="txtNumDoc" required style="width: 180px; font-size: 12px; text-transform: uppercase; font-family: Roboto;" type="text" placeholder="Número de Documento" class="NumDoc" @*oninvalid="setCustomValidity('Probando para cambiar mensaje de xxxx')"*@ @* oninput="setCustomValidity('validando')"*@ />
+
+                                                                            </div>
+                                                                            @*82BC30*@
+                                                                            <div id="divBuscarNombres" style="display: none;">
+                                                                                @*   @Html.TextBox("txtPrimerNombre", "", new { maxlength = 20, style = "width:115px;border:2px solid #B0B5AA;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "Primer Nombre", @class = "" })
+                                                        @Html.TextBox("txt.SegundoNombre", "", new { maxlength = 20, style = "width:115px;border:2px solid #B0B5AA;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "Segundo Nombre", @class = "" })
+                                                        @Html.TextBox("txt.PrimerApellido", "", new { maxlength = 20, style = "width:115px;border:2px solid #B0B5AA;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "Primer Apellido", @class = "" })
+                                                        @Html.TextBox("txt.SegundoApellido", "", new { maxlength = 20, style = "width:115px;border:2px solid #B0B5AA;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "Segundo Apellido", @class = "" })*@
+                                                                            </div>
+                                                                        </td>
+                                                                        <td style="width: 10%; text-align: left;">
+
+                                                                            <input type="submit" value="Buscar Víctima" name="btnBuscarVictima" id="btnBuscarVictima" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />
+
+                                                                        </td>                                                                       
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                </td>
+                                            </tr>
+                                            <tr id="filaGridMaestro" style="display: none">
+                                                <td style="text-align: center;">
+                                                    <div id="maestroVictimas">
+                                                    </div>
+                                                    <br />
+                                                    
+                                                    <input type="button" value="Agregar Víctima No Incluida" id="btnAgregarVictimaNoIncluida" style="margin: auto; height: 30px; padding: 3px; width: 200px; font-family: Roboto;" />
+                                                    &nbsp;
+                                                    
+                                                    <div>
+                                                        &nbsp;
+                                                        &nbsp;
+                                                        <h2>FUENTES</h2>
+                                                    </div>
+                                                    <div id="fuentePersonas">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align: center;">
+                                                    <div id="CargandoDatosMaestro" style="display: none;">
+                                                        <img alt="" src="@Url.Content("~/Content/Imagenes/ajax-loader.gif")" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                             
+                            <div id="panelNoIncluida" align="center">
+                                <table width="80%">
+                                    <tr>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Tipo Documento:</label>
+                                        </td>
+                                        <td>
+                                            <div class="select">
+                                                <span class="caret"></span>
+                                                @Html.DropDownList("TiposDoc", ViewBag.TiposDoc as List<SelectListItem>, new { id = "ddlTipoDocumento", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;width: 194px;", maxlength = "30" })
+                                                @*Html.DropDownList("TiposDoc", HttpContext.Current.Session["TiposDoc"] as List<SelectListItem>, new { id = "ddlTipoDocumento", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;width: 194px;", maxlength = "30" })*@
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Documento:</label>
+                                        </td>
+                                        <td>
+                                            @Html.TextBox("txtNumDoc2", "", new { required = "required", maxlength = 20, style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "NumDoc requerido", id = "txtNumDoc2", disabled = "disabled" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Primer Nombre:</label>
+                                        </td>
+                                        <td>
+                                            @Html.TextBox("txtPrimerNombre2", "", new { maxlength = 20, style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "soloLetras requerido", pattern = @"^[^\s][a-zA-ZñÑ ]+", id = "txtPrimerNombre2" })
+                                        </td>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Segundo Nombre:</label>
+                                        </td>
+                                        <td>
+                                            @Html.TextBox("txtSegundoNombre2", "", new { maxlength = 20, style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "soloLetras", pattern = @"^[^\s][a-zA-ZñÑ ]+", id = "txtSegundoNombre2" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Primer Apellido:</label>
+                                        </td>
+                                        <td>
+                                            @Html.TextBox("txtPrimerApellido2", "", new { maxlength = 20, style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "soloLetras requerido", pattern = @"^[^\s][a-zA-ZñÑ ]+", id = "txtPrimerApellido2" })
+                                        </td>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Segundo Apellido:</label>
+                                        </td>
+                                        <td>
+                                            @Html.TextBox("txtSegundoApellido2", "", new { maxlength = 20, style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "soloLetras", pattern = @"^[^\s][a-zA-ZñÑ ]+", id = "txtSegundoApellido2" })
+                                        </td>                                        
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">Fecha Nacimiento:</label>
+                                        </td>
+                                        <td>
+                                            @Html.TextBox("txtFechaNacimiento2", "", new {Type = "date",   style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "requerido", pattern = @"^[\d{1,2}/\d{1,2}/\d{4}\s]*$", id = "txtFechaNacimiento2" })</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center">
+                                            <br />
+                                            <input type="submit" value="Agregar Víctima" id="btnAgregarVictimaNI" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />
+                                        </td>
+                                    </tr>
+                                    
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fondo">
+                        <div id="panelHogar" style="display: none; padding: 10px; /*border: 1px solid #ccc; border-radius: 5px; */" align="center" class="bordesDiv2">
+                            <table>
+                                <tr id="filaGridHogar" style="display: block">
+                                    <td style="text-align: center;">
+                                        <h5 style="font-size: 14px; font-family: 'Roboto';">ESTRUCTURA PRELIMINAR DEL HOGAR</h5>
+                                        <div id="maestroHogar">
+                                        </div>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <div id="CargandoDatosHogar" style="display: none;">
+                                            <img alt="" src="@Url.Content("~/Content/Imagenes/ajax-loader.gif")" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        @*                    <div id="panelGrupo" style="display: none; padding: 10px; /*border: 1px solid #ccc; border-radius: 5px; */" align="center" class="bordesDiv2">
+                        <table>
+                            <tr id="filaGridGrupo" style="display: block">
+                                <td style="text-align: center;">
+                                    <h5 style="font-size: 14px; font-family: 'Roboto';">GRUPO FAMILIAR DE LA VICTIMA</h5>
+                                    <div id="maestroGrupo">
+                                    </div>
+                                    <br />
+                                        <input type="button" value="Volver" id="btnVolverHogar" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <div id="CargandoDatosHogar2" style="display: none;">
+                                        <img alt="" src="~/Content/Imagenes/ajax-loader.gif" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>*@
+                    </td>
+                </tr>
+                <tr id="filaHechos" style="display: none">
+                    <td>
+                        <br />
+                        <input type="button" value="Volver a panel de busqueda" id="btnVolver" name="" style="margin: auto; height: 30px; padding: 3px; width: 250px; font-family: 'Roboto',sans-serif;" />
+                        <br />
+                        <br />
+                        <div id="ajaxDiv">
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div id="CargandoDatos" style="display: none;">
+                            <img alt="" src="@Url.Content("~/Content/Imagenes/ajax-loader.gif")" />
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </form>
+
+    <div id="dialogConformacionHogar" style="display: none;">
+        <br />
+    </div>
+
+
+
+
+
+    @if (ViewBag.CerrarVentana)
+    {
+        <script type="text/javascript">
+            window.close();
+        </script>  
+    }
+
+    <!--
+//JOSE VASQUEZ  FECHA:18.NOV.2015
+//MODIFICACION: LOGICA DE ENCUESTA ACTIVA, PARA PRESENTAR DIALOGO Y CONTINUAR RUTA DE ENCUESTA O ABANDONARLA
+!-->
+    <input type="hidden" name="HID_encuestaActiva" id="HID_encuestaActiva"  value="@encuestaActiva">
+
+    <div id="encuestaAbierta" style="display: none">
+        <table>
+            <tr>
+                <td>Usted tiene la encuesta <b>
+                    <label>@encuestaActiva</label></b> activa, por favor continúe con su diligenciamiento. 
+                <br>
+                    Si desea iniciar una nueva encuesta finalícela o abandónela indicando la respectiva causa.
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <!--
+//JOSE VASQUEZ  FECHA:18.NOV.2015
+//FIN MODIFICACION
+!-->
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    //   $(document).ready(function () {
+    var rbClick = false;
+    var idChequeados = "";
+    var opcionDialogo = 0;
+    var opcionAjax = 0;
+    var $myForm = $('#formulario');
+    var selectedIndocumentado = false; //jose vasquez 29.10.2015
+
+    $(document).ready(function () {
+        // $('#txtNumDoc').setCustomValidity("Dude '" + input.value + "' is not a valid email. Enter something nice!!");
+        var $elem = $("#txtNumDoc");
+        //$elem.setCustomValidity("This email already exists.");
+        //$('input').each(function () {
+        //    this.setCustomValidity("This email already existsdffdfd.");
+        //});
+        //document.getElementById("txtNumDoc").setCustomValidity("Probando para cambiar mensaje de requerido");
+        //$("#txtNumDoc").validationMessage();
+        //$("#formulario").validate();
+        //$("#formulario").removeAttr("novalidate");
+
+        //JOSE VASQUEZ  FECHA:18.NOV.2015
+        //MODIFICACION: LOGICA DE ENCUESTA ACTIVA, PARA PRESENTAR DIALOGO Y CONTINUAR RUTA DE ENCUESTA O ABANDONARLA
+        if ($.trim($('#HID_encuestaActiva').val()) != '') {
+            $("#encuestaAbierta").dialog('open');
+        }
+        //FIN MODIFICACION  FECHA:18.NOV.2015
+
+    });
+
+    //JOSE VASQUEZ  FECHA:18.NOV.2015
+    //MODIFICACION: LOGICA DE ENCUESTA ACTIVA, PARA PRESENTAR DIALOGO Y CONTINUAR RUTA DE ENCUESTA O ABANDONARLA
+    $("#encuestaAbierta").dialog({
+        autoOpen: false,
+        resizable: false,
+        //height: 400,
+        width: 550,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: false,
+        dialogClass: 'dialog',
+        hide: 'explode',
+        buttons: {
+            "Continuar": function () {
+                Accion_EncuestaAbierta_Continuar();
+                $(this).dialog("close");
+            }
+        }
+
+    });
+
+    function Accion_EncuestaAbierta_Continuar() {
+
+        window.location.href = '@Url.Action("Encuesta", "Encuesta")?codigoHogar=' + $("#HID_encuestaActiva").val();
+    }
+
+    //FIN MODIFICACION  FECHA:18.NOV.2015
+
+
+    //MODIFICACION PARA QUE CUANDO SE EL DE CIKC A UN HREF, LA PAGINA NO PIERDA FOCO
+    $(document).on('click', 'a[href^="#"]', function (e) {
+        e.preventDefault();
+        return false;
+
+    })
+
+    $('#txtNumDoc').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            $('input[name = btnBuscarVictima]').click();
+            return false;
+        }
+    });
+
+    $(document).on('submit', '.validateDontSubmit', function (e) {
+
+        //prevent the form from doing a submit
+        // alert('entro1');
+        event.preventDefault();
+        return false;
+
+    });
+
+    //JOSE VASQUEZ  FECHA:29.10.2015
+    //MODIFICACION: CONTROL DE LA SELECCION EN EL COMBO DE DOCUMENTOS
+    //SE DEBE BORRAR EL DOCUMENTO CUANDO SE SELECCIONA  'INDOCUMENTADO'
+    //Y VOLVER EL VALOR DEL DOCUMENTO CUANDO SE SELECCIONA OTRO ITEM DEL COMBO DE DOCUMENTOS
+    $('#ddlTipoDocumento').click(function () {
+        var DocumentoSeleccionado = $('#ddlTipoDocumento  option:selected').val();
+        if (DocumentoSeleccionado == 'INDOCUMENTADO') {
+            valorNumdoc = $("#txtNumDoc").val();
+            $("#txtNumDoc2").val('');
+            selectedIndocumentado = true;
+        }
+        if (selectedIndocumentado && DocumentoSeleccionado != 'INDOCUMENTADO') {
+            $("#txtNumDoc2").val($("#txtNumDoc").val());
+        }
+
+    });
+    //FIN JOSE VASQUEZ  FECHA:29.10.2015
+
+    $(function () {
+        $("#tabs-min").tabs();
+    });
+
+    function estadoChk(chk) {
+        rbClick = true;
+        //   alert(chk.id);
+        // chkMaestro = 'SI';
+        $.ajax({
+            data: { isChecked: chk.checked, id: chk.id },
+            dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa html
+            url: '@Url.Action("SelectVictima", "ConformacionHogar")',
+
+            success: function (result) { // Variable return contains the data we get from serverside
+                idChequeados = result;
+            }
+        });
+    }
+
+
+
+    $(document).ajaxStop(function () {
+        if (opcionAjax == 1) {
+            var total = $('#totalConsulta').val();
+            //  alert(total);
+            if (total == '0') {
+                $('#filaGridMaestro').hide('slow');
+                $("#CargandoDatosMaestro").hide();
+                //alert('No se encontraron registros con el criterio de busqueda suministrado.');
+                mostrarDialogoHogar('No se encontraron registros con el criterio de busqueda suministrado.<br/>¿Desea agregar una víctima no incluida?');
+            }
+            else {
+                $("#CargandoDatosMaestro").hide();
+                //$('#maestroVictimas').show();
+                //$("#btnAgregarVictima").show();
+                $("#filaGridMaestro").show('slow');
+            }
+
+            document.body.style.cursor = "default";
+        }
+        else if (opcionAjax == 2) {
+            $('#filaGridMaestro').hide('slow');
+        }
+        opcionAjax = 0;
+    });
+
+    $(document).ajaxStart(function () {
+        // if (!rbClick) {
+        //     $("#CargandoDatosMaestro").show();
+        //  $("#filaGridMaestro").hide('slow');
+
+        //  }
+        if (opcionAjax == 1) {
+            $('#filaGridMaestro').hide();
+            $("#CargandoDatosMaestro").show();
+        }
+    });
+
+
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace
+    $(function () {
+        $(".NumDoc").bind("keypress", function (e) {
+            //  if (this.className == "numerico") {
+            var keyCode = e.which ? e.which : e.keyCode
+            var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || specialKeys.indexOf(keyCode) != -1);
+            $(".error").css("display", ret ? "none" : "inline");
+            return ret;
+            $(".numeric").bind("paste", function (e) {
+                return false;
+            });
+            $(".numeric").bind("drop", function (e) {
+                return false;
+            });
+            //  }
+        });
+    });
+
+    $('#tabIncluida').click(function () {
+        $("#tabNoIncluida").hide('slow');
+
+    });
+
+    $('#btnAgregarVictimaNoIncluida').click(function () {
+        $("#tabNoIncluida").show('slow');
+        $("#tabs-min").tabs({ active: 1 });
+        $("#txtNumDoc2").val($("#txtNumDoc").val());
+        //CAMBIO JOSE VASQUEZ  FECHA: 11.NOV.2015
+        $("#ddlTipoDocumento").val("CC");
+        //FIN CAMBIO JOSE VASQUEZ
+
+    });
+
+
+
+    $('#btnBuscarVictima').click(function () {
+        // alert($("form")[0].id);
+
+        //   alert($("form")[0].checkValidity().toString());
+        if ($('#txtNumDoc')[0].checkValidity()) {
+            //var $theForm = $('#myForm')
+
+            //if ($("form")[0].checkValidity()) {
+            //  alert($('#txtNumDoc').val().trim());
+            var valBusqueda = '';
+            var varOpcion = $('#opcionBusqueda option:selected ').text();
+            var msj = 'Escriba por favor el criterio de busqueda para realizar la consulta.';
+            var className = $("#txtNumDoc").attr('class');
+            var VictimaSeleccionada = '';  //se selecciono una victima para formar el hogar - JVASQUEZ 29.10.2015
+            //$('#maestroVictimas').hide();
+            //$("#btnAgregarVictima").hide();
+            //$('#filaGridMaestro').hide('slow');
+
+            //JAIME ANDRES LOBATON  - SE AGREGA PARA  VALIDAR CAMPO REQUERIDOS VICTIMA NO INCLUIDA
+            $('#txtPrimerApellido2').prop("required", false);
+            $('#txtPrimerNombre2').prop("required", false);
+            $('#txtPrimerNombre2').prop("required", false);
+
+            busquedaVictima = 'SI';
+            rbClick = false;
+            opcionAjax = 1;
+
+            if (varOpcion == 'NOMBRES Y APELLIDOS') {
+                if (($('#PrimerNombre').val().trim() != '' || $('#SegundoNombre').val().trim() != '') && ($('#PrimerApellido').val().trim() != '' || $('#SegundoApellido').val().trim() != '')) {
+                    valBusqueda = $('#PrimerNombre').val().trim() + '|' + $('#SegundoNombre').val().trim() + '|' + $('#PrimerApellido').val().trim() + '|' + $('#SegundoApellido').val().trim();
+                }
+                else {
+                    msj = 'Escriba al menos un nombre y un apellido para realizar la busqueda.'
+                }
+            }
+            else
+                valBusqueda = $("#txtNumDoc").val().trim();
+
+            //  alert(valBusqueda);
+
+            if (valBusqueda != '' && ((className == 'numerico' && !isNaN(valBusqueda)) || className != 'numerico')) {
+                //  var div = $('#ajaxDiv');
+                var divMaestroVictimas = $('#maestroVictimas');
+
+                document.body.style.cursor = "wait";
+                //if (busquedaMaestro != 'SI')
+                //    $('#CargandoDatos').css("display", "block");
+                //else
+                //    $('#CargandoDatosMaestro').css("display", "block");
+
+                $('#fuentePersonas').html('');
+                $.ajax(
+                     {
+                         data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                         dataType: 'html',
+                         url: '@Url.Action("cargarFuentePersona", "ConformacionHogar")',
+                         success: function (result) {
+                             $('#fuentePersonas').append(result);
+                             $('#fuentePersonas').show();
+                         },
+                         error: function (xhr, textStatus, errorThrown) {
+                             alert("ha ocurrido un error al consultar las bases");
+                         }
+                     })
+
+                document.getElementById("maestroVictimas").innerHTML = "";
+                //someStringValue = 'SI';
+                idChequeados = '';
+                // alert(valBusqueda);
+                $.ajax(
+                     {
+                         data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                         dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                         url: '@Url.Action("cargarMaestroVictima", "ConformacionHogar")',
+                         //URL del action result que cargara la vista parcial
+                         success: function (result) {
+                             //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+                             divMaestroVictimas.append(result);
+                             //JOSE VASQUEZ - 29.10.2015
+                             //YA HAY UNA VICTIMA SELECCIONADA DEBE PRESENTARSE LA GRILLA DE CONFORMACION DE HOGAR
+                             VictimaSeleccionada = $('#ExisteVictimaSeleccionada').val();
+                             if (VictimaSeleccionada == 'SI') {
+                                 $('#maestroHogar').show('slow');
+                             }
+                             //FIN JOSE VASQUEZ - 29.10.2015
+                         },
+                         error: function (xhr, textStatus, errorThrown) {
+
+                         }
+                    });
+
+
+                 }
+                 else {
+                //    if (isNaN(valBusqueda)) msj = 'El valor de busqueda debe ser numérico.';
+                //    $('#filaGridMaestro').hide('slow');
+                //   alert(msj);
+                 }
+             }
+             else {
+            //$('#txtNumDoc').setCustomValidity("PLZ CREATE A USERNAME, YO!");
+            //   alert('entro2');
+            //   $myForm.find(':submit').click();
+            // $("#formulario").submit();
+            //   $('#formulario .submit').click();
+            //  $('#formulario').submit();
+            //      return false;
+            //  return;
+             }
+    });
+
+
+
+         //function check(input) {
+         //    alert('entro');
+         //    if (input.validity.typeMismatch) {
+         //        input.setCustomValidity("Dude '" + input.value + "' is not a valid email. Enter something nice!!");
+         //    }
+         //    else {
+         //        input.setCustomValidity("");
+         //    }
+         //}
+
+         $('#opcionBusqueda').change(function () {
+             var varOpcion = $('#opcionBusqueda option:selected ').text();
+             $('#filaGridMaestro').hide('slow');
+
+             if (varOpcion == 'NOMBRES Y APELLIDOS') {
+                 $('#divBuscarDoc').css("display", "none");
+                 $('#divBuscarNombres').css("display", "block");
+                 $('#tablaBusqueda').css("width", "100%");
+                 $("#PrimerNombre").val("");
+                 $("#SegundoNombre").val("");
+                 $("#PrimerApellido").val("");
+                 $("#SegundoApellido").val("");
+                 $("#PrimerNombre").focus();
+             }
+             else {
+                 $('#divBuscarDoc').css("display", "block");
+                 $('#divBuscarNombres').css("display", "none");
+                 $('#tablaBusqueda').css("width", "45%");
+                 $("#txtNumDoc").val("");
+                 $("#txtNumDoc").focus();
+             }
+
+             switch (varOpcion) {
+                 case 'DOCUMENTO':
+                     $("#txtNumDoc").attr("placeholder", "Número de Documento").blur();
+                     $("#txtNumDoc").removeAttr('class');
+                     break;
+                 case 'NOMBRES Y APELLIDOS':
+                     break;
+             }
+
+
+         });
+
+         //$('#btnAgregarVictima').click(function () {
+
+
+         $('#btnAgregarVictimaNI').click(function () {
+
+             if ($('#txtPrimerNombre2')[0].checkValidity() && $('#txtPrimerApellido2')[0].checkValidity() && $('#txtFechaNacimiento2')[0].checkValidity()) {
+                 // Valida que se hayan diligenciado los campos requeridos
+                 //var camposValidos = true;
+                 //var foco = false;
+                 //$('.requerido').each(function () {
+                 //    // alert($(this).val());
+                 //    if ($(this).val().trim() == "") {
+                 //        camposValidos = false;
+                 //        $(this).val('');
+                 //        if (!foco) {
+                 //            $(this).focus();
+                 //            foco = true;
+                 //        }
+                 //    }
+                 //});
+
+                 //if (!camposValidos) {
+                 //    alert("Por favor diligencie todos los campos requeridos antes de continuar.");
+                 //    return;
+                 //}
+
+                 var existe = false;
+                 var doc = $('#txtNumDoc2').val().toString().trim().toUpperCase();
+                 // alert(doc);
+                 if (doc != '')
+                     //+ '-' + integranteGrupo.length
+                 {
+                     integranteGrupo = $("." + doc.substring(doc.indexOf('|') + 1));
+                     if (integranteGrupo.length) existe = true;
+                 }
+
+                 if (existe) {
+                     opcionDialogo = 3;
+                     window.confirm('El número de documento <b>' + doc.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar. ¿Esta seguro de incluir esta persona?');
+                     //alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
+                     // $('#txtNumDoc').val('');
+                     // $('#filaGridMaestro').hide('slow');
+                     return;
+                 }
+                 else agregarVictimaNIHogar();
+                 //  id = idChequeados.toString().trim();
+
+                 //  if (id != '')
+                 //      //+ '-' + integranteGrupo.length
+                 //  {
+                 //      integranteGrupo = $("." + id.substring(id.indexOf('|') + 1));
+                 //     if (integranteGrupo.length) existe = true;
+                 //  }
+
+                 //if (existe) {
+                 //    alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
+                 //    $('#txtNumDoc').val('');
+                 //    $('#filaGridMaestro').hide('slow');
+                 //    return;
+                 //}
+
+                 //    if (idChequeados != '') {
+
+
+                 //}
+                 //else
+                 //    alert('Seleccione al menos una persona para agregarla al hogar.');
+             }
+             //  else
+             //     alert('entroooo');
+         });
+
+
+
+         function agregarVictimaNIHogar() {
+             //JOSE VASQUEZ  FECHA:03.11.2015
+             //MODIFICACION: CARGA TIPO DE DOCUMENTO NOMBRE CORTO.
+             var datos = $('#ddlTipoDocumento  option:selected').text().toString().trim().toUpperCase() + '|' + $('#txtNumDoc2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtFechaNacimiento2').val().toString().trim().toUpperCase();
+             //  alert($('#txtNumDoc').val().toString().trim())
+             document.getElementById("maestroHogar").innerHTML = "";
+             var div = $('#maestroHogar');
+             $('#txtPrimerApellido2').prop("required", false);             
+
+             $.ajax(
+                  {
+                      type: 'POST',
+                      data: { datosVictima: datos },
+                      dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                      url: '@Url.Action("agregarVictimaNoIncluida", "ConformacionHogar")',
+                      //URL del action result que cargara la vista parcial
+                      success: function (result) {
+                          //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+
+
+                          if ($('#panelHogar').css('display') == 'none') $('#panelHogar').show('slow');
+                          $('#txtNumDoc2').val('');
+                          $('#txtPrimerNombre2').val('');
+                          $('#txtSegundoNombre2').val('');
+                          $('#txtPrimerApellido2').val('');
+                          $('#txtSegundoApellido2').val('');
+                          $('#txtFechaNacimiento2').val('');
+                          //                           $('#filaGridMaestro').hide('slow');
+                          $("#tabNoIncluida").hide('slow');
+                          $("#tabs-min").tabs({ active: 0 });
+                          div.append(result);
+                      },
+                      error: function (error) {
+                          // si hay un error lanzara el mensaje de error
+                          // alert('Se presento un error para la persona con Id ' + id);
+                      }
+                  });
+              }
+
+              function enrutarOpcion() {
+                  switch (opcionDialogo) {
+                      case 1:
+                          //alert('opcion 1');
+                          excluirVictima();
+                          return false;
+                      case 2:
+                          agregarVictimaIHogar();
+                          // alert('opcion 2');
+                          return false;
+                      case 4:
+                          agregarVictimaIGF();
+                          // alert('opcion 2');
+                          return false;
+                      default:
+                          agregarVictimaNIHogar();
+                          //alert('opcion 3');
+                          return false;
+                  }
+              };
+              //});
+
+             
+
+             
+
+              var specialKeysSoloLetras = new Array();
+              specialKeysSoloLetras.push(8); //Backspace
+              specialKeysSoloLetras.push(32); //Space
+              specialKeysSoloLetras.push(164); //ñ
+              specialKeysSoloLetras.push(165); //Ñ
+              specialKeysSoloLetras.push(209); //ñ
+              specialKeysSoloLetras.push(241); //Ñ
+
+              $(".soloLetras").bind("keypress", function (e) {
+                  //  if (this.className == "numerico") {
+
+
+                  var keyCode = e.which ? e.which : e.keyCode;
+                  // alert(keyCode);
+                  var ret = ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || specialKeysSoloLetras.indexOf(keyCode) != -1);
+                  $(".error").css("display", ret ? "none" : "inline");
+                  return ret;
+                  $(".numeric").bind("paste", function (e) {
+                      return false;
+                  });
+                  $(".numeric").bind("drop", function (e) {
+                      return false;
+                  });
+                  //    }
+              });
+
+              $(".alpha-only").keyup(function () {
+                  if (this.value.match(/[^a-zA-Z]/g)) {
+                      this.value = this.value.replace(/[^a-zA-Z]/g, '');
+                  }
+              });
+
+
+              window.confirm = function (message) {
+
+                  $(document.createElement('div'))
+                      .attr({ 'class': 'dialog' })
+                      .html(message)
+                      .dialog({
+                          buttons: {
+                              OK: { id: 'Ok', text: 'Aceptar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); enrutarOpcion(); } },
+                              Cancel: { id: 'Cancel', text: 'Cancelar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); } },
+                              //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                          },
+                          close: function () { $(this).remove(); },
+                          resizable: false,
+                          height: 150,
+                          width: 400,
+                          show: { effect: 'drop', direction: "up" },
+                          modal: true,
+                          draggable: false,
+                          dialogClass: 'dialog butonAlert',
+                          hide: 'explode'
+                      });
+              };
+    function incluirVictima(obj) {
+
+        document.body.style.cursor = "wait";
+        $("#CargandoDatosMaestro").show();
+        var existe = false;
+        //id = idChequeados.toString().trim();
+        //id = $(this).attr('id');
+        id = obj.id;
+        //alert(id);
+        if (id != '')
+            //+ '-' + integranteGrupo.length
+        {
+            console.log('id diferente de vacio ' + id);
+            integranteGrupo = $("." + id.substring(id.indexOf('-') + 1));
+            if (integranteGrupo.length) existe = true;
+        }
+
+        if (existe) {
+            console.log('exite = verdadero');
+            // alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
+            opcionDialogo = 2;
+            window.confirm('El número de documento <b>' + id.substring(id.indexOf('-') + 1) + '</b> ya existe en la conformación del hogar. ¿Esta seguro de incluir esta persona?');
+            $('#txtNumDoc').val('');
+            //  $('#filaGridMaestro').hide('slow');
+            return;
+
+        }
+        else {
+            console.log('exite = falso');
+            agregarVictimaIHogar();
+        }
+            
+
+        //   if (windows.c)
+
+    };
+
+
+
+    function agregarVictimaIHogar() {
+
+        console.log('Entro al metodo agregarVictimaIHogar()');
+        // if (idChequeados != '') {
+        document.getElementById("maestroHogar").innerHTML = "";
+        var div = $('#maestroHogar');
+        var idVictima, idPersona, idVictimaTemp, modeloVictimas;
+
+        idVictimaTemp = id;
+        idVictima = id.substring(15);
+        idVictima = idVictima.replace("-", "|");
+        idPersona = $("#" + idVictimaTemp).prop("name");
+        modeloVictimas = $("#hdModelo").val();
+        //alert(idVictimaTemp);
+        opcionAjax = 2;
+        //     alert(idVictima);
+        //  alert('ss');
+        $.ajax(
+             {
+                 type: 'POST',
+                 data: { idVictima: idVictima, idPersona: idPersona, opcion: '1', modeloVictimas: modeloVictimas  },
+                 dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("actualizarMaestroHogar", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+                     if (result != null) {
+                         console.log('Resultado difernete de nul');
+                     } else {
+                         console.log('Resultado es nulo');
+                     }
+                     //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+                     console.log('Se ejecuto el ajax bien');
+                     //alert(consPersona);
+                     if ($('#panelHogar').css('display') == 'none') $('#panelHogar').show('slow');
+                     $('#txtNumDoc').val('');
+                     //$('#filaGridMaestro').hide('slow');
+                     //'@Url.Content("~/Content/Icons/check-3.png")';
+                     $('#imgIncluirMaestro_' + idVictima.substring(0, idVictima.indexOf('|'))).attr("src", "@Url.Content("~/Content/Icons/check-3.png")");
+                     //$('#imgIncluir_' + id).show(0);
+                     $('#incluirMaestro_' + idVictima.replace("|", "-")).off();
+                     $('#incluirMaestro_' + idVictima.replace("|", "-")).css('cursor', 'default');
+                     div.append(result);
+                     document.body.style.cursor = "default";
+                     $("#CargandoDatosMaestro").hide();
+
+                 },
+                 error: function (error) {
+                     // si hay un error lanzara el mensaje de error
+                     alert('Se presento un error para la persona con Id ' + id);
+                     document.body.style.cursor = "default";
+                     //  alert(error.responseText);
+                 }
+             });
+         }
+
+         function mostrarDialogoHogar(mensaje) {
+             $("#dialogConformacionHogar").html(mensaje);
+             $("#dialogConformacionHogar").dialog(
+                                     {
+                                         height: 160,
+                                         width: 450,
+                                         dialogClass: 'dialog butonAlert',
+                                         // html :mensaje,
+                                         show: { effect: 'drop', direction: "up" },
+                                         modal: true,
+                                         draggable: false,
+                                         hide: 'explode',
+                                         buttons: {
+                                             "Si": function () {
+                                                 $(this).dialog("close");
+                                                 busquedaRegistraduria($("#txtNumDoc").val());
+                                             },
+                                             "No": function () {
+                                                 $(this).dialog("close");
+                                             }
+                                         }
+                                     }
+             );
+         }
+
+         function validarRegistraduria() {
+         }
+
+         function busquedaRegistraduria(value) {
+             //$("#divBusqueda").hide('slow');
+             alert(value);
+             $.getJSON("@Url.Action("validacionRegistraduria")" + "/" + value, updateFields);
+    };
+
+    updateFields = function (data) {
+        /*
+         public string DOCUMENTO { get; set; }
+        public string NOMBRE1 { get; set; }
+        public string NOMBRE2 { get; set; }
+        public string APELLIDO1 { get; set; }
+        public string APELLIDO2 { get; set; }
+        */
+        console.log("DOC_ANTE4S_" + data.DOCUMENTO);
+        $("#tabNoIncluida").show('slow');
+        $("#tabs-min").tabs({ active: 1 });
+        if (data.DOCUMENTO != null) {
+
+            $("#txtNumDoc2").val(data.DOCUMENTO);
+            $('#txtFechaNacimiento2').val(data.F_NACIMIENTO);
+            $('#txtPrimerNombre2').val(data.NOMBRE1);
+            $("#txtPrimerApellido2").val(data.NOMBRE2);
+            $("#txtSegundoNombre2").val(data.APELLIDO1);
+            $("#txtSegundoApellido2").val(data.APELLIDO2);
+            $('#txtFechaNacimiento2').prop("disabled", true);
+            $('#txtPrimerApellido2').prop("disabled", true);
+            $('#txtPrimerNombre2').prop("disabled", true);
+            $('#txtSegundoNombre2').prop("disabled", true);
+            $('#txtSegundoApellido2').prop("disabled", true);
+            $('#txtPrimerApellido2').prop("required", false);
+            $('#txtPrimerNombre2').prop("required", false);
+        } else {
+            console.log("DOC_FALSO" + data.DOCUMENTO);
+            $("#txtNumDoc2").val($("#txtNumDoc").val());            
+            $('#txtPrimerApellido2').prop("disabled", false);
+            $('#txtPrimerNombre2').prop("disabled", false);
+            $('#txtSegundoNombre2').prop("disabled", false);
+            $('#txtSegundoApellido2').prop("disabled", false);
+            $('#txtPrimerApellido2').prop("required", true);
+            $('#txtPrimerNombre2').prop("required", true);
+            $('#txtFechaNacimiento2').prop("required", true);
+        }
+
+        // $("#Message").html(data.Message);
+    };
+</script>

@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Sesion Invalida";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/Jquery/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    @Html.Partial("_DialogPopup")
+    <br /><br /><br /><br /><br /><br /><br />
+
+    <div>
+        <img alt="" src="@Url.Content("~/Content/Imagenes/AccesoDenegado.png")"  style="margin:auto 0px"/>
+    </div>
+    <script type="text/javascript">
+        //window.close();
+    </script>  
+</body>
+

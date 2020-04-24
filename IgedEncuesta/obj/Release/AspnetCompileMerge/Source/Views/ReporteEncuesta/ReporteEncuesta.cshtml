@@ -1,0 +1,285 @@
+﻿@model IEnumerable<AdministracionInstrumentos.gic_ReporteMiembros>
+
+@{
+
+    ViewBag.Title = "Reporte";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+
+    var filaGrid = new AdministracionInstrumentos.gic_ReporteMiembros();
+    // Instanciamiento del helper webgrid
+    var grid = new WebGrid(Model, canPage: true, canSort: true, rowsPerPage: 10,
+    selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+    grid.Pager(WebGridPagerModes.NextPrevious);
+    //MIEMBROS DEL HOGAR, FECHA DE CREACION, ESTADO, COLILLA
+
+    string encuestaActiva = (string)ViewBag.EncuestaActiva;
+}
+
+<style>
+    .marcoGrid2 {
+        background-color: #905353;
+        border: 0px none;
+        padding: 2px 2px 2px 2px;
+        border-radius: 5px;
+        width: 1100px;
+    }
+</style>
+<!--
+<table width="80%">
+<tr>
+<td class="fondo">
+    <div style="padding: 10px; /*border: 1px solid #ccc; border-radius: 5px; */" align="center" class="bordesDiv2">
+    -->
+ <div class="centrarDiv"> 
+    <table class="marcoFormulario  efecto2 efecto1" style="width: 1010px;margin-top:20px;">
+        <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>PERSONAS ENCONTRADAS</h5>
+                    <br />
+                </td>
+        </tr>
+        <tr>
+            <td class="bordesDiv2 fondo">
+                <div id="gridContent" class="marcoGrid2">
+                    @grid.GetHtml(
+                        tableStyle: "grid-view",
+                        headerStyle: "grid-view-header",
+                        rowStyle: "grid-view-tr-normal",
+                        //selectedRowStyle: "select",
+                        alternatingRowStyle: "grid-view-tr-alternate",
+                        footerStyle: "grid-view-pgr",
+                        //caption:"Listado de Productos",
+                        columns: grid.Columns(
+                        grid.Column("Codigo", "CODIGO" , format: (item =>
+                        {
+                            if (item.estado == "ANULADA" || item.estado == "")
+                            {
+                                return Html.Raw(item.codigo);
+                            }
+                            else if (item.estado == "CERRADA")
+                            {
+                                //return Html.Raw(@Html.ActionLink((string)item.codigo, "DescargarEncuesta", "ReporteEncuesta", new { codigoHogar = item.codigo }, null));
+                                return Html.Raw("<a id='lnC_" + item.Codigo.ToString() + "'  onclick='encuestaCerrada(this)'   href='#'>" + item.Codigo.ToString() + "</a> ");
+                            }
+                            //if ((hogCodigo != "" && estado != "ACTIVA") || (hogCodigo != "" && hogCodigo != lblCodigoHogar.Text))
+                            else if ((item.estado != "ACTIVA" || item.estado != "APLAZADA") && (item.Codigo != encuestaActiva && encuestaActiva!=""))
+                            {
+                                return Html.Raw("<a id='lnA_" + item.Codigo.ToString() + "' onclick='encuestaAbierta(this)'    href='#'>" + item.Codigo.ToString() + "</a> ");
+                            }
+                            else
+                            {
+                                return Html.Raw(@Html.ActionLink((string)item.codigo, "Encuesta", "Encuesta", new { codigoHogar = item.codigo, tipo = "REPORTE" }, null));
+                            }
+
+                        }), canSort: false),
+                        //grid.Column("CODIGO", "CODIGO", canSort: false),
+                        grid.Column("miembrosHogar", "MIEMBROS", canSort: false),
+                        grid.Column("fechaCreacion", "FCH. CREACION", canSort: false),
+                        grid.Column("estado", "ESTADO", canSort: false),
+                        grid.Column("Soporte", "SOPORTE", format: (item =>
+                        {
+                            if (item.colilla == "" || item.colilla == null)
+                            {
+                                return Html.Raw("Sin Soporte Cargado");
+                            }
+                            else
+                            {
+                                return Html.Raw(@Html.ActionLink((string)"Ver Soporte", "DescargarSoporte", "ReporteEncuesta", new { ruta = @item.colilla, codigoHogar = item.codigo }, null));
+                            }
+
+                        }), canSort: false)
+
+                    ))
+                    
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><label class="etiqueta" style="font-size: 11px">Total Encuestas: </label> @grid.TotalRowCount.ToString()</td>
+        </tr>
+    </table>
+</div>
+<!-- 
+</td>
+</tr>
+</table>
+    -->
+
+<div id="generacionInforme" style="display: none">
+</div>
+
+<input id="codigoHogActivo" name="codigoHogActivo" type="hidden" value="@encuestaActiva" />
+
+<div id="encuestaCerrada" style="display: none">
+    @using (Html.BeginForm("informePdf", "Encuesta", FormMethod.Post, new { id="form"   }))
+    {
+<input id="codigoHog" name="hogCodigo" type="hidden" value="" />
+
+    <table>
+        <tr>
+            <td>La encuesta se encuentra '<b>CERRADA</b>'. ¿Desea generar un informe con las preguntas y respuestas diligenciadas?
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+    }
+</div>
+<div id="encuestaAbierta" style="display: none">
+
+    <table>
+        <tr>
+            <td>Usted tiene la encuesta <b>
+                <label>@encuestaActiva</label></b> activa.
+                <br>
+                Si desea editar la encuesta <b>
+                    <label id="lblCodHogar"></label>
+                </b>primero debe finalizar o abandonar la encuesta activa.
+                
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+
+</div>
+ <iframe id="iframe" style="display:none;"></iframe>
+<script type="text/javascript">
+    function encuestaCerrada(objeto) {
+         //alert("entro");
+         $("#encuestaCerrada").dialog('open');
+         var idObjeto = $(objeto).attr('id').split('_');
+         var cod = idObjeto[1];
+         console.log(cod);
+        $("#codigoHog").val(cod);
+        //alert($("#codigoHog").val());
+    }
+
+    function encuestaAbierta(objeto) {
+        // alert("entro");
+        $("#encuestaAbierta").dialog('open');
+        var idObjeto = $(objeto).attr('id').split('_');
+        var cod = idObjeto[1];
+        $("#codigoHog").val(cod);
+        var spanCodigo = "#lblCodHogar";
+        //var ingreso = "" + data;
+        $(spanCodigo).html($("#codigoHog").val());
+    }
+
+
+    $(document).ready(function () {
+        //alert(@encuestaActiva);
+        var codHot = "";
+        $('.linkCerrada').on('click', function () {
+            //alert("entro");
+            $("#encuestaCerrada").dialog('open');
+            var idObjeto = $(this).attr('id').split('_');
+            var cod = idObjeto[1];
+            codHot = cod;
+            $("#codigoHog").val(cod);
+            // alert($("#codigoHog").val());
+
+
+        });
+
+
+
+        $('.linkActiva').on('click', function () {
+            //alert("entro");
+            $("#encuestaAbierta").dialog('open');
+            var idObjeto = $(this).attr('id').split('_');
+            var cod = idObjeto[1];
+            $("#codigoHog").val(cod);
+            var spanCodigo = "#lblCodHogar";
+            //var ingreso = "" + data;
+            $(spanCodigo).html($("#codigoHog").val());
+
+        });
+
+
+        $("#encuestaAbierta").dialog({
+            autoOpen: false,
+            resizable: false,
+            //height: 400,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            buttons: {
+                "Cancelar": function () {
+                    $(this).dialog("close");
+                }
+
+            }
+
+        });
+
+        $("#encuestaCerrada").dialog({
+            autoOpen: false,
+            resizable: false,
+            //height: 400,
+            width: 550,
+            show: { effect: 'drop', direction: "up" },
+            modal: true,
+            draggable: false,
+            dialogClass: 'dialog',
+            hide: 'explode',
+            buttons: {
+                "Cancelar": function () {
+                    $(this).dialog("close");
+                },
+                "Generar": function () {
+                    $(this).dialog().find('form').submit();
+                   // generacionInforme(codHot);
+                    $(this).dialog("close");
+                }
+
+            }
+
+        });
+
+    });
+
+    function generacionInforme(pcodHOT) {
+
+        // alert("entro ge" + $('#codigoHog').val());
+        //MODIFICACION JOSE VASQUEZ FECHA: 2015.NOV.27
+        //SE CAMBIA LA CONSTANTE POR LA FUNCION DE .NET
+        //window.location = 'Encuesta/informePdf?hogCodigo=' + $('#codigoHog').val(); aaa
+        //var codigoHOT = $('#codigoHogActivo').val();
+        //window.location = 'url.Action("informePdf", "Encuesta", new { "hogCodigo=' + codigoHOT });
+        //        window.location ='@Url.Action("informePdf", "Encuesta")?hogCodigo=' + pcodHOT;
+
+        //window.location = '@Url.Action("informePdf", "Encuesta")?hogCodigo=' + pcodHOT;
+       @* $.ajax({
+            url: '@Url.Action("informePdf", "Encuesta")',
+            success: function (data) {
+                var blob = new Blob([data]);
+                console.log(blob);
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "Dossier_" + new Date() + ".pdf";
+                link.click();
+            }
+        });*@
+     @*   $.ajax({
+            type: "POST",
+            cache: false,
+            contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("informePdf", "Encuesta")',
+            data: "{ hogCodigo: " + pcodHOT + " }",
+            //data: { "idTema": idUsuario[1] },
+                success: function (result) {
+                    //   console.log(result);
+                  //  $('#CargueDinamico').html(result);
+
+
+                }
+        });*@
+
+    };
+
+</script>

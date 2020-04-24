@@ -1,0 +1,231 @@
+﻿@model  List<IgedEncuesta.Models.mdlConstancia.ConstanciaSAAH>
+@{
+    ViewBag.Title = "ConstanciaSAAH";
+    Layout = null;
+}
+
+<style>
+
+    h2 {
+        
+        text-align: center;                
+        line-height: 100px;
+    }
+
+    .tabla {
+        border: 1px solid black;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+</style>
+
+<h2>CONSTANCIA DE FORMULACIÓN ENTREVISTA DE CARACTERIZACIÓN ASISTENCIA</h2>
+
+
+<p style="text-align:justify; color:black">
+    En cumplimiento del principio de participación conjunta y participación activa de las víctimas y
+    con el ánimo de “actualizar su  información social, económica y demográfica”, verificar las necesidades en medidas de asistencia,
+    la Unidad para las Víctimas a través de la Dirección de Gestión Social y Humanitaria formuló conjuntamente con: @Model[0].PRIMER_NOMBRE 
+    @Model[0].SEGUNDO_NOMBRE  
+    @Model[0].PRIMER_APELLIDO  
+    @Model[0].SEGUNDO_APELLIDO,
+    identificado (a) con documento de identidad @Model[0].TIPO_DOC @Model[0].NUMERO_DOC, Entrevista de caracterización: @Model[0].COD_HOGAR como @Model[0].TIPO_PERSONA de su hogar
+    y por lo tanto como representante de las personas que se relacionan a continuación.
+</p>
+
+<table >
+    <tr>
+        <td  style="text-align: left">
+            Departamento de Atención:
+        </td>
+        <td style="text-align: left">
+            @Model[0].DEPTO_ATENCION
+        </td>
+        <td style="text-align: left">
+            Punto de Atención:
+        </td>
+        <td style="text-align: left">
+            @Model[0].PUNTO_ATENCION
+        </td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">
+            Municipio de Atención:
+        </td>
+        <td style="text-align: left">
+            @Model[0].MUN_ATENCION
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">
+            Fecha de Atención:
+        </td>
+        <td style="text-align: left">
+            @Model[0].FECHA_ATENCION
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td style="text-align: left">
+            Departamento de residencia:
+        </td>
+        <td style="text-align: left">
+            @Model[0].DEPTO_RESIDENCIA
+        </td>
+        <td style="text-align: left">
+            Municipio de Residencia:
+        </td>
+        <td style="text-align: left">
+            @Model[0].MUN_RESIDENCIA
+        </td>
+    </tr>
+</table>
+
+<h2>CONFORMACIÓN HOGAR ENTREVISTA DE CARACTERIZACIÓN</h2>
+
+<div>
+    <table style="margin: 0 auto;" border="1">
+        <tr style="color:white; background-color:#3380FF; text-align: center ">
+            <td>NOMBRES Y APELLIDOS</td>
+            <td>TIPO DOCUMENTO IDENTIDAD</td>
+            <td>NÚMERO DOCUMENTO IDENTIDAD</td>
+            <td>ESTADO HOGAR</td>
+            <td>INCLUIDO EN EL RUV</td>
+            <td>HECHO VICTIMIZANTE</td>
+        </tr>
+
+        @{ foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.PRIMER_NOMBRE @item.SEGUNDO_NOMBRE @item.PRIMER_APELLIDO @item.SEGUNDO_APELLIDO</td>
+                    <td>@item.TIPO_DOC</td>
+                    <td>@item.NUMERO_DOC</td>
+                    <td>@item.ESTADO_ENCUESTA</td>
+                    <td>@item.ESTADO_RUV</td>
+                    <td>
+                        @item.HECHO_VICTIMIZANTE_1  @item.HECHO_VICTIMIZANTE_2  @item.HECHO_VICTIMIZANTE_3  @item.HECHO_VICTIMIZANTE_4  @item.HECHO_VICTIMIZANTE_5
+                        @item.HECHO_VICTIMIZANTE_6  @item.HECHO_VICTIMIZANTE_7  @item.HECHO_VICTIMIZANTE_8  @item.HECHO_VICTIMIZANTE_9  @item.HECHO_VICTIMIZANTE_10
+                        @item.HECHO_VICTIMIZANTE_11 @item.HECHO_VICTIMIZANTE_12 @item.HECHO_VICTIMIZANTE_13 @item.HECHO_VICTIMIZANTE_14
+                    </td>
+                </tr>
+            }
+        }
+
+    </table>
+</div>
+
+<div >
+    <h2>1.	NOVEDADES IDENTIFICADAS EN REGISTRO ÚNICO DE VICTIMAS – RUV</h2>
+</div>
+
+<div >
+    
+    <table style="margin: 0 auto;" border="1">
+        <tr style="color:white; background-color:#3380FF; text-align: center ">
+            <td>
+                NOMBRES Y APELLIDOS
+            </td>
+            <td>
+                NOVEDAD
+            </td>
+        </tr>
+        @{ foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.PRIMER_NOMBRE @item.SEGUNDO_NOMBRE @item.PRIMER_APELLIDO @item.SEGUNDO_APELLIDO
+                    </td>
+                    <td>
+                        @item.NOVEDAD_RUV
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+
+<h2>2.	NECESIDAD EN MEDIDAS DE ASISTENCIA IDENTIFICADAS</h2>
+
+    <table style="margin: 0 auto;" border="1">
+        <tr style="color:white; background-color:#3380FF; text-align: center ">
+            <td>
+                NOMBRES Y APELLIDOS
+            </td>
+            <td>
+                NECESIDAD IDENTIFICADA
+            </td>
+            <td>
+                MEDIDA DE ASISTENCIA
+            </td>
+        </tr>
+        @{ foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.PRIMER_NOMBRE @item.SEGUNDO_NOMBRE @item.PRIMER_APELLIDO @item.SEGUNDO_APELLIDO
+                    </td>
+                    <td>
+                        @item.NECESIDAD_IDENTIFICADA
+                    </td>
+                    <td>
+                        @item.MEDIDA_ASISTENCIA
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+
+
+<p style="text-align:justify">
+    Luego de la formulación de la Entrevista de caracterización para las Víctimas identificó las siguientes necesidades del grupo familiar en medidas de asistencia,
+    las cuales serán validadas y tramitadas desde el Grupo de Gestión de Oferta de la unidad, con las entidades que hacen parte del SNARIV y tienen
+    competencia directa para atender a la población víctima:
+</p>
+
+<h2 style="text-align:left">RECUERDE:</h2>
+<p style="text-align:justify; color:black">1.	El Objetivo de la formulación de la Entrevista de caracterización es conocer la conformación actual de su hogar, actualizar datos de contacto, identificar su situación actual y las necesidades y capacidades de los integrantes de su núcleo familiar para la remisión oportuna a la oferta para aportar en el acceso efectivo a las medidas de asistencia.</p>
+<p style="text-align:justify; color:black">2.	La información relacionada respecto de la composición de su hogar actual, no implica modificaciones en el Registro Único de Víctimas.</p>
+<p style="text-align:justify; color:black">3.	La Unidad para las Víctimas validará la información dada por la víctima consultando fuentes alternas de información de las entidades competentes y realizará la gestión de las necesidades que se identifiquen como susceptibles de remisión a oferta.</p>
+<p style="text-align:justify; color:black">4.	Los miembros del hogar que ya estén siendo atendidos en otro hogar diferente no serán atendidos bajo el presente Hogar Entrevista de caracterización.</p>
+
+
+<h2 style="text-align:left">TENGA EN CUENTA:</h2>
+<p style="text-align:justify; color:black">La información consignada en la Entrevista de caracterización será objeto de revisión y verificación, antes de realizar remisión a las entidades competentes y el acceso efectivo a las medidas de asistencia dependerá de la oferta disponible y/ o vigente que exista</p>
+
+<table style="border: double">
+    <tr>
+        <td style="text-align: left">
+            Firma: _____________________________
+        </td>
+        <td>
+            <br/><br /><br /><br /><br />
+            Huella: ________________________<br />
+            En caso de manifestar no saber firmar.
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: left">
+            Nombre: ______________________________________________________
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Tipo y Número de Identificación: ______________________________
+        </td>
+    </tr>
+</table>
+
+<p style="text-align:justify; color:black">
+    [1] En atención a lo establecido en la Ley 1448 de 2011 – artículo 29 y el Decreto 4800 de 2011 - artículo 50, la información veraz y completa que las víctimas aporten a las autoridades y que estas recauden servirá de base para adecuar el acceso de los miembros del hogar a medidas de atención y asistencia específicas según las necesidades particulares y actuales de cada hogar.
+</p>
+
+
+

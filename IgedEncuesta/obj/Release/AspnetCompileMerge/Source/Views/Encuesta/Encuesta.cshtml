@@ -1,0 +1,617 @@
+﻿@model  IEnumerable<AdministracionInstrumentos.gic_Tema>
+@{
+
+    ViewBag.Title = "Encuesta";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    AdministracionInstrumentos.Encuesta objSesion = new AdministracionInstrumentos.Encuesta();
+    string userIdApp;
+    userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
+    List<AdministracionInstrumentos.gic_Tema> temasValidar = new List<AdministracionInstrumentos.gic_Tema>();
+    var temasValidarJson = objSesion.getValorCampoSesion("TEMASVALIDAR", userIdApp);
+    //temasValidar = (List<AdministracionInstrumentos.gic_Tema>)TempData["TEMASVALIDAR"];
+    temasValidar = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AdministracionInstrumentos.gic_Tema>>(temasValidarJson);
+    AdministracionInstrumentos.gic_Tema temaR = new AdministracionInstrumentos.gic_Tema();
+    var Imagen = "";
+    int temasTerminados = int.Parse(objSesion.getValorCampoSesion("CAPTERMI", userIdApp)); //TempData["CAPTERMI"];
+                                                                                           //int temasTerminados = (int)TempData["CAPTERMI"];
+    string codigoHogar = objSesion.getValorCampoSesion("CODHOGAR", userIdApp);// TempData["CODHOGAR"].ToString();
+                                                                              //temasTerminados = 2;
+                                                                              //temaR = temasValidar.Find(x => x.tem_IdTema == tema.tem_IdTema);
+}
+
+<script>
+    $(document).ready(function () {
+        var TabsAdehabilitar;
+        var TabsAdehabilitarLink;
+        var total = ('@temasTerminados');
+        //console.log("totalter_" + total);
+        if (total == "3") {
+            // console.log("true");
+            TabsAdehabilitar = false;
+        } else {
+            TabsAdehabilitar = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+            TabsAdehabilitarLink = ["3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
+
+        }
+
+        $(function () {
+            // $("#tabs-left").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+            // $("#tabs-left li").addClass("ui-tabs-vertical ui-helper-clearfix");
+            // $("#tabs-left li").removeClass("ui-corner-top").addClass("ui-corner-left");
+        });
+
+        $(function () {
+            $("#tabs-left").tabs({
+                /* collapsible: true,
+                 active: false,
+                 disabled: false,
+
+                 beforeLoad: function (event, ui) {
+
+                     //$("a").removeAttr('href');
+
+                 }*/
+
+            });
+        });
+    });
+
+
+
+</script>
+
+<head>
+
+    <title>IGED Encuesta</title>
+    @*  @Styles.Render("~/Content")*@
+</head>
+
+<style>
+    #tabs-left {
+        /*width: 45%;*/
+        top: 0;
+    }
+
+        #tabs-left .ui-tabs-nav {
+            /* float: left; */
+            width: 260px;
+            height: 100%;
+            background: none;
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            /*font-size:11px;*/
+        }
+
+            #tabs-left .ui-tabs-nav li {
+                /*clear: left;*/
+                width: 100%;
+                border-bottom-width: 1px !important;
+                border-right-width: 1px !important;
+                margin: 0 -1px .4em 0;
+                border-radius: 5px;
+            }
+
+                #tabs-left .ui-tabs-nav li a {
+                    /*  display: block;*/
+                    padding: 1em 1em;
+                }
+
+                #tabs-left .ui-tabs-nav li.ui-tabs-active {
+                    padding-bottom: 0;
+                    /*padding-right: .1em;*/
+                    border-right-width: 1px;
+                }
+
+        #tabs-left .ui-tabs-panel {
+            /*padding: 2px;*/
+            /*float: right;*/
+            width: 62%;
+        }
+
+        #tabs-left .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+            padding: .7em 1em;
+        }
+
+
+    .fondo {
+        background: white url('../Content/Imagenes/pattern-6dzp.png') repeat;
+        /*border: 1px solid #ccc;*/
+        border-radius: 5px;
+    }
+    /*.dialog {
+        position: absolute;
+        padding: .2em;
+        width: 300px;
+        overflow: hidden;
+        position: absolute;
+        padding: .1em;
+        width: 320px;
+        height: 600px;
+        overflow: hidden;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        background: #FFFAFA;
+        z-index: 5000;
+    }*/
+    .divFlotante {
+        right: 0;
+        left: 98%;
+        width: 42px;
+        height: 72px;
+        top: 10%;
+    }
+</style>
+<body>
+    @Html.Partial("_DialogPopup")
+    <br /><br /><br />
+    <div id="CargandoDatosEncuesta" style="display: none;">
+        <img alt="" src="@Url.Content("~/Content/Imagenes/ajax-loader.gif")" />
+    </div>
+    <form id="formPreguntas" class="validateDontSubmit">
+        <div class="centrarDiv topClass" style="width: 1010px; border: 0px;">
+            <table style="width: 1010px;margin-top:20px;" class="marcoFormulario  efecto2 efecto1 fondo">
+                <tr>
+                    <td colspan="2">
+                        <h5>DILIGENCIAMIENTO IGED ENCUESTA</h5>
+                        <h5 style="font-family: 'Century Gothic'; font-size: 17px; font-weight: 500">CODIGO DE HOGAR: @codigoHogar</h5>
+                        <br />
+                    </td>
+
+                </tr>
+                <tr class="fondo">
+                    <td style="/*border: solid; border-color: red; */width: 30%; vertical-align: top;">
+                        <div id="tabs-left" class="centrarDiv" style="/*border: solid; border-color: brown; */margin-left: 13px; margin-right: 13px; display: normal; border: 1px solid #ccc; /*padding: 10px; */ border-radius: 5px;">
+                            <ul>
+                                @foreach (var TEMAS in Model)
+                                {
+                                    temaR = temasValidar.Find(x => x.tem_IdTema == TEMAS.tem_IdTema);
+                                    if (temaR.tem_NombreTema == "T")
+                                    {
+                                        //Imagen = "../Content/Caracterizacion/guardado.png";
+                                        Imagen = @Url.Content("~/Content/Icons/check.png");
+                                    }
+                                    else if (temaR.tem_NombreTema == "NT")
+                                    {
+                                        //Imagen = "../Content/Caracterizacion/faltante.png";
+                                        Imagen = @Url.Content("~/Content/Icons/attention.png");
+                                    }
+                                    else
+                                    {
+                                        //Imagen = "../Content/Caracterizacion/nollenado.png";
+                                        Imagen = @Url.Content("~/Content/Icons/close_delete.png");
+                                    }
+
+                                    <li style="margin-right: 5px;">
+                                        @*<a class="entro" style="text-transform:uppercase; font-size:10px; font-weight:normal;" id="tab1_@TEMAS.tem_IdTema" href="@Url.Action("cargarTema", "Encuesta", new { idTema = @TEMAS.tem_IdTema })">@TEMAS.tem_NombreTema</a>*@
+                                        <a class="entro" style="text-transform:uppercase; font-size:10px; font-weight:normal; width:210px;text-align:left;" id="tab_@TEMAS.tem_IdTema" href="#CargueDinamico">@TEMAS.tem_NombreTema</a>
+                                        <img id="img_@TEMAS.tem_IdTema" alt="" height="25" width="25" src="@Imagen" style="padding:5px;margin-right:5px;" />
+
+                                    </li>
+                                    @* if (temasTerminados == 3)
+                                        {
+                                        <li>
+                                            <a style="text-transform:uppercase; font-size:10px; font-weight:normal;" id="tab1_@TEMAS.tem_IdTema" href="@Url.Action("consultarFuente", "FuentesExternas", new { idTema = @TEMAS.tem_IdTema })">@TEMAS.tem_NombreTema</a>
+                                            <img alt="" height="20" width="20" src="@Imagen" />
+
+                                        </li>
+                                        }
+                                        else
+                                        {
+                                            if (TEMAS.tem_IdTema == 1 || TEMAS.tem_IdTema == 2 || TEMAS.tem_IdTema == 3)
+                                            {
+
+                                        <li>
+                                            <a style="text-transform:uppercase; font-size:10px; font-weight:normal;" id="tab1_@TEMAS.tem_IdTema" href="@Url.Action("consultarFuente", "FuentesExternas", new { idTema = @TEMAS.tem_IdTema })">@TEMAS.tem_NombreTema</a>
+                                            <img alt="" height="20" width="20" src="@Imagen" />
+
+                                        </li>
+                                            }
+                                            else
+                                            {
+                                        <li>
+                                            @TEMAS.tem_NombreTema
+                                            <a style="text-transform:uppercase; font-size:10px; font-weight:normal;" id="tab1_@TEMAS.tem_IdTema" href="#">@TEMAS.tem_NombreTema</a>
+
+
+                                        </li>
+                                            }
+                                        }*@
+                                }
+                            </ul>
+                            <a href="@Url.Action("Download")" title="Descargar Soporte">
+                                <img src="@Url.Content("~/Content/Icons/Download.png")" height="30" alt="Descargar soporte" />
+                            </a>
+                            <a href="#" id="cargueSoporte" title="Cargue Soporte">
+                                <img src="@Url.Content("~/Content/Icons/Attach.png")" height="30" alt="Cargar soporte" />
+                            </a>
+                            <a href="#" id="btnAbandonar" title="Abandonar Encuesta">
+                                <img src="@Url.Content("~/Content/Icons/Go Out.png")" height="30" alt="Abandonar soporte" />
+                            </a>
+                            @*<input type="image" src="@Url.Content("~/Content/Icons/Go Out.png")" onclick="return false;" value="Abandonar"  id="btnAbandonar" style="width: 42px; border: none" />*@
+                            <div id="divGeneraPdf" style="display:none">
+                                <a href="@Url.Action("informePdf", new { hogCodigo = @codigoHogar })" id="generacionPdf" title="Generación PDF">
+                                    <img src="@Url.Content("~/Content/Icons/Document.png")" height="30" alt="Descargar PDF" />
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="/*border: solid; border-color: blue; */ width: 65%; padding-right: 12px; vertical-align: top;">
+                        <table style="width: 100%; /*border: solid; border-color: green; */ border: 1px solid #ccc; border-radius: 5px; height: 842px;">
+                            <tr>
+                                <td>
+
+                                    <div style="width: 96%; height: 100%; margin: 13px;" id="CargueDinamico">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+
+                    <td id="tdBotones" style="width: 5%; display: none; vertical-align: top;">
+                        <div>
+                            <button id="btnSiguiente" type="submit" onclick="botonSig();" name="siguiente" style="background: none; border: none">
+                                <img src="@Url.Content("~/Content/Icons/Boton-Siguiente.png")" style="cursor: pointer" title="Siguiente">
+                            </button>
+                            <button id="btnAnterior" type="button" onclick="bntAnterior();" name="anterior" style="background: none; border: none;">
+                                <img src="@Url.Content("~/Content/Icons/Boton-Anterior.png")" style="cursor: pointer" title="Anterior">
+                            </button>
+                            
+                            @*  <input type="image" src="~/Content/Icons/Boton-Siguiente.png" title="Siguiente" value="Siguiente" id="btnSiguiente" style="width: 32px; border: none" />
+                                <input type="image" src="~/Content/Icons/Boton-Anterior.png" title="Anterior" onclick="return false;" value="Anterior" id="btnAnterior" style="width: 32px; border: none" />
+                                <input type="image" src="~/Content/Icons/Go Out.png" onclick="return false;" value="Abandonar" title="Abandonar Encuesta" id="btnAbandonar" style="width: 32px; border: none" />*@
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div id="dialog-cargueColilla" style="display: none">
+            <table class="tabla1" id="uploadtable">
+                <tr>
+                    <td>
+                        <input id="fileUpload" type="file" name="fileUpload[0]" accept=".pdf" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <input id="codigoHogar" type="hidden" name="hogCodigo" value="@codigoHogar" />
+    </form>
+    <div id="dialog-abandonar" style="display: none">
+        <table style="width: 100%;">
+            <tr>
+                @* <td style="width: 60px; vertical-align: middle; align-content: center">
+                        <img alt="" src="~/Content/Caracterizacion/Modal-Alerta.png" />
+                    </td>*@
+
+                <td colspan="2">
+                    <h3 style="font-family: 'Century Gothic'; font-size: 17px; font-weight: 500; text-transform: uppercase; padding: 0px; color: black;">Seleccione la razón por la que desea abandonar la entrevista: </h3>
+                    @* @Html.Label("")
+                        @Html.Label("Seleccione la razón por la que desea abandonar la entrevista:")*@
+                    @*<asp:Label ID="lblMsgBox2" runat="server" CssClass="AparienciaLblModalPopUp" Text="Seleccione la razón por la que desea abandonar la entrevista:"></asp:Label>*@
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: left;">
+                    @Html.RadioButton("Abandonar", "2", new { id = "noContesta", @class = "css-radio" })
+                    @*<input class="css-radio" id="noContesta" name="Abandonar" value="2" required style="width: 15px" type="radio" />*@
+                    <label class="css-labelRadio" for="noContesta">El Hogar no desea contestar la entrevista.</label>
+                    @Html.RadioButton("Abandonar", "3", new { id = "aplazar", @class = "css-radio" })
+                    <label class="css-labelRadio" for="aplazar">Retomar entrevista después (Aplazar).</label><br />
+                    <div id="LbcerrarT" style="display:block">
+                        @Html.RadioButton("Abandonar", "4", new { id = "Rdcerrar", @class = "css-radio", })
+                        <label class="css-labelRadio" for="Rdcerrar" id="Rdcerrar" >Cerrar entrevista.</label><br />
+                    </div>
+
+                    @Html.RadioButton("Abandonar", "1", new { id = "anular", @class = "css-radio" })
+                    <label class="css-labelRadio" for="anular">Anular entrevista.</label><br />
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    function InvalidMsg(textbox, validador) {
+        if (textbox.validity.patternMismatch) {
+
+            if (validador == "TE") {
+                console.log("entro__" + validador);
+                textbox.setCustomValidity('valor incorrecto');
+            } else if (validador == "NU") {
+                textbox.setCustomValidity('Solo numeros');
+            } else if (validador == "FE") {
+                textbox.setCustomValidity('fecha incorrecta');
+            } else if (validador == "DI") {
+                textbox.setCustomValidity('Direccion incorrecta');
+            } else if (validador == "EM") {
+                textbox.setCustomValidity('Correo incorrecto');
+            } else if (validador == "TI") {
+                textbox.setCustomValidity('Telefono incorrecto (##-########)');
+            } else {
+                textbox.setCustomValidity('Valor incorrecto');
+            }
+        }
+        else {
+            textbox.setCustomValidity('');
+        }
+        return true;
+    }
+
+    $('#btnAbandonar').click(function (e) {
+        $("#dialog-abandonar").dialog('open');
+
+    });
+
+    $("#dialog-abandonar").dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 550,
+        height: 300,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: false,
+        dialogClass: 'dialog',
+        hide: 'explode',
+        buttons: {
+            "Guardar": function () {
+                consultarCapitulosTerminados();
+                //opcionesAbandonar();
+                // $(this).dialog("close");
+            },
+            "Cancelar": function () {
+                $(this).dialog("close");
+            }
+
+
+        }
+
+    });
+
+    function redireccionar() {
+        window.location.href = '@Url.Action("Inicio", "ConformacionHogar")';
+    }
+
+    //Agregado Andrés Quintero el 14/05/2109
+    function consultarCapitulosTerminados() {
+
+        var radio = $("input[name=Abandonar]");
+
+        var checkedValue = radio.filter(':checked').val();
+        //console.log(radio);
+        if (radio.is(":checked")) {
+            console.log("CHEKEADO"+checkedValue);
+
+            if (checkedValue == "1") {
+                opcion = 1;
+                var confirmacion = confirm("La entrevista no podrá seguir siendo editada. </br>¿Desea continuar con la operación ?");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    // cache: false,
+                    //contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    traditional: true,
+                    url: '@Url.Action("consultarCapitulosTerminados", "Encuesta")',
+                    //data: { respuestas: total, tipo: tipoCampo, idPregunt: idPregunta, tipoPregunt: tipoPregunta },
+                    data: { "valor": checkedValue },
+                    success: function (result) {
+                        if (result < 4) {
+                            alert("Debe diligenciar mínimo cuatro capítulos");
+                        } else {
+                            opcionesAbandonar();
+                        }
+                       
+                        
+                        
+                    }
+                });
+            }
+
+        } else {
+            alert("Debe seleccionar al menos una opción.");
+        }
+
+    }
+
+    function opcionesAbandonar() {
+
+        var radio = $("input[name=Abandonar]");
+
+        var checkedValue = radio.filter(':checked').val();
+        //console.log(radio);
+        if (radio.is(":checked")) {
+            console.log("CHEKEADO"+checkedValue);
+
+            if (checkedValue == "1") {
+                opcion = 1;
+                var confirmacion = confirm("La entrevista no podrá seguir siendo editada. </br>¿Desea continuar con la operación ?");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    // cache: false,
+                    //contentType: "application/json; charset=utf-8",
+                    datatype: "json",
+                    traditional: true,
+                    url: '@Url.Action("opcionesAbandonar", "Encuesta")',
+                    //data: { respuestas: total, tipo: tipoCampo, idPregunt: idPregunta, tipoPregunt: tipoPregunta },
+                    data: { "valor": checkedValue },
+                    success: function (result) {
+                        // alert("Se abandon");
+                        $("#dialog-abandonar").dialog('close');
+                        setTimeout(redireccionar, 1000);
+                    }
+                });
+            }
+
+        } else {
+            alert("Debe seleccionar al menos una opción.");
+        }
+
+    }
+
+    window.confirm = function (message) {
+
+        $(document.createElement('div'))
+            .attr({ 'class': 'dialog' })
+            .html(message)
+            .dialog({
+                buttons: {
+                    "1": {
+                        id: 'Ok', text: 'OK', click: function () {
+
+                            eliminarEncuesta();
+                            $(this).dialog("close");
+
+                        }, 'class': 'butonAlert'
+
+                    },
+
+                    "2": {
+                        id: 'btnCancelar', text: 'Cancelar', click: function () {
+                            $(this).dialog("close");
+                            //return false;
+                        }, 'class': 'butonAlert'
+                    },
+
+                    //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                },
+                close: function () { $(this).remove(); },
+                resizable: false,
+                height: 150,
+                width: 300,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: false,
+                dialogClass: 'dialog butonAlert',
+                hide: 'explode'
+            });
+    };
+
+    function eliminarEncuesta() {
+
+        $.ajax({
+            type: "POST",
+            // cache: false,
+            //contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            traditional: true,
+            url: '@Url.Action("eliminarEncuesta", "Encuesta")',
+            success: function (result) {
+
+                $("#dialog-abandonar").dialog('close');
+
+                alert("Se Anulo la entrevista correctamente");
+                setTimeout(redireccionar, 2000);
+
+
+            },
+            error: function (result) {
+                alert("Error en la transacción");
+            }
+
+        });
+
+
+    }
+    $('#cargueSoporte').click(function (e) {
+        $("#dialog-cargueColilla").dialog('open');
+
+    });
+
+    function cargarArchivo() {
+        var data = new FormData();
+        var files = $("#fileUpload").get(0).files;
+
+        if (files.length > 0) {
+            data.append("UploadedImage", files[0]);
+        }
+
+        // Make Ajax request with the contentType = false, and procesDate = false
+        var ajaxRequest = $.ajax({
+            type: "POST",
+            //url: "/api/fileupload/uploadfile",
+            url: '@Url.Action("cargarSoporte", "Encuesta")',
+            contentType: false,
+            processData: false,
+            data: data
+        });
+
+        ajaxRequest.done(function (xhr, textStatus) {
+            // Do other operation
+            $("#dialog-cargueColilla").dialog('close');
+            alert("Cargue exitoso.");
+        });
+
+        ajaxRequest.error(function (xhr, textStatus) {
+            // Do other operation
+            alert("Error en el cargue. Verifique la ruta, donde se almacena el archivo");
+        });
+    }
+
+    $("#dialog-cargueColilla").dialog({
+        autoOpen: false,
+        resizable: false,
+        //height: 400,
+        width: 550,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: false,
+        dialogClass: 'dialog',
+        hide: 'explode',
+        buttons: {
+            "Cancelar": function () {
+                $(this).dialog("close");
+            },
+            "Guardar": function () {
+                cargarArchivo();
+                //$(this).dialog("close");
+            }
+
+        }
+
+    });
+
+
+    $(function () {
+        $('.entro').click(function (e) {
+            document.body.style.cursor = "wait";
+            //$("#CargandoDatosEncuesta").show('slow');
+            var idTema = $(this).attr('id').split('_');
+            $("#tdBotones").show('slow');
+            $('#btnSiguiente').show('slow');
+            var TabsAdehabilitarLink;
+            $.ajax({
+                type: "POST",
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("cargarTema", "Encuesta")',
+                data: "{ idTema: " + idTema[1] + " }",
+                //data: { "idTema": idUsuario[1] },
+                success: function (result) {
+                    $('#CargueDinamico').html(result);
+                    document.body.style.cursor = "default";
+                    $("#CargandoDatosEncuesta").hide('slow');
+
+
+                }
+            });
+            //}
+            return false;
+
+        });
+
+    });
+
+    $(document).on('submit', '.validateDontSubmit', function (e) {
+        // alert("submit");
+        //prevent the form from doing a submit
+        e.preventDefault();
+        // $(window).scrollTop(0);
+        return false;
+    })
+
+
+</script>

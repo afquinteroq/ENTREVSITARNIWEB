@@ -1,0 +1,552 @@
+﻿@model AdministracionInstrumentos.gic_PreguntaRespuestasFlujo
+@{
+    var OpcionRespuestaGen = Model.opcionesRespuesta.FirstOrDefault();
+    string nombres = string.Empty;
+    string valorCampoTexto = string.Empty;
+    int idPersonaEncuestada = Model.idPersonaEncuesta;
+}
+
+<style>
+     .etiqueta2 {
+         font-family: 'Roboto',sans-serif;
+         /*font-size: 1.1em;*/
+         font-size: 11px;
+         text-align: left;
+         padding: 6px;
+         text-transform: uppercase;
+         width: 480px;
+     }
+
+     .ui-autocomplete {
+         max-height: 100px;
+         width: 400px;
+         overflow-y: auto;
+         /* prevent horizontal scrollbar */
+         overflow-x: hidden;
+     }
+     /* IE 6 doesn't support max-height
+    * we use height instead, but this forces the menu to always be this tall
+    */
+     * html .ui-autocomplete {
+         height: 100px;
+     }
+</style>
+
+<div style="width: 100%">
+    <input id="idPregunt" type="hidden" value="@Model.preguntaXpersonaGen.pre_IdPregunta" />
+
+    <table cellpadding="0" style="width: 100%;border-collapse: separate; border-spacing: 10px;">
+
+        @if (Model.preguntaXpersonaGen.pre_TipoCampo == "CT" || Model.preguntaXpersonaGen.pre_TipoCampo == "CH")
+        {
+            var pregunta = new System.Web.HtmlString(Model.preguntaXpersonaGen.pre_pregunta);
+
+            if (Model.preguntaXpersonaGen.pre_TipoPregunta == "GE")
+            {
+                <tr>
+                    <td style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; background: white url('../Content/Imagenes/pattern-4i7c.png') repeat">
+                        @Html.Label("", "Pregunta " + Model.preguntaXpersonaGen.ipx_Orden.ToString() + ". ", new { style = "text-transform:uppercase;;font-family:'Roboto'; font-size: 12px;" })
+                        @Html.Raw("<label style=\"text-transform:uppercase;font-family:'Roboto'; font-size: 12px;\">")
+                        @Html.Raw(pregunta.ToString())
+                        @Html.Raw("</label>")
+                    </td>
+                </tr>
+                <tr id="tr_@Model.preguntaXpersonaGen.pre_pregunta" style="text-align: left;">
+                    <td class=" marcoPreguntas efecto2 efecto1" style="width: 100%">
+
+                        @if (Model.preguntaXpersonaGen.pre_TipoCampo == "CT" || Model.preguntaXpersonaGen.pre_TipoCampo == "CH")
+                        {
+
+                            @GenerarValidadorRadio(Model, "", idPersonaEncuestada, "", false);
+                    }
+                    </td>
+                </tr>
+            }
+            else if (Model.preguntaXpersonaGen.pre_TipoPregunta == "IN")
+            {
+
+                <tr>
+
+                    <td colspan="2" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; background: white url('../Content/Imagenes/pattern-4i7c.png') repeat">
+                        @Html.Label("", "Pregunta " + Model.preguntaXpersonaGen.ipx_Orden.ToString() + ". ", new { style = "text-transform:uppercase;;font-family:'Roboto'; font-size: 12px;" })
+                        @Html.Raw("<label style=\"text-transform:uppercase;font-family:'Roboto'; font-size: 12px;\">")
+                        @Html.Raw(pregunta.ToString())
+                        @Html.Raw("</label>")
+                    </td>
+
+                </tr>
+
+                //@Html.Raw(pregunta.ToString());
+                foreach (AdministracionInstrumentos.gic_PreguntasxPersona personas in Model.colleccionPreguntas)
+                {
+                    nombres = personas.per_PrimerNombre + " " + personas.per_SegundoNombre + " " + personas.per_PrimerApellido + " " + personas.per_SegundoApellido;
+                    string tabla = "tbl_" + Model.preguntaXpersonaGen.pre_IdPregunta + "_per_" + personas.per_IdPersona;
+                    AdministracionInstrumentos.gic_RespuestaNuevo respuesta = new AdministracionInstrumentos.gic_RespuestaNuevo();
+                    List<AdministracionInstrumentos.gic_RespuestaNuevo> resValidadas = new List<AdministracionInstrumentos.gic_RespuestaNuevo>();
+                    resValidadas = respuesta.getRespuestasxPrexPersona(Model.preguntaXpersonaGen.pre_IdPregunta, 1, Model.codigoHogar, personas.per_IdPersona);
+                    <tr>
+                        <td style="width: 40%;" class=" marcoPreguntas efecto2 efecto1">
+                            @Html.Label(nombres, new { @style = "text-transform:uppercase; font-family:'Roboto'; font-size:12px; font-weight:normal; width:210px;text-align:center;" })
+
+                        </td>
+                        <td style="width: 60%" class=" marcoPreguntas efecto2 efecto1">
+                            <table cellpadding="0" id="@tabla">
+                                @foreach (AdministracionInstrumentos.gic_RespuestaNuevo respuestaText in resValidadas.OrderBy(x => x.res_OrdenRespuesta))
+                                {
+                                    bool validaPersona = false;
+                                    string eventoOnchange = string.Empty;
+                                    //if (respuestaText.pre_Campo_Tex == "AB" && Model.preguntaXpersonaGen.pre_TipoCampo == "CT")
+                                    //{
+                                    eventoOnchange = "MostraHabilitaTextoFamiliar(this,'" + respuestaText.pre_Campo_Tex + "','" + Model.respuestasConcatenadas + "','" + Model.personasConcatenadas + "','" + respuestaText.res_Habilita + "','txt_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona + "')";
+                                    //}
+                                    if (personas.validacion_Persona != 0)
+                                    {
+                                        validaPersona = true;
+                                    }
+                                    bool autoCompletarVal = false;
+                                    if (respuestaText.res_AutoCompletar == "SI")
+                                    {
+                                        autoCompletarVal = true;
+                                    }
+                                    //validaPersona = true;
+                                    //  string valorCampoTexto;
+                                    <tr>
+                                        <td style="height:15px">
+                                            @GenerarRadioTexto(respuestaText, "rdl_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona, eventoOnchange, "txt_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona, "rdl_" + respuestaText.pre_IdPregunta.pre_IdPregunta + "_per_" + personas.per_IdPersona, validaPersona, personas.per_IdPersona, autoCompletarVal)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+
+                }
+
+            }
+        }
+    </table>
+</div>
+@helper GenerarValidadorRadio(AdministracionInstrumentos.gic_PreguntaRespuestasFlujo coleccionFlujo, string idControl, int idPersona, string valorTexto, bool validarControl)
+{
+string respuestaRequerida = string.Empty;
+string eventoOnchange = string.Empty;
+string valorCampoTexto = string.Empty;
+AdministracionInstrumentos.gic_RespuestaNuevo respuesta = new AdministracionInstrumentos.gic_RespuestaNuevo();
+List<AdministracionInstrumentos.gic_RespuestaNuevo> resValidadas = new List<AdministracionInstrumentos.gic_RespuestaNuevo>();
+resValidadas = respuesta.getRespuestasxPrexPersona(Model.preguntaXpersonaGen.pre_IdPregunta, 1, Model.codigoHogar, idPersona);
+
+if (coleccionFlujo.opcionesRespuestaFiltrado != null)
+{
+    respuesta = coleccionFlujo.opcionesRespuestaFiltrado.FirstOrDefault();
+    if (respuesta.res_Obligatoria == "SI")
+    {
+        respuestaRequerida = "true";
+    }
+
+
+
+    foreach (AdministracionInstrumentos.gic_RespuestaNuevo respuestaText in resValidadas.OrderBy(x => x.res_OrdenRespuesta))
+    {
+        //chekeado = false;
+        // if (respuestaText.pre_Campo_Tex == "AB" && Model.preguntaXpersonaGen.pre_TipoCampo == "CT")
+        //{
+        eventoOnchange = "MuestraHabilitaTexto(this,'" + idPersona.ToString() + "','" + respuestaText.pre_Campo_Tex + "','" + Model.respuestasConcatenadas + "');";
+        //}
+        bool autoCompletarVal = false;
+        if (respuestaText.res_AutoCompletar == "SI")
+        {
+            autoCompletarVal = true;
+        }
+            @GenerarRadioTexto(respuestaText, "rdl_" + respuestaText.res_IdRespuesta.ToString(), eventoOnchange, "txt_" + respuestaText.res_IdRespuesta, "rdl_" + respuestaText.pre_IdPregunta.pre_IdPregunta.ToString(), true, idPersona, autoCompletarVal)
+    }
+}
+
+}
+
+
+@helper GenerarRadioTexto(AdministracionInstrumentos.gic_RespuestaNuevo respuestaText, string idControl, string eventoOnchange, string controlTexto, string nombreRadio, bool validacionControl, int idPersona, bool atucompletar)
+{
+    string visibilidadControl = string.Empty, respuestaRequerida = "true";
+    string valorCampoTexto = string.Empty, clase = "none";//;, eventoOnchange = string.Empty;
+    bool chekeado = false;
+    if (validacionControl == false)
+    {
+        visibilidadControl = "block";
+        respuestaRequerida = "false";
+
+    }
+    var respues = (Model.coleccionRespuestas.FirstOrDefault(x => x.res_IdRespuesta.res_IdRespuesta == respuestaText.res_IdRespuesta && idPersona == x.per_IdPersona));
+    //foreach (AdministracionInstrumentos.gic_RespuestaxEncuesta resEn in Model.coleccionRespuestas)
+    //{
+    valorCampoTexto = "";
+    //var respues = (Model.coleccionRespuestas.FirstOrDefault(x => x.res_IdRespuesta.res_IdRespuesta== respuestaText.res_IdRespuesta &&  8 == x.per_IdPersona ));
+    if (respues != null)
+    {
+        chekeado = true;
+
+        if (respues.rxp_TextoRespuesta != "" && respues.rxp_TextoRespuesta != null)
+        {
+            valorCampoTexto = respues.rxp_TextoRespuesta;
+            if (Model.flujo != "SIG" || valorCampoTexto != "")
+            {
+
+                clase = "block";
+
+            }
+        }
+
+
+    }
+
+    if (validacionControl == true)
+    {
+        <table cellpadding="0" cellspacing="0" style="width: 100%">
+            <tr>
+                <td style="vertical-align: central; width: 10%">
+
+                    @if (respuestaRequerida == "true")
+                    {
+                        @Html.RadioButton(nombreRadio, respuestaText.res_IdRespuesta, chekeado, new { id = idControl, @style = "visibility:" + visibilidadControl + ";", @class = "css-radio", required = "", @onchange = eventoOnchange })
+                        <label for="@idControl" class="css-labelRadio"></label>
+                    }
+                    else
+                    {
+                        @Html.RadioButton(nombreRadio, respuestaText.res_IdRespuesta, chekeado, new { id = idControl, @style = "visibility:" + visibilidadControl + ";", @class = "css-radio", @onchange = eventoOnchange })
+                        <label for="@idControl" class="css-labelRadio"></label>
+                    }
+                </td>
+                <td style="text-align: left; width: 90%">
+                    @Html.Label(respuestaText.res_Respuesta.ToString(), new { @style = "font-size:11px; font-weight:normal;font-family:'Roboto';   width:210px;text-align:center;" })
+
+
+                    @if (respuestaText.pre_Campo_Tex == "AB")
+                    {
+                        @GenerarValidador(respuestaText, controlTexto, 0, valorCampoTexto, validacionControl, atucompletar, clase)
+                    }
+                </td>
+
+
+            </tr>
+
+        </table>
+}
+}
+
+
+@helper GenerarValidador(AdministracionInstrumentos.gic_RespuestaNuevo respuesta, string idControl, int idPersona, string valorTexto, bool validarControl, bool autocompletar, string visibilidadControl = "block")
+{
+
+string respuestaRequerida = "";
+int longCampo = 10;
+int int_width = 300;
+string eventoOnchange = string.Empty;
+string eventoOnkey = string.Empty;
+string claseAutocompletar = string.Empty;
+string claseRequerido = string.Empty;
+AdministracionInstrumentos.gic_RespuestaNuevo resObj = new AdministracionInstrumentos.gic_RespuestaNuevo();
+string width = "width:";
+string heigth = string.Empty;
+//if (respuesta.res_Obligatoria == "SI")
+//{
+//    respuestaRequerida = "true";
+//}
+
+// respuestaRequerida = (respuesta.res_Obligatoria == "SI") ? "required" : "";
+DateTime? MyDateTime;
+MyDateTime = new DateTime();
+string valorMinimo = (respuesta.pre_Validador_Min != null) ? respuesta.pre_Validador_Min : "1";
+string valorMaximo = (respuesta.pre_Validador_Max != null) ? respuesta.pre_Validador_Max : "10";
+if (respuesta.pre_Validador == "FE")
+{
+
+    if (valorTexto != "")
+    {
+        MyDateTime = DateTime.ParseExact(valorTexto, "dd/MM/yyyy",
+                                     null);
+    }
+    else
+    {
+        MyDateTime = null;
+    }
+}
+//if (respuesta.res_Obligatoria == "S
+//Valida que no vega vacio el campo de logitud
+
+if (!string.IsNullOrEmpty(respuesta.pre_longcampo.ToString()) || respuesta.pre_longcampo > 0)
+{
+    longCampo = respuesta.pre_longcampo;
+    eventoOnkey = "validarOnkey(this, " + longCampo + ");";
+}
+//Si el validador_Max viene con SYSDATE, coloca la fecha actual.
+if (respuesta.pre_Validador_Max == "SYSDATE")
+{
+    respuesta.pre_Validador_Max = DateTime.Now.ToShortDateString();
+}
+
+//MODIFICACION: JOSE VASQUEZ  NOV.19.2015
+//SE CONTROLA LA LONGITUD DEL CONTROL TEXTO, VA LA
+//LONGITUD DE ACUERDO A LA CANTIDAD DE CARACTERES
+//if (longCampo > 0 && autocompletar == false)
+//{
+//    int_width = (longCampo * 24);
+//    if (int_width > 550)
+//    {
+//        int_width = 550;
+//    }
+//}
+//else if (autocompletar == true)
+//{
+//    int_width = 450;
+//}
+
+width += int_width.ToString() + "px;";
+//FIN MODIFICACION: JOSE VASQUEZ  NOV.19.2015
+
+
+//Valida si esa pregunta cumple los validadores para mostrar o no el campo de texto.
+if (validarControl == false)
+{
+    visibilidadControl = "none";
+    respuestaRequerida = "false";
+}
+
+if (autocompletar == true)
+{
+    claseAutocompletar = "autocompletar";
+}
+
+if (valorTexto != "")
+{
+    claseRequerido = "requerido";
+    respuestaRequerida = "required";
+
+}
+
+if (respuesta.pre_Validador == "TE")
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "    " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = valorMaximo, respuestaRequerida, maxlength = longCampo, id = idControl, @class = " entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+
+}
+else if (respuesta.pre_Validador == "NU")
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + " ; " + width + " ", pattern = "[0-9]*", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada", @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", type = "number" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + " ; " + width + " ", pattern = "[0-9]*", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada", @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", type = "number" })
+    }
+}
+else if (respuesta.pre_Validador == "FE")
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, MyDateTime, "{0:yyyy-MM-dd}", new { @style = "display:" + visibilidadControl + "; " + width + " ", type = "date", pattern = "^([0-9]{1,2})[./-]+([0-9]{1,2})[./-]+([0-9]{2}|[0-9]{4})$", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, MyDateTime, "{0:yyyy-MM-dd}", new { @style = "display:" + visibilidadControl + "; " + width + " ", type = "date", pattern = "^([0-9]{1,2})[./-]+([0-9]{1,2})[./-]+([0-9]{2}|[0-9]{4})$", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+}
+else if (respuesta.pre_Validador == "DI")
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^[A-Z0-9 a-z # \-  áéíóú]*$", min = valorMinimo, max = valorMaximo, required = "", maxlength = respuesta.pre_longcampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^[A-Z0-9 a-z # \-  áéíóú]*$", min = valorMinimo, max = valorMaximo, maxlength = respuesta.pre_longcampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+}
+else if (respuesta.pre_Validador == "EM")
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+}
+else if (respuesta.pre_Validador == "TI")
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"\d{2}-\d{7}", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"\d{2}-\d{7}", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+}
+else
+{
+    if (respuestaRequerida == "required")
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = valorMaximo, maxlength = longCampo, required = "", id = idControl, @class = " entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+    else
+    {
+            @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = respuesta.pre_Validador_Max, maxlength = longCampo, id = idControl, @class = " entrada " + claseAutocompletar, @onkeypress = eventoOnkey, @onchange = eventoOnchange, oninvalid = "InvalidMsg(this,'" + respuesta.pre_Validador + "');", oninput = "InvalidMsg(this,'" + respuesta.pre_Validador + "');" })
+    }
+
+}
+}
+
+<script type="text/javascript">
+
+
+
+
+
+    function MuestraHabilitaTexto(objeto, idpersona, tipoPregunta, respuestas) {
+
+        var idRespuesta = objeto.id.split("_")[1];
+        var arrRespuestas = [];
+        var separated = respuestas.split(",");
+        arrRespuestas = convertArray(separated);
+        console.log("id_" + idRespuesta);
+        for (h = 0; h < arrRespuestas.length; h++) {
+            if (document.getElementById('txt_' + arrRespuestas[h]) != null) {
+
+                //console.log("entro FOR_" + arrRespuestas[h]);
+                $('#txt_' + arrRespuestas[h]).hide('slow');
+                //document.getElementById('txt_' + arrRespuestas[h]).style.visibility = 'hidden';
+                $('#txt_' + arrRespuestas[h]).prop("required", false);
+                //desRequerido(arrRespuestas[h]);
+            }
+        }
+
+        if (tipoPregunta == "AB") {
+            //
+            if (objeto.checked) {
+                // alert(objeto);
+                // document.getElementById("txt_" + idRespuesta).style.visibility = (objeto.checked) ? 'visible' : 'hidden';
+                $("#txt_" + idRespuesta).show('slow');
+            } else {
+                $("#txt_" + idRespuesta).hide('slow');
+            }
+            $('#txt_' + idRespuesta).prop("required", true);
+            // habilitarRequerido(idRes);
+        }
+    }
+
+    //MostraHabilitaTextoFamiliar(this,'" + respuestaText.pre_Campo_Tex + "','" + Model.respuestasConcatenadas + "','"+Model.personasConcatenadas+"','"+respuestaText.res_Habilita+"')";
+    function MostraHabilitaTextoFamiliar(obj, campo, idRespuestas, idPersonas, habilita, id_obj) {
+
+
+        var id = obj.id.split("_");
+        //console.log("id_" + obj.id.split("_")[0]);
+        var arrRespuestas = [];
+        var arrPersonas = [];
+        var separated = idRespuestas.split(",");
+        var personas = idPersonas.split(",");
+        arrRespuestas = convertArray(separated);
+        arrPersonas = convertArray(personas);
+        // var idCampoTexto = id_obj.substring(16);
+        var tipoControl = obj.id.split("_")[0];
+        //console.log("ID::" + campo);
+        //console.log("IDRESPUESTA::" + obj.checked);
+        var idPer = id[3];
+        var idRes = id[1];
+        if (habilita == "SI" && obj.checked) {
+
+            deseleccionarOtrasPersonas(arrPersonas, idPer, idRes, tipoControl);
+            if (campo == "AB") {
+                habilitarCampoTextoRadio(arrPersonas, arrRespuestas, id_obj, obj, id, campo);
+            }
+        } else {
+            // console.log("entro");
+            habilitarCampoTextoRadio(arrPersonas, arrRespuestas, id_obj, obj, id, campo);
+        }
+    }
+
+    function deseleccionarOtrasPersonas(arrPersonas, idPersona, idRespuesta, tipoControl) {
+        for (i = 0; i < arrPersonas.length; i++) {
+            // document.getElementById('MainContent__' + tipoControl + '_' + arrRespuestas[h] + "_PER_" + idPersona).disabled = true;
+            if (arrPersonas[i] != idPersona) {
+                if ($("#" + tipoControl + '_' + idRespuesta + "_per_" + arrPersonas[i] + "").is(":checked")) {
+                    //console.log("tipocontrol_" + tipoControl + "_idrespuesta_" + idRespuesta + "_personaId_" + arrPersonas[i]);
+                    document.getElementById(tipoControl + '_' + idRespuesta + "_per_" + arrPersonas[i]).checked = false;
+                }
+                 $('#txt_' + +idRespuesta + "_per_" + arrPersonas[i]).hide('slow');
+                 $('#txt_' + idRespuesta + "_per_" + arrPersonas[i]).prop("required", false);
+
+            }
+        }
+
+    }
+
+
+    function habilitarCampoTextoRadio(arrPersonas, arrRespuestas, id_obj, obj, id, campo) {
+        /*console.log("respuestas" + arrRespuestas);
+        console.log("personas" + arrPersonas);
+        console.log("personas" + id);*/
+        for (i = 0; i < arrPersonas.length; i++) {
+            for (h = 0; h < arrRespuestas.length; h++) {
+                if (document.getElementById('txt_' + arrRespuestas[h] + "_per_" + arrPersonas[i]) != null) {
+                    //console.log(arrRespuestas[h]);
+                    if (id[3] == arrPersonas[i]) {
+
+                        $('#txt_' + +arrRespuestas[h] + "_per_" + arrPersonas[i]).hide('slow');
+                        //document.getElementById('txt_' + arrRespuestas[h] + "_per_" + arrPersonas[i]).style.visibility = 'hidden';
+                        var idRequerido = arrRespuestas[h] + "_per_" + arrPersonas[i];
+                        //desRequerido(idRequerido);
+                        $('#txt_' + arrRespuestas[h] + "_per_" + arrPersonas[i]).prop("required", false);
+                        $('#txt_' + arrRespuestas[h] + "_per_" + arrPersonas[i]).val('');
+
+                    }
+                }
+            }
+            if (id[3] == arrPersonas[i]) {
+                if (campo == "AB") {
+                    //document.getElementById(id_obj).style.visibility = (obj.checked) ? 'visible' : 'hidden';
+                    if (obj.checked) {
+                        $('#' + id_obj).show('slow');
+                    } else {
+                        $('#' + id_obj).hide('slow');
+                    }
+                    // console.log(id_obj);
+                    $('#' + id_obj).prop("required", true);
+                    // habilitarRequerido(idCampoTexto);
+                }
+                //document.getElementById('MainContent_val_' + idPregunta + "_PER_" + arrPersonas[i]).style.visibility = 'hidden';
+            }
+        }
+
+    }
+
+
+
+    function convertArray(objeto) {
+        var arr = [];
+        for (var i in objeto) {
+            if (objeto.hasOwnProperty(i)) {
+                arr.push(objeto[i]);
+            }
+        }
+
+        return arr;
+    }
+
+
+    $(function () {
+
+        $(".autocompletar").autocomplete({
+
+            source: '@Url.Action("AutoCompletarTexto", "Encuesta")',
+            minLength: 3,
+
+        });
+    });
+</script>

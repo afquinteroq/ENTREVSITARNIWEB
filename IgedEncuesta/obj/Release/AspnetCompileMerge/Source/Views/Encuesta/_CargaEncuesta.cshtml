@@ -1,0 +1,725 @@
+﻿@model AdministracionInstrumentos.gic_PreguntaRespuestasFlujo
+
+@{
+    int idPersonaEncuestada = Model.idPersonaEncuesta;
+    string habilitaTemas = Model.habilitar;
+    int totalPreguntas = Model.totalPreguntas;
+    string codigoHogar = Model.codigoHogar;
+    int totalCapitulosTerminados =Model.totalCapitulosTerminados;
+}
+<style>
+    .transparent { background:transparent }
+
+    overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #000;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+#loading {
+    width: 50px;
+    height: 57px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -28px 0 0 -25px;
+}
+
+
+</style>
+<table style="width: 100%">
+    <tr>
+        <td style="border: 1px solid #ccc; border-radius: 5px; background: white url('@Url.Content("~/Content/Imagenes/ed878c0d.png")') repeat">
+            <div>
+                @{ Html.RenderPartial("_CargaEncabezado", Model.temaAmostrar); }
+            </div>
+        </td>
+    </tr>
+</table>
+    <table style="width: 100%">
+        <tr>
+            <td>
+                <div style="width: 100%">
+
+                    @if ((Model.temaAmostrar.tem_IdTema == 1 || Model.temaAmostrar.tem_IdTema == 2 || Model.temaAmostrar.tem_IdTema == 3) || totalCapitulosTerminados >= 3)
+                    {
+                        if (totalPreguntas > 0)
+                        {
+                            if (Model.preguntaXpersonaGen.pre_TipoCampo == "DP" || (Model.preguntaXpersonaGen.pre_TipoCampo == "TE" || Model.preguntaXpersonaGen.pre_TipoCampo == "AT" || Model.preguntaXpersonaGen.pre_TipoCampo == "TA"))
+                            {
+                                Html.RenderPartial("_CargaPreguntaTexto", Model);
+                            }
+                            else if (Model.preguntaXpersonaGen.pre_TipoCampo == "CT" || Model.preguntaXpersonaGen.pre_TipoCampo == "CH")
+                            {
+                                Html.RenderPartial("_CargaPreguntaRadio", Model);
+                            }
+                            else if (Model.preguntaXpersonaGen.pre_TipoCampo == "LT" || Model.preguntaXpersonaGen.pre_TipoCampo == "CL")
+                            {
+                                Html.RenderPartial("_CargaPreguntaCheck", Model);
+                            }
+                        }
+                        else
+                        {
+                            Html.RenderPartial("_CapituloFinalizado", Model);
+                        }
+                    }
+                    else
+                    {
+                        if (totalCapitulosTerminados != 3)
+                        {
+
+                            Html.RenderPartial("_NoCumpleValidaciones", Model);
+                        }
+
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
+   
+    <div id="dialog-mensajeCon" style="display: none;">
+        Este capítulo ya fue diligenciado en su totalidad. Tenga en cuenta que si continua con esta acción el capitulo quedara con estado de diligenciamiento incompleto hasta que no recorra de nuevo todas las preguntas que lo componen. ¿Desea continuar?
+    </div>
+
+<input id="idPregunt" type="hidden" value="@Model.preguntaXpersonaGen.pre_IdPregunta" />
+<input id="respuestasConcatenadasJs" type="hidden" value="@Model.respuestasConcatenadas" />
+<input id="personasConcatenadasJs" type="hidden" value="@Model.personasConcatenadas" />
+<input id="tipoPreguntaJs" type="hidden" value="@Model.preguntaXpersonaGen.pre_TipoPregunta" />
+<input id="tipoCampoJa" type="hidden" value="@Model.preguntaXpersonaGen.pre_TipoCampo" />
+<input id="idPersonaGen" type="hidden" value="@idPersonaEncuestada" />
+<input id="coleccionPreguntas" type="hidden" value="@totalPreguntas" />
+<input id="idTem" type="hidden" value="@Model.temaAmostrar.tem_IdTema" />
+<input id="habilitaTem" type="hidden" value="@habilitaTemas" />
+<input id="idOrden" type="hidden" value="@Model.preguntaXpersonaGen.ipx_Orden" />
+<input id="totalCapitulos" type="hidden" value="@totalCapitulosTerminados" />
+
+<script type="text/javascript">
+
+    function validarOnkey(objeto, valor) {
+        //alert(objeto.id+"__" +valor );
+        $('#' + objeto.id).keypress(function () {
+            return this.value.length < valor;
+        });
+    }
+
+
+    $("#dialog-mensajeCon").dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 300,
+        height: 300,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: false,
+        dialogClass: 'dialog',
+        hide: 'explode',
+        buttons: {
+            "Continuar": function () {
+                $(this).dialog("close");
+            },
+            "Cancelar": function () {
+                //  $(this).dialog("close");
+                redireccionar();
+            }
+
+
+        }
+
+    });
+
+
+
+
+    $(document).ajaxStop(function () {
+        $.LoadingOverlay("hide");
+    });
+
+    $(document).ajaxStart(function () {
+        var ruta_Cargando2 = '@Url.Content("~/Content/Imagenes/Cargando2.gif")';
+        $.LoadingOverlay("show", "image: " + ruta_Cargando2);
+    });
+
+    function bntAnterior()  {
+        var ruta_imagen = '@Url.Content("~/Content/Icons/attention.png")';
+        $("#img_" + $("#idTem").val()).attr("src", ruta_imagen);
+        document.body.style.cursor = "wait";
+        //$("#CargandoDatosEncuesta").show('slow');
+        $.ajax({
+            type: "POST",
+            // cache: false,
+            //contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            traditional: true,
+            url: '@Url.Action("anterior", "Encuesta")',
+            //data: { respuestas: total, tipo: tipoCampo, idPregunt: idPregunta, tipoPregunt: tipoPregunta },
+            //data: { "idTema": idUsuario[1] },
+            success: function (result) {
+                //   console.log(result);
+                $('#CargueDinamico').html(result);
+                document.body.style.cursor = "default";
+                $("#CargandoDatosEncuesta").hide('slow');
+            }
+        });
+        $(window).scrollTop(0);
+    }
+
+    $(document).ready(function () {
+        var ruta_img_check = '@Url.Content("~/Content/Icons/check.png")';
+        console.log("conteot_" + $("#coleccionPreguntas").val());
+        console.log("idOrden_" + $("#idOrden").val());
+        console.log($("#img_" + $("#idTem").val()).attr("src"));
+        var ruta = '@System.Web.Configuration.WebConfigurationManager.AppSettings["rutaCheck"]';
+        console.log("rr__"+ruta);
+        //console.log("_ch_"+@System.Web.Configuration.WebConfigurationManager.AppSettings["rutaCheck"]);
+        if ($("#img_" + $("#idTem").val()).attr("src") == ruta_img_check) {
+            //alert("");
+            $("#dialog-mensajeCon").dialog('open');
+        }
+
+        if ($('#idOrden').val() == "1") {
+            //   alert($('#idOrden').val());
+            $('#btnAnterior').hide('slow');
+        } else if ($("#coleccionPreguntas").val() == "0") {
+            //VALIDA SI SE ESTA CONTESTADNO LA ENCUESTA, PARA CAMBIAR EL ICONO Y LLEGA AL FINAL
+            if ($("#img_" + $("#idTem").val()).attr("src") == ruta) {
+                $("#img_" + $("#idTem").val()).attr("src", ruta_img_check);
+            }
+
+            $('#btnSiguiente').hide('slow');
+
+            if ($("#habilitaTem").val() == "1") {
+
+                $("#tabs").tabs({
+                    collapsible: true,
+                    active: false,
+                    disabled: false
+                });
+            }
+        } else {
+            $('#btnAnterior').show('slow');
+            if ($('#totalCapitulos').val() == "3" || $('#idTem').val() == "1" || $('#idTem').val() == "2" || $('#idTem').val() == "3") {
+                // alert("entro b");
+                $('#btnSiguiente').show('slow');
+            }
+        }
+
+        if ($('#totalCapitulos').val() >= "3") {
+            $('#Lbcerrar').show();
+        } else {
+            $('#Lbcerrar').hide();
+        }
+
+
+
+        //Validacion capitulos terminados, para habilitar boton generacionPdf.
+
+        var numeroTotal = parseInt($('#totalCapitulos').val());
+        //alert(numeroTotal);
+        // var numeroTotal = 20;
+        if (numeroTotal >= 20) {
+            $('#divGeneraPdf').show('slow');
+        }
+
+        $(window).scrollTop(0);
+    });
+
+
+    $(document).on('submit', '.validateDontSubmit', function (e) {
+        // alert("submit");
+        //prevent the form from doing a submit
+        e.preventDefault();
+        // $(window).scrollTop(0);
+        return false;
+    })
+
+
+    $("#dialog-confirmacionAban").dialog({
+        autoOpen: false,
+        resizable: false,
+        //height: 400,
+        width: 300,
+        show: { effect: 'drop', direction: "up" },
+        modal: true,
+        draggable: false,
+        dialogClass: 'dialog',
+        hide: 'explode',
+        buttons: {
+            "Confirmar": function () {
+                //opcionesAbandonar();
+                // $(this).dialog("close");
+            },
+            "Cancelar": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    var opcion;
+    window.confirm = function (message) {
+
+        $(document.createElement('div'))
+            .attr({ 'class': 'dialog' })
+            .html(message)
+            .dialog({
+                buttons: {
+                    "1": {
+                        id: 'Ok', text: 'OK', click: function () {
+
+                            eliminarEncuesta();
+                            $(this).dialog("close");
+
+                        }, 'class': 'butonAlert'
+
+                    },
+
+                    "2": {
+                        id: 'btnCancelar', text: 'Cancelar', click: function () {
+                            $(this).dialog("close");
+                            //return false;
+                        }, 'class': 'butonAlert'
+                    },
+
+                    //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                },
+                close: function () { $(this).remove(); },
+                resizable: false,
+                height: 150,
+                width: 300,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: false,
+                dialogClass: 'dialog butonAlert',
+                hide: 'explode'
+            });
+    };
+
+
+
+    function eliminarEncuesta() {
+
+        $.ajax({
+            type: "POST",
+            // cache: false,
+            //contentType: "application/json; charset=utf-8",
+            datatype: "json",
+            traditional: true,
+            url: '@Url.Action("eliminarEncuesta", "Encuesta")',
+            success: function (result) {
+
+                $("#dialog-abandonar").dialog('close');
+
+                alert("Se Anulo la entrevista correctamente");
+                setTimeout(redireccionar, 2000);
+
+
+            },
+            error: function (result) {
+                alert("Error en la transacción");
+            }
+
+        });
+
+
+    }
+
+   
+
+
+    $("#CargandoDiv").dialog({
+        dialogClass: 'transparent'
+    });
+
+
+    function convertArray(objeto) {
+        var arr = [];
+        for (var i in objeto) {
+            if (objeto.hasOwnProperty(i)) {
+                arr.push(objeto[i]);
+            }
+        }
+
+        return arr;
+    }
+
+    var verifyPaymentType = function () {
+        var checkboxes = $('.wish_payment_type .checkbox');
+        var inputs = checkboxes.find('input');
+        var first = inputs.first()[0];
+
+        inputs.on('change', function () {
+            this.setCustomValidity('');
+        });
+
+        first.setCustomValidity(checkboxes.find('input:checked').length === 0 ? 'Choose one' : '');
+    }
+
+    function verificarJefe(arrRespuestas, arrPersonas) {
+        for (i = 0; i < arrPersonas.length; i++) {
+            //alert(arrPersonas[i]);
+            var conteoChek = 0;
+            //            conteoChek = conteoChek + verificarJefeCheked(arrRespuestas, arrPersonas[i]);
+            //alert(verificarJefeCheked(arrRespuestas, arrPersonas[i]));
+            if (verificarJefeCheked(arrRespuestas, arrPersonas[i]) == "1")
+                return true;
+
+        }
+
+        //if (conteoChek == 0)
+        return false;
+        //else
+        //return true;
+    }
+    function verificarJefeCheked(arrRespuestas, idPersona) {
+        //   console.log("tipo_" + arrRespuestas);
+        var chekiado = 0;
+        var isCheckedInicial = null;
+        for (f = 0; f < arrRespuestas.length; f++) {
+
+            //MainContent__chl_5_PER_116
+            //alert('id ' + idPersona);
+            if (idPersona != "") {
+                isCheckedInicial = document.getElementById('rdl_' + arrRespuestas[f] + "_per_" + idPersona);
+            } else {
+                isCheckedInicial = document.getElementById('rdl_' + arrRespuestas[f]);
+            }
+            //   console.log("idpersona_" + isCheckedInicial);
+            if (arrRespuestas[f] == "79" && isCheckedInicial != null) {
+                //alert(idPersona + ' - ' + isCheckedInicial.checked);
+                if (isCheckedInicial.checked) {
+                    //   console.log("checked_" + isCheckedInicial.checked);
+                    //chekiado = chekiado + 1;
+                    // alert('entro');
+                    return 1;
+                }
+            }
+        }
+
+        //return chekiado;
+        return 0;
+    }
+
+
+    function botonSig() {
+        //alert("entro sig");
+        document.body.style.cursor = "wait";
+        var ruta_img_attention = '@Url.Content("~/Content/Icons/attention.png")';
+        document.body.style.cursor = "wait";
+        $("#img_" + $("#idTem").val()).attr("src", ruta_img_attention);
+        var idPregunta = $('#idPregunt').val();
+        var respuestasConcatenadas = $('#respuestasConcatenadasJs').val();
+        var personasConcatenadas = $('#personasConcatenadasJs').val();
+        console.log(idPregunta);
+        console.log(respuestasConcatenadas);
+        var tipoPregunta = $('#tipoPreguntaJs').val();
+        var tipoCampo = $('#tipoCampoJa').val();
+        var idPersonaGe = $('#idPersonaGen').val();
+        var arrPersonas = [];
+        var arrRespuestas = [];
+        var repuestas = respuestasConcatenadas.split(",");
+        arrRespuestas = convertArray(repuestas);
+        var personas = personasConcatenadas.split(",");
+        arrPersonas = convertArray(personas);
+        var respuesta = "";
+        var total = new Array();
+        // $("#" + tipo + "_" + arrRespuestas[r] + "_per_" + arrPersonas[h])
+        //console.log("coleccionpreguntas_" + tipoCampo);
+        if ($("#coleccionPreguntas").val() == "0") {
+
+
+        }
+
+
+        if (idPregunta == "28" && tipoCampo == 'CH') {
+            //alert('alerta' + verificarJefe(arrRespuestas, arrPersonas));
+            //alert(verificarJefe(arrRespuestas, arrPersonas));
+
+            //VERIFICA QUE SE SELECCIONE AL MENOS UN JEFE DE HOGAR.
+            if (verificarJefe(arrRespuestas, arrPersonas) == false) {
+                //return true;
+                alert("Debe existir una persona que sea jefe del hogar.");
+                return false;
+            }
+        }
+        if (tipoCampo == "LT" || tipoCampo == "CL") {
+            total = guardarPreguntasRadioCheck(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe, "chl");
+
+        } else if (tipoCampo == "CH" || tipoCampo == "CT") {
+            //total = guardarPreguntasRadioButtom(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe);
+            total = guardarPreguntasRadioCheck(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe, "rdl");
+        } else if (tipoCampo == "AT" || tipoCampo == "TE" || tipoCampo == "TA") {
+            total = guardarPreguntasTexto(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe);
+        } else if (tipoCampo == "DP") {
+            total = guardarPreguntasCombo(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe);
+        } else {
+            alert("No existe una pregunta con ese tipo de campo");
+            return;
+        }
+        //Valida que cumpla todas las validaciones
+        console.log("TOTAL" + total);
+        if ($("form")[0].checkValidity()) {
+            $.ajax({
+                type: "POST",
+                // cache: false,
+                //contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                traditional: true,
+                url: '@Url.Action("siguiente", "Encuesta")',
+                data: { respuestas: total, tipo: tipoCampo, idPregunt: idPregunta, tipoPregunt: tipoPregunta },
+                //data: { "idTema": idUsuario[1] },
+                success: function (result) {
+                    //   console.log(result);
+                    if (result.data != 1) {
+                        $('#CargueDinamico').html(result);
+                        document.body.style.cursor = "default";
+                        $("#CargandoDatosEncuesta").hide('slow');
+                        //
+                    } else {
+                        alert(result.data2);
+                    }
+
+
+                }
+            });
+        } else {
+            $("#CargandoDatosEncuesta").hide('slow');
+            document.body.style.cursor = "default";
+        }
+     
+        //document.body.style.cursor = "default";
+        //$(window).scrollTop(0);
+        $(".topClass").scrollTop(0);
+
+    }
+
+    function guardarPreguntasRadioCheck(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe, tipo) {
+
+        /*console.log("guardarPreguntasRadioCheck:" + arrPersonas);
+
+        console.log("tipoPregunta:" + tipoPregunta);
+        console.log("arrRespuestas:" + arrRespuestas);
+        console.log("idPregunta:" + idPregunta);
+        console.log("idPersonaGe:" + idPersonaGe);*/
+
+        var inputs;
+        var first;
+        var nombreControl = [];
+        var respuesta;
+        var tipoInput;
+        var tipoText;
+        var total = new Array();
+        if (tipoPregunta == "IN") {
+            if (tipo == "chl") {
+                //console.log("tipo:" + tipo);
+                for (i = 0; i < arrPersonas.length; i++) {
+                    //chl_2_per_8
+                    nombreControl.push("#tbl_" + idPregunta + "_per_" + arrPersonas[i]);
+                }
+
+                for (j = 0; j < nombreControl.length; j++) {
+                    inputs = $(nombreControl[j]).find('input');
+                    first = inputs.first()[0];
+                    inputs.on('change', function () {
+                        this.setCustomValidity('');
+                    });
+                    //if (tipoCampo == "LT" || tipoCampo == "CL") {
+                    //console.log("NOMBRE_" + first);
+                    if ($(nombreControl[j]) !== undefined && $(nombreControl[j]) !== null && first !== null && first !== undefined) {
+                        //   console.log("entrovalidacion");
+                        first.setCustomValidity($(nombreControl[j]).find('input:checked').length === 0 ? 'Seleccione uno' : '');
+                    }
+                    //return false;
+                    //}
+                }
+            }
+
+            //console.log("respuestassconteo:" + arrRespuestas);
+            for (h = 0; h < arrPersonas.length; h++) {
+                respuesta = "";
+                for (r = 0; r < arrRespuestas.length; r++) {
+                    respuesta = "";
+                    //chl_2_per_8
+                    //respuesta = "";
+                    tipoInput = $("#" + tipo + "_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
+                    //console.log(tipoInput);
+                    if (tipoInput != null) {
+                        // console.log(tipoInput);
+                        if (tipoInput.prop('checked')) {
+                            //   console.log("cjejaeados" + arrPersonas[h]);
+                            respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r];
+                            tipoText = $("#txt_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
+                            if (tipoText != null && tipoText.css("visibility") == "visible") {
+                                //console.log("entroTexto" + arrPersonas[h]);
+                                //idRespuesta = $(this).attr('id').split("_")[1];
+                                if (tipoText.val().trim() != "") {
+                                    //    console.log(tipoText.val().trim());
+                                    respuesta = respuesta + "_texto_" + tipoText.val().trim() + "";
+                                    if (total.indexOf(respuesta) < 0) {
+                                        total.push(respuesta);
+                                    }
+                                }
+                            } else {
+                                respuesta = respuesta + "";
+                                if (total.indexOf(respuesta) < 0) {
+                                    total.push(respuesta);
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+
+        } else if (tipoPregunta == "GE") {
+
+            // console.log("ENTROANTES_");
+
+            if (tipo == "chl") {
+                nombreControl.push("#tr_" + idPregunta);
+                inputs = $(nombreControl[0]).find('input');
+                first = inputs.first()[0];
+                inputs.on('change', function () {
+
+                    this.setCustomValidity('');
+                });
+                //   alert("VALOR_"+$(nombreControl[0]).find('input:checked').length);
+                if ($(nombreControl[0]) !== undefined && $(nombreControl[0]) !== null && first !== null && first !== undefined) {
+                    first.setCustomValidity($(nombreControl[0]).find('input:checked').length === 0 ? 'Seleccione uno' : '');
+                }
+                //   alert(tipo);
+            }
+            for (r = 0; r < arrRespuestas.length; r++) {
+                respuesta = "";
+                tipoInput = $("#" + tipo + "_" + arrRespuestas[r]);
+                //console.log(tipoInput);
+                if (tipoInput != null) {
+                    // console.log(tipoInput);
+                    if (tipoInput.prop('checked')) {
+                        respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[r];
+                        tipoText = $("#txt_" + arrRespuestas[r]);
+                        // console.log("idtexto" + tipoText.attr("id"))
+                        if (tipoText != null && tipoText.css("visibility") == "visible") {
+                            //console.log(tipoText);
+                            //idRespuesta = $(this).attr('id').split("_")[1];
+                            if (tipoText.val().trim() != "") {
+                                //    console.log(tipoText.val().trim());
+                                respuesta = respuesta + "_texto_" + tipoText.val().trim() + "";
+                                if (total.indexOf(respuesta) < 0) {
+                                    total.push(respuesta);
+                                }
+                            }
+                        } else {
+                            respuesta = respuesta + "";
+                            if (total.indexOf(respuesta) < 0) {
+                                total.push(respuesta);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }
+        //console.log("cheks::" + total);
+        return total;
+    }
+
+    function guardarPreguntasTexto(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe) {
+
+        var inputs;
+        var first;
+        var nombreControl = [];
+        var respuesta;
+        var tipoInput;
+        var tipoText;
+        var total = new Array();
+        if (tipoPregunta == "IN") {
+            // console.log("personeasconteo:" + arrPersonas);
+            // console.log("respuestassconteo:" + arrRespuestas);
+            for (h = 0; h < arrPersonas.length; h++) {
+                respuesta = "";
+                for (r = 0; r < arrRespuestas.length; r++) {
+                    respuesta = "";
+                    //chl_2_per_8
+                    //respuesta = "";
+                    //txt_19_PER_8
+                    tipoInput = $("#txt_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
+                    //console.log(tipoInput);
+                    if (tipoInput != null && tipoInput.css("visibility") == "visible") {
+                        // console.log(tipoInput);
+
+                        //   console.log("cjejaeados" + arrPersonas[h]);
+                        // respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r];
+                        //tipoText = $("#txt_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
+
+                        //console.log("entroTexto" + arrPersonas[h]);
+
+                        //console.log("validatexto"+tipoInput.val().trim());
+                        respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r] + "_texto_" + tipoInput.val().trim() + "";
+                        //respuesta = respuesta + "_texto_" + tipoText.val().trim() + ")";
+                        if (total.indexOf(respuesta) < 0) {
+                            total.push(respuesta);
+                        }
+                    }
+
+                }
+            }
+
+        } else if (tipoPregunta == "GE") {
+            for (r = 0; r < arrRespuestas.length; r++) {
+                respuesta = "";
+                tipoInput = $("#txt_" + arrRespuestas[r]);
+                // console.log(tipoInput);
+                if (tipoInput != null && tipoInput.css("visibility") == "visible") {
+                    // console.log(tipoInput);
+                    // console.log(tipoText);
+                    respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[r] + "_texto_" + tipoInput.val().trim() + "";
+                    //respuesta = respuesta + "_texto_" + tipoInput.val().trim() + ")";
+                    if (total.indexOf(respuesta) < 0) {
+                        total.push(respuesta);
+                    }
+                }
+            }
+
+        }
+        //console.log("cheks::" + total);
+        return total;
+    }
+
+    function guardarPreguntasCombo(tipoPregunta, arrPersonas, arrRespuestas, idPregunta, idPersonaGe) {
+
+        var inputs;
+        var first;
+        var nombreControl = [];
+        var respuesta;
+        var tipoInput;
+        var tipoText;
+        var total = new Array();
+        if (tipoPregunta == "GE") {
+
+            respuesta = "";
+            tipoInput = $("#M_" + idPregunta);
+            console.log(tipoInput);
+            if (tipoInput != null && tipoInput.css("visibility") == "visible") {
+                //console.log("respuesta_" + arrRespuestas[0]);
+                respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[0] + "_texto_" + tipoInput.val().trim() + "";
+                //respuesta = respuesta + "_texto_" + tipoInput.val().trim() + ")";
+                if (total.indexOf(respuesta) < 0) {
+                    total.push(respuesta);
+                }
+            }
+
+        }
+        //console.log("cheks::" + total);
+        return total;
+    }
+
+
+</script>
+
+

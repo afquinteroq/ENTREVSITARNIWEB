@@ -1,0 +1,213 @@
+﻿@{
+    ViewBag.Title = "EditarEstadoEncuestaSAAH";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+@Html.Partial("_DialogPopup")
+
+<br /><br />
+
+    <div class="centrarDiv " id="contenedor">
+        <table class="marcoFormulario  efecto2 efecto1 " style="margin: auto; width: 1010px; text-transform: uppercase; font-family: 'Roboto'; font-size: 12px;margin-top:20px;">
+
+            <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>Editar Estado Encuesta</h5>
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="fondo " style="text-align:center;margin:0 auto; border: 1px solid #ccc; border-radius: 5px;width: 90%;text-align:center;padding:20px;">
+                        <table style="margin:0 auto;">
+                            <tr>
+                                <td style="text-align: center;font-family: 'Roboto'; font-size: 13px;">
+                                    Tener en cuenta que si asinga el estado ANULADA, esta entrevista será eliminada definitivamente.
+                                    @*@Html.DropDownList("lstUsuariosSAAH", ViewBag.lstUsuariosSAAH as List<SelectListItem>, new { id = "ddlListadoUsuariosSAAH", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;width: 194px;", maxlength = "30" })*@                                                                       
+                                    <br />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><br />
+                                    <label for="hogcodigo">Código de hogar:</label>
+                                    <input type="text" id="hogcodigo" name="hogcodigo" style="margin: auto;width:180px" required />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><br />
+                                    <div id="mensajeError">@ViewBag.Mensaje </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><br />
+                                    <div id="idlanulada" style=" display: none">
+                                        Seleccionar el circulo para ANULAR la entrevista:<br />
+                                        <label><input type="radio" name="estado" id="Anulada" value="ANULADA">Anular</label>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            @*<tr>
+                                    <td>
+                                        <label><input type="radio"  name="estado" id="Aplazada" value="APLAZADA">Aplazar</label>
+
+                                    </td>
+                                </tr>*@
+                            <tr>
+                                <td>
+                                    <br />
+                                    <input type="button" name="btnBuscarGrupoFamiliar" value="Buscar grupo familiar" id="btnBuscarGrupoFamiliar" style="margin: auto;width:250px" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br />
+                                    <input type="button" name="btnIraEditarEstadoEscuesta" value="Regresar a Buscar Entrevista" id="btnIraEditarEstadoEscuesta" style="margin: auto;width:250px; display: none" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br />
+                                    <input type="button" name="btnEditarEstadoEscuesta" value="Anular Entrevista" id="btnEditarEstadoEscuesta" style="margin: auto;width:250px; display: none" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a hidden href="@Url.Action("DescargarArchivoConstanciaFirmada", "GeneracionPdfs", new { hogcodigo = "8HI49" })">
+                                        <input type="button" name="btnlimpiarmensaje" id="btnlimpiarmensaje" value="Descargar Constancia firmada" />
+                                    </a>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                    <div id="miembrosxhogar">
+                    </div>
+                    <br />
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+<script>
+    $('#btnEditarEstadoEscuesta').click(function (e) {
+        var p_hogcodigo = $("#hogcodigo").val();
+
+        var p_estado = $('input:radio[name=estado]:checked').val();
+        console.log(p_estado);
+        $("#mensajeError").html('');
+        var p_hogcodigo = $("#hogcodigo").val();
+        location.href = '@Url.Action("AsignarEstadoEncuesta", "GeneracionPdfs")?hogcodigo=' + p_hogcodigo + '&estado=' + p_estado;
+
+        $('#miembrosxhogar').html('');
+                $.ajax(
+                    {
+                        data: { codHogar: p_hogcodigo},
+                        dataType: 'html',
+                        url: '@Url.Action("obtMiembroXHogar", "CargaMiebroXHogar")',
+                        success: function (result) {
+                            console.log('prueba ');
+                            $('#miembrosxhogar').append(result);                            
+                            $('#miembrosxhogar').show();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            alert("Código de hogar no existe o ha ocurrido un error al consultar las bases");
+                        }
+                    })
+
+
+    });
+</script>
+
+
+<script type="text/javascript">
+
+
+    $(document).ajaxStop(function () {
+        console.log('entro a la funcion loadingoverlay stop');
+        $.LoadingOverlay("hide");
+        $("#CargandoDatosMaestro").hide();
+    });
+
+    $(document).ajaxStart(function () {
+        $("#CargandoDatosMaestro").show();
+        console.log('entro a la funcion loadingoverlay start');
+        var ruta_Cargando2 = '@Url.Content("~/Content/Imagenes/Cargando2.gif")';
+        $.LoadingOverlay("show", "image: " + ruta_Cargando2);
+    });
+    
+
+    $('#btnBuscarGrupoFamiliar').click(function (e) {
+        $("#mensajeError").html('');
+        var p_hogcodigo = $("#hogcodigo").val();
+    $('#miembrosxhogar').html('');
+                $.ajax(
+                    {
+                        data: { codHogar: p_hogcodigo},
+                        dataType: 'html',
+                        url: '@Url.Action("obtMiembroXHogar", "CargaMiebroXHogar")',
+                        success: function (result) {
+                            $('#miembrosxhogar').append(result);
+                            $('#miembrosxhogar').show();
+
+                            var resultado = document.getElementById("resultado").innerHTML;
+                            console.log('ready! ' + resultado);
+
+                            if (resultado == 'ENTREVISTA NO PERTENECE A SAAH') {
+                                $('#btnIraEditarEstadoEscuesta').css("display", "none");
+                                $('#btnEditarEstadoEscuesta').css("display", "none");
+                                $('#idlanulada').css("display", "none");
+                                $('#btnBuscarGrupoFamiliar').css("display", "block");
+                            } else {
+                                $('#btnIraEditarEstadoEscuesta').css("display", "block");                                
+                                document.getElementById("hogcodigo").disabled = true;
+                                $('#idlanulada').css("display", "block");
+                                $('#btnBuscarGrupoFamiliar').css("display", "none");
+                            }
+
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            alert("Código de hogar no existe o ha ocurrido un error al consultar las bases");
+                        }
+                    })
+
+    });
+
+    $('#btnIraEditarEstadoEscuesta').click(function (e) {
+        $("#mensajeError").html('');
+        var p_hogcodigo = $("#hogcodigo").val();
+    $('#miembrosxhogar').html('');
+                $.ajax(
+                    {
+                        data: { codHogar: p_hogcodigo},
+                        dataType: 'html',
+                        url: '@Url.Action("EditarEstadoEncuestaSAAH", "GeneracionPdfs")',
+                        success: function (result) {
+                            $('#idlanulada').css("display", "none");
+                            $('#btnIraEditarEstadoEscuesta').css("display", "none");
+                            $('#btnEditarEstadoEscuesta').css("display", "none");
+                            $('#btnBuscarGrupoFamiliar').css("display", "block");
+                            document.getElementById("hogcodigo").disabled = false;
+                            $("#hogcodigo").val('');
+
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            alert("Código de hogar no existe o ha ocurrido un error al consultar las bases");
+                        }
+                    })
+
+    });
+
+    $('#Anulada').click(function (e) {
+        $('#btnEditarEstadoEscuesta').css("display", "block");
+    });
+
+
+</script>
+
+
+

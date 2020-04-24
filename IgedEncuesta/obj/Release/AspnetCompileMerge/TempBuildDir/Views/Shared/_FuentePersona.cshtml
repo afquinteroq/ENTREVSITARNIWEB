@@ -1,0 +1,141 @@
+﻿@model IEnumerable<IgedEncuesta.Models.mdlFuente.FuentePersona>
+
+@{
+    ViewBag.Title = "MaestroVictimas";
+    var lista = (List<string>)TempData["SelectList"];
+    
+
+    // TempData["TotalConsulta"] = Model.Count();
+    var total = Model.Count();
+    TempData["TotalConsulta"] = total;
+
+    TempData["PERFILES"] = Model;
+    TempData.Keep("PERFILES");
+    List<IgedEncuesta.Models.mdlFuente.FuentePersona> modeloHogar = (List<IgedEncuesta.Models.mdlFuente.FuentePersona>)TempData["ModeloHogar"];
+    var modelo = ViewBag.ModeloSerializado;
+}
+
+
+<br />
+
+<input type="hidden" id="totalConsulta" value="@total">
+<input type="hidden" id="hdModelo" name="ModeloVictimas" value="@modelo">
+<div id="gridContentFuente" class="marcoGrid" style="width: 100%">
+    @{
+        //var filaGrid = new PortalAplicacionesRNI.Models.gridDatos();
+        //var grid = new WebGrid(Model);                         
+        // Instanciamiento del helper webgrid
+        WebGrid grid = new WebGrid(Model, canPage: true, rowsPerPage: 5, canSort: false,
+        selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContentFuente");        
+
+        grid.Pager(WebGridPagerModes.NextPrevious);
+        //grid.Pager(WebGridPagerModes.All);
+        //grid.Bind(Model, rowCount: Model.Count(), autoSortAndPage: false);
+    }
+
+    @grid.GetHtml(
+                        //htmlAttributes: new { id = "gridContent" }, // id for ajaxUpdateContainerId parameter
+                        //htmlAttributes: new { id = "grid" },
+                        //mode: WebGridPagerModes.All,
+                        tableStyle: "grid-view",
+                        headerStyle: "grid-view-header",
+                        rowStyle: "grid-view-tr-normal",
+                        alternatingRowStyle: "grid-view-tr-alternate",
+                        footerStyle: "grid-view-pgr",
+                        columns: grid.Columns(
+                        grid.Column("FUENTE", "FUENTE"),
+                        grid.Column("TIPO_DOC", "TIPO DOCUMENTO"),
+                        grid.Column("NUMERO_DOC", "DOCUMENTO"),                        
+                        grid.Column("NOMBRES_COMPLETOS", "NOMBRES"),
+                        grid.Column("PARENTESCO", "PARENTESCO"),                        
+                        grid.Column("GENERO", "GENERO"),
+                        grid.Column("FECHA_NACIMIENTO", "FECHA NACIMIENTO"),
+                        grid.Column("ESTADO_VALORACION", "ESTADO VALORACION"),
+                        grid.Column("NUMERO_FORMULARIO", "NÚMERO FORMULARIO"),
+                        grid.Column("CODIGO_DECLARACION", "NÚMERO DECLARACION"),
+                        grid.Column("HECHO_VICTIMIZANTE", "HECHO")
+
+                       )
+    )
+
+</div>
+
+
+
+
+<script>
+    //$('#totalConsulta').val('@total');
+    //alert('entro');
+
+    //$('.incluirMaestro').click(function () {
+
+    //    var existe = false;
+    //    //id = idChequeados.toString().trim();
+    //    id = $(this).attr('id');
+        
+    //    if (id != '')
+    //        //+ '-' + integranteGrupo.length
+    //    {
+    //        integranteGrupo = $("." + id.substring(id.indexOf('-') + 1));
+    //        if (integranteGrupo.length) existe = true;
+    //    }
+
+    //    if (existe) {
+    //        // alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
+    //        opcionDialogo = 2;
+    //        window.confirm('El número de documento <b>' + id.substring(id.indexOf('-') + 1) + '</b> ya existe en la conformación del hogar. ¿Esta seguro de incluir esta persona?');
+    //        $('#txtNumDoc').val('');
+    //      //  $('#filaGridMaestro').hide('slow');
+    //        return;
+
+    //    }
+    //    else agregarVictimaIHogar();
+
+    //    //   if (windows.c)
+
+    //});
+
+@*    function agregarVictimaIHogar() {
+        // if (idChequeados != '') {
+        document.getElementById("maestroHogar").innerHTML = "";
+        var div = $('#maestroHogar');
+        var idVictima;
+        idVictima = id.substring(15);
+        idVictima = idVictima.replace("-", "|");
+
+        opcionAjax = 2;
+        //     alert(idVictima);
+        //  alert('ss');
+        $.ajax(
+             {
+                 type: 'POST',
+                 data: { idVictima: idVictima, opcion: '1' },
+                 dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+                 url: '@Url.Action("actualizarMaestroHogar", "ConformacionHogar")',
+                 //URL del action result que cargara la vista parcial
+                 success: function (result) {
+                     //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
+
+                     //alert(consPersona);
+                     if ($('#panelHogar').css('display') == 'none') $('#panelHogar').show('slow');
+                     $('#txtNumDoc').val('');
+                     //$('#filaGridMaestro').hide('slow');
+
+                     $('#imgIncluirMaestro_' + idVictima.substring(0, idVictima.indexOf('|'))).attr("src", "../Content/Icons/check-3.png");
+                     //    $('#imgIncluir_' + id).show(0);
+                     $('#incluirMaestro_' + idVictima.replace("|", "-")).off();
+                     $('#incluirMaestro_' + idVictima.replace("|", "-")).css('cursor', 'default');
+                     div.append(result);
+
+                 },
+                 error: function (error) {
+                     // si hay un error lanzara el mensaje de error
+                     alert('Se presento un error para la persona con Id ' + id);
+                     //  alert(error.responseText);
+                 }
+             });
+    };*@
+         //             else
+          //                alert('Seleccione al menos una persona para agregarla al hogar.');
+            //      }
+    </script>

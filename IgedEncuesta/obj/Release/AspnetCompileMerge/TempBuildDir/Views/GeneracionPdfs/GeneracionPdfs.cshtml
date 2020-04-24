@@ -1,0 +1,97 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    ViewBag.Title = "GeneracionPdfs";
+
+    
+}
+
+@*<form id="frmGeneracion">*@
+@Html.Partial("_DialogPopup")
+@using (Html.BeginForm("generacion", "GeneracionPdfs", FormMethod.Post, new { id = "formGeneracion" }))
+{
+    <br />
+    <div class="centrarDiv " id="contenedor">
+        <table class="marcoFormulario  efecto2 efecto1 " style="margin: auto; width: 1010px; text-transform: uppercase; font-family: 'Roboto'; font-size: 12px;margin-top:20px;">
+            <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>Generacion de  Cuestionarios</h5>
+                    <br />
+                </td>
+            </tr>
+            <tr >
+                <td >
+                    <div class="fondo " style="text-align:center;margin:0 auto; border: 1px solid #ccc; border-radius: 5px;width: 90%;text-align:center;padding:20px;">
+                        <table style="margin:0 auto;">
+                            <tr>
+                                <td style="text-align: center;font-family: 'Roboto'; font-size: 13px;">Seleccione el número de hogares que va a entrevistar en papel.  <br/>  Recuerde: No debe fotocopiar
+                                    un cuestionario para entrevistar a más de un hogar, pues el código es único.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br />
+                                    @Html.DropDownList("OpcionSeleccionada", ViewBag.Opciones as List<SelectListItem>, new { id = "opcionBusqueda", required = "", style = "width:220px" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    
+                                    @Html.RadioButton("PDFRadios", "General", true, new { id = "General", @class = "css-radio" })
+                                    <label for="General" class="css-labelRadio">General</label>
+
+                                    @Html.RadioButton("PDFRadios", "Indigena", false, new { id = "Enfoque", @class = "css-radio" })
+                                    <label for="Enfoque" class="css-labelRadio">Enfoque Etnico</label>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                     <br />
+                                    <input type="submit" name="btnGenerarCuestionario" value="Generar cuestionarios" id="btnGenerarCuestionario" style="margin: auto;width:180px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <br />
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    //$(document).ready(function () {
+    //    console.log("entrovalor" + $('#respuestaServidor').val());
+    //    if ($('#respuestaServidor').val() == "") {
+
+
+    //    } else if ($('#respuestaServidor').val() == "1") {
+
+    //        alert("Generación de cuestionario(s) exitosa.");
+    //    } else if ($('#respuestaServidor').val() == "2") {
+    //        alert("Generación de soporte exitosa.");
+    //    } else {
+    //        alert("Error en la descarga.");
+    //    }
+
+    //});
+
+
+    $('#btnGenerarCuestionario').click(function (e) {
+        if ($("#formGeneracion")[0].checkValidity()) {
+            $('#formGeneracion').submit();
+            alert("Generación de cuestionario(s) exitosa.");
+        }
+
+    });
+
+    $('#btnGenerarSoporte').click(function (e) {
+
+        alert("Generación de soporte exitosa.");
+
+
+    });
+</script>

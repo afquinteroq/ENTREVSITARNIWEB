@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Inicio";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+    }
+
+
+
+<body>
+    @if (ViewBag.CerrarVentana)
+    {
+        <script type="text/javascript">
+            window.close();
+        </script>
+    }
+    else
+    {
+        <script type="text/javascript">
+            window.location.href = '@Url.Action("Inicio", "ConformacionHogar")';
+        </script>
+    }
+</body>

@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0CA845A6-38DD-4D81-9637-64F37B4A88A3}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IgedEncuesta</RootNamespace>
+    <AssemblyName>IgedEncuesta</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AccesoDatos, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Documents\UV\ComponenteDatos_UltimaVersion\AccesoDatos\bin\x86\Release\AccesoDatos.dll</HintPath>
+    </Reference>
+    <Reference Include="AdmonSesion">
+      <HintPath>..\..\..\..\AdmonSesion\bin\Release\AdmonSesion.dll</HintPath>
+    </Reference>
+    <Reference Include="Autenticacion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\DLLS ULTIMA VERSION COMPONENTE SEGURIDAD\Autenticacion.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ObjetosTipos, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\ComponenteDatos_UltimaVersion\AccesoDatos\bin\x86\Release\ObjetosTipos.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.Pdf">
+      <HintPath>..\..\..\..\Acreditacion 16042018 1526\Consulta Individual RNI\Libs\libreriaPDF\SelectPdf-v18.4.0\SelectPdf-v18.4.0\Assemblies\net40\Select.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\IgedEncuestaVersionGabriel\IgedEncuesta\bin\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.2\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\..\..\IgedEncuestaVersionGabriel\IgedEncuesta\bin\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CargaMiebroXHogarController.cs" />
+    <Compile Include="Controllers\CargueConstanciaSAAHFirmadaController.cs" />
+    <Compile Include="Controllers\CargueSoporteController.cs" />
+    <Compile Include="Controllers\CerrarEncuestaController.cs" />
+    <Compile Include="Controllers\ConformacionHogarController.cs" />
+    <Compile Include="Controllers\DiligenciarEncuestaController.cs" />
+    <Compile Include="Controllers\EncuestaController.cs" />
+    <Compile Include="Controllers\GeneracionPdfsController.cs" />
+    <Compile Include="Controllers\GestionSAAHController.cs" />
+    <Compile Include="Controllers\ReporteEncuestaController.cs" />
+    <Compile Include="Controllers\SesionController.cs" />
+    <Compile Include="Filters\ExpiraSesionFilterAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_ArchivoColilla.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_ElementosPadre.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_estadoPreguntas.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_Hogar.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_InstrumentoxPregunta.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_Instumento.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_MiembroHogar.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_Persona.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_PersonaHechos.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_Pregunta.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_PreguntasxPersona.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_Respuesta.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_RespuestaNuevo.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_RespuestasxPersona.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_RespuestaxEncuesta.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_Tema.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\gic_TipoCaracterizacion.cs" />
+    <Compile Include="Models\mdlAdministracionInstrumentos\Parentesco.cs" />
+    <Compile Include="Models\mdlConstancia\ConstanciaSAAH.cs" />
+    <Compile Include="Models\mdlEncuesta\HechosPersona.cs" />
+    <Compile Include="Models\mdlEncuesta\Persona.cs" />
+    <Compile Include="Models\mdlFuente\FuentePersona.cs" />
+    <Compile Include="Models\mdlGenerico\GIC_REPORTEXHOGAR.cs" />
+    <Compile Include="Models\mdlGenerico\TipoDocumento.cs" />
+    <Compile Include="Models\mdlEncuesta\Victima.cs" />
+    <Compile Include="Models\mdlGenerico\BaseDatos.cs" />
+    <Compile Include="Models\mdlEncuesta\Hogar.cs" />
+    <Compile Include="Models\mdlEncuesta\Encuesta.cs" />
+    <Compile Include="Models\mdlGenerico\gic_AdministradorDeCambios.cs" />
+    <Compile Include="Models\mdlGenerico\Tool.cs" />
+    <Compile Include="Models\mdLogErrorIntegracion\MI_LOG_ERRORES_INTEGRACION.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilidades\man_ArchivoPdf.cs" />
+    <Compile Include="Utilitarios\CookieTempDataProvider.cs" />
+    <Compile Include="Util\General.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Caracterizacion\bajarArchivo.jpg" />
+    <Content Include="Content\Caracterizacion\faltante.jpg" />
+    <Content Include="Content\Caracterizacion\faltante.png" />
+    <Content Include="Content\Caracterizacion\guardado.jpg" />
+    <Content Include="Content\Caracterizacion\guardado.png" />
+    <Content Include="Content\Caracterizacion\Modal-Alerta.png" />
+    <Content Include="Content\Caracterizacion\nollenado.jpg" />
+    <Content Include="Content\Caracterizacion\nollenado.png" />
+    <Content Include="Content\Caracterizacion\subirArchivo.jpg" />
+    <Content Include="Content\Icons\add_person.png" />
+    <Content Include="Content\Icons\add_person0.png" />
+    <Content Include="Content\Icons\add_person_32.png" />
+    <Content Include="Content\Icons\add_person_off.png" />
+    <Content Include="Content\Icons\Attach.png" />
+    <Content Include="Content\Icons\attention.png" />
+    <Content Include="Content\Icons\Boton-Anterior.png" />
+    <Content Include="Content\Icons\Boton-Siguiente.png" />
+    <Content Include="Content\Icons\check-1.png" />
+    <Content Include="Content\Icons\check-2.png" />
+    <Content Include="Content\Icons\check-3.png" />
+    <Content Include="Content\Icons\check-30.png" />
+    <Content Include="Content\Icons\check-4.png" />
+    <Content Include="Content\Icons\check.png" />
+    <Content Include="Content\Icons\checkbox.png" />
+    <Content Include="Content\Icons\check_2.png" />
+    <Content Include="Content\Icons\check_3.png" />
+    <Content Include="Content\Icons\close_delete.png" />
+    <Content Include="Content\Icons\close_delete_2.png" />
+    <Content Include="Content\Icons\csscheckbox_1.png" />
+    <Content Include="Content\Icons\csscheckbox_10.png" />
+    <Content Include="Content\Icons\csscheckbox_100.png" />
+    <Content Include="Content\Icons\csscheckbox_11.png" />
+    <Content Include="Content\Icons\delete_person.png" />
+    <Content Include="Content\Icons\delete_person0.png" />
+    <Content Include="Content\Icons\Document.png" />
+    <Content Include="Content\Icons\Download.png" />
+    <Content Include="Content\Icons\Go Out.png" />
+    <Content Include="Content\Icons\group_family.png" />
+    <Content Include="Content\Icons\group_family0.png" />
+    <Content Include="Content\Icons\group_family_off.png" />
+    <Content Include="Content\Icons\group_family_off0.png" />
+    <Content Include="Content\Icons\GuiaUsuario.png" />
+    <Content Include="Content\Icons\home.png" />
+    <Content Include="Content\Icons\invalid.png" />
+    <Content Include="Content\Icons\logout.png" />
+    <Content Include="Content\Icons\required-small.png" />
+    <Content Include="Content\Icons\required.png" />
+    <Content Include="Content\Icons\uiTabsArrow.png" />
+    <Content Include="Content\Icons\valid.png" />
+    <Content Include="Content\Imagenes\AccesoDenegado.png" />
+    <Content Include="Content\Imagenes\AccesoDenegado2.PNG" />
+    <Content Include="Content\Imagenes\ajax-loader.gif" />
+    <Content Include="Content\Imagenes\Cargando2.gif" />
+    <Content Include="Content\Imagenes\Cargando.gif" />
+    <Content Include="Content\Imagenes\Cargando3.gif" />
+    <Content Include="Content\Imagenes\crossword.png" />
+    <Content Include="Content\Imagenes\ed878c0d.png" />
+    <Content Include="Content\Imagenes\Encabezado_Banner-03.png" />
+    <Content Include="Content\Imagenes\f00c7bff.png" />
+    <Content Include="Content\Imagenes\Footer.png" />
+    <Content Include="Content\Imagenes\FooterRound.png" />
+    <Content Include="Content\Imagenes\footer_27122019.jpg" />
+    <Content Include="Content\Imagenes\gradient.png" />
+    <Content Include="Content\Imagenes\grd_pgr.png" />
+    <Content Include="Content\Imagenes\Header.png" />
+    <Content Include="Content\Imagenes\HeaderRound.png" />
+    <Content Include="Content\Imagenes\logoConsInd.jpg" />
+    <Content Include="Content\Imagenes\pattern-1rhb.png" />
+    <Content Include="Content\Imagenes\pattern-4i7c.png" />
+    <Content Include="Content\Imagenes\pattern-6dzp.png" />
+    <Content Include="Content\Imagenes\pattern-bobh.png" />
+    <Content Include="Content\Imagenes\pdf.png" />
+    <Content Include="Content\Imagenes\shl.png" />
+    <Content Include="Content\Imagenes\sos.png" />
+    <Content Include="Content\Imagenes\square_bg.png" />
+    <Content Include="Content\Imagenes\subtle_dots.png" />
+    <Content Include="Content\Imagenes\textura_encab.jpg" />
+    <Content Include="Content\Imagenes\textura_pie.jpg" />
+    <Content Include="Content\Imagenes\wood_pattern.png" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_highlight-hard_65_fef7f8_1x100.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_highlight-soft_75_9c4a59_1x100.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_highlight-soft_75_c28993_1x100.png" />
+    <Content Include="Content\themes\Jquery\images\ui-bg_highlight-soft_75_c48994_1x100.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_834e58_256x240.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_9c4a59_256x240.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\Jquery\images\ui-icons_f2c8c2_256x240.png" />
+    <Content Include="Content\themes\Jquery\jquery-ui.css" />
+    <Content Include="Content\themes\Jquery\jquery-ui.min.css" />
+    <Content Include="Content\themes\Jquery\jquery-ui.structure.css" />
+    <Content Include="Content\themes\Jquery\jquery-ui.structure.min.css" />
+    <Content Include="Content\themes\Jquery\jquery-ui.theme.css" />
+    <Content Include="Content\themes\Jquery\jquery-ui.theme.min.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\Fonts\Lato-Bold.ttf" />
+    <Content Include="Content\Fonts\Lato-Regular.ttf" />
+    <Content Include="Content\Fonts\OpenSans-CondLightItalic.ttf" />
+    <Content Include="Content\Fonts\Roboto-Medium.ttf" />
+    <Content Include="Content\Fonts\Roboto-Regular.ttf" />
+    <Content Include="Content\Fonts\Roboto-Thin.ttf" />
+    <Content Include="Content\Fonts\Slabo27px-Regular.ttf" />
+    <Content Include="Archivos\GuiaIGEDEncuesta.pdf" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\PRUEBAS_CARACTERIZACION_2.pubxml" />
+    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\General.js" />
+    <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.js" />
+    <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-2.2.0.debug.js" />
+    <Content Include="Scripts\knockout-2.2.0.js" />
+    <Content Include="Scripts\loadingoverlay.js" />
+    <Content Include="Scripts\loadingoverlay.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Encuesta\DiligenciarEncuesta.cshtml" />
+    <Content Include="Views\Shared\_AccesoDenegado.cshtml" />
+    <Content Include="Views\Shared\_DialogPopup.cshtml" />
+    <Content Include="Views\Shared\_FinSesion.cshtml" />
+    <Content Include="Views\Shared\_FinSesion2.cshtml" />
+    <Content Include="Views\Shared\_LayoutMenu.cshtml" />
+    <Content Include="Views\Encuesta\ConformacionHogar.cshtml" />
+    <Content Include="Views\Shared\SesionInvalida.cshtml" />
+    <Content Include="Views\Shared\_MaestroVictima.cshtml" />
+    <Content Include="Views\Shared\_GrupoVictima.cshtml" />
+    <Content Include="Views\Shared\GrupoVictima.cshtml" />
+    <Content Include="Views\Shared\_GrupoFamiliar.cshtml" />
+    <Content Include="Views\Encuesta\ConformacionHogar2.cshtml" />
+    <Content Include="Views\Encuesta\ConformacionHogar3.cshtml" />
+    <Content Include="Views\Encuesta\_CapituloFinalizado.cshtml" />
+    <Content Include="Views\Encuesta\_CargaEncabezado.cshtml" />
+    <Content Include="Views\Encuesta\_CargaEncuesta.cshtml" />
+    <Content Include="Views\Encuesta\_CargaPreguntaCheck.cshtml" />
+    <Content Include="Views\Encuesta\_CargaPreguntaRadio.cshtml" />
+    <Content Include="Views\Encuesta\_CargaPreguntaTexto.cshtml" />
+    <Content Include="Views\Encuesta\Encuesta.cshtml" />
+    <Content Include="Views\GeneracionPdfs\GeneracionPdfs.cshtml" />
+    <Content Include="Views\ReporteEncuesta\ReporteEncuesta.cshtml" />
+    <Content Include="Views\CargueSoporte\CargueSoporte.cshtml" />
+    <Content Include="Views\Shared\Inicio.cshtml" />
+    <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Encuesta\_NoCumpleValidaciones.cshtml" />
+    <Content Include="Views\GeneracionPdfs\DescargarSoporte.cshtml" />
+    <Content Include="Views\GeneracionPdfs\Generacion.cshtml" />
+    <Content Include="Views\Shared\_FuentePersona.cshtml" />
+    <Content Include="Views\CerrarEncuesta\CerrarEncuesta.cshtml" />
+    <Content Include="Views\GeneracionPdfs\ConstanciaSAAH.cshtml" />
+    <Content Include="Views\GeneracionPdfs\FooterUrl.cshtml" />
+    <Content Include="Views\GeneracionPdfs\HeaderUrl.cshtml" />
+    <Content Include="Views\GeneracionPdfs\DescargarConstanciaSAAH.cshtml" />
+    <Content Include="Views\GeneracionPdfs\DescargarConstanciaFirmadaSAAH.cshtml" />
+    <Content Include="Views\GeneracionPdfs\_ErrorDownloadArchivo.cshtml" />
+    <Content Include="Views\CargueConstanciaSAAHFirmada\CargueConstanciaSAAHFirmada.cshtml" />
+    <Content Include="Views\GeneracionPdfs\EditarEstadoEncuestaSAAH.cshtml" />
+    <Content Include="Views\Shared\_MiembrosXHogar.cshtml" />
+    <Content Include="Views\GestionSAAH\AsignarmeEntrevista.cshtml" />
+    <Content Include="Views\Shared\_VersionAplicacion.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\ConformacionHogar\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:55947/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

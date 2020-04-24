@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "ConformacionHogar";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+    <title>IGED Encuesta</title>
+
+
+
+    @*    @Html.Partial("_DialogPopup")*@
+
+    <form id="formulario" class="validateDontSubmit">
+        <input type="text" id="txtNumDoc" required/>
+        <input type="submit" value="Buscar Víctima" id="btnBuscarVictima" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />
+
+    </form>
+
+
+
+    @if (ViewBag.CerrarVentana)
+    {
+        <script type="text/javascript">
+            window.close();
+        </script>  
+    }
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$("#formulario").validate();
+        //$("#formulario").removeAttr("novalidate");
+    });
+
+    var rbClick = false;
+    var idChequeados = "";
+    var opcionDialogo = 0;
+    var opcionAjax = 0;
+    var $myForm = $('#formulario');
+
+
+       //  $("#formulario").submit(function (event) {
+             $(document).on('submit', '.validateDontSubmit', function (e) {
+
+             //prevent the form from doing a submit
+             //    alert('entro1');
+
+               event.preventDefault();
+               return false;
+
+         });
+
+         $('#btnBuscarVictima').click(function () {
+             // alert($("form")[0].id);
+
+             //   alert($("form")[0].checkValidity().toString());
+             if ($('#txtNumDoc')[0].checkValidity()) {
+
+                 }
+             else {
+              // alert('no valido');
+            //   $myForm.find(':submit').click();
+            // $("#formulario").submit();
+            //   $('#formulario .submit').click();
+            //  $('#formulario').submit();
+            //      return false;
+            //  return;
+             }
+   });
+         // });
+</script>

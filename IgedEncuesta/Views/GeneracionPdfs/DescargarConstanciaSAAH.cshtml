@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "DescargarConstanciaSAAH";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+
+@Html.Partial("_DialogPopup")
+
+<br />
+
+
+    <br />
+    <div class="centrarDiv " id="contenedor">
+        <table class="marcoFormulario  efecto2 efecto1 " style="margin: auto; width: 1010px; text-transform: uppercase; font-family: 'Roboto'; font-size: 12px;margin-top:20px;">
+
+            <tr>
+                <td style="margin-top: 5px;">
+                    <br />
+                    <h5>Descargar Constancia sin firmar</h5>
+                    <br />
+                </td>
+            </tr>
+
+            <tr>
+
+                <td>
+                    <div class="fondo " style="text-align:center;margin:0 auto; border: 1px solid #ccc; border-radius: 5px;width: 90%;text-align:center;padding:20px;">
+                        <table style="margin:0 auto;">
+                            <tr>
+                                <td style="text-align: center;font-family: 'Roboto'; font-size: 13px;">
+                                    Descargar Constancia sin firmar
+                                    <br>
+                                    Favor ingrear el código de hogar.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" id="hogcodigo" name="hogcodigo"  style="margin: auto;width:180px" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="mensajeError">@ViewBag.Mensaje </div>
+                                </td>
+                            </tr>
+                            <tr>                                
+                                <td>
+                                    <br />
+                                    @*<div id="CargandoDatosMaestro" style="display: none;">                                        
+                                        <h5>Procesando por favor espere...</h5>
+                                        <img alt="" src="@Url.Content("~/Content/Imagenes/Cargando3.gif")" />
+                                    </div>*@
+                                    <input type="button" name="btnDescargarConstanciaSinfirmar" value="Descargar Constancia Sin Firmar" id="btnDescargarConstanciaSinfirmar" style="margin: auto;width:250px" />
+                                </td>                                
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+
+
+
+<script type="text/javascript">
+
+
+    //$('#btnGenerarCostanciaSinFirmar').click(function (e) {
+    //    if ($("#formGeneracion")[0].checkValidity()) {
+    //        $('#formGeneracion').submit();
+    //        alert("Generación de cuestionario(s) exitosa.");
+    //    }
+
+    //});
+
+    //andrés quintero 07/01/2020
+    $(document).ajaxStop(function () {
+        console.log('entro a la funcion loadingoverlay stop');
+        $.LoadingOverlay("hide");
+        $("#CargandoDatosMaestro").hide();
+    });
+
+    $(document).ajaxStart(function () {
+        $("#CargandoDatosMaestro").show();
+        console.log('entro a la funcion loadingoverlay start');
+        var ruta_Cargando2 = '@Url.Content("~/Content/Imagenes/Cargando2.gif")';
+        $.LoadingOverlay("show", "image: " + ruta_Cargando2);
+    });
+    ///
+
+    $('#btnDescargarConstanciaSinfirmar').click(function (e) {
+        
+        $("#mensajeError").html('');
+        var p_hogcodigo = $("#hogcodigo").val();
+        //window.location.href = "/GeneracionPdfs/DescargarArchivoConstanciaSinFirmar" + "?hogcodigo=" + p_hogcodigo;
+        //window.location.href = "/GeneracionPdfs/DescargarArchivoConstanciaSinFirmar" + "?hogcodigo=" + p_hogcodigo;
+        location.href = '@Url.Action("DescargarArchivoConstanciaSinFirmar", "GeneracionPdfs")?hogcodigo=' + p_hogcodigo;
+
+        @*$.ajax({
+            type: "GET",
+            //cache: false,
+            contentType: false,
+            datatype: "json",
+            //traditional: true,
+            data: { hogcodigo: p_hogcodigo},
+            url: '@Url.Action("DescargarArchivoConstanciSinFirmar", "GeneracionPdfs")',
+            success: function (result) {
+                window.location = "/GeneracionPdfs/DescargarArchivoConstanciSinFirmar" + "?p_hogcodigo=" + resultData.fName;
+                alert("Descarga constancia exitosa.");
+            }, error: function (result) {
+                alert("Código no existe.");
+            }
+
+        });*@
+
+
+
+
+    });
+</script>
+

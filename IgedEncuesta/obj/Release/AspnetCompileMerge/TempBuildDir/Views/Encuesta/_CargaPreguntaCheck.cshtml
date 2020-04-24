@@ -1,0 +1,757 @@
+﻿@model AdministracionInstrumentos.gic_PreguntaRespuestasFlujo
+@{
+    var OpcionRespuestaGen = Model.opcionesRespuesta.FirstOrDefault();
+    string nombres = string.Empty;
+    string valorCampoTexto = string.Empty;
+    //int idPersonaEncuestada = (int)TempData["IDPERSONAENCUESTADA"];
+    int idPersonaEncuestada = Model.idPersonaEncuesta;
+}
+
+<style>
+    .etiqueta2 {
+        font-family: 'Roboto',sans-serif;
+        /*font-size: 1.1em;*/
+        font-size: 11px;
+        text-align: left;
+        padding: 6px;
+        text-transform: uppercase;
+        width: 480px;
+    }
+
+    input[type=checkbox].css-checkbox {
+        position: absolute;
+        /*z-index: -1000;*/
+        left: 0px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        width: 1px;
+        margin: 20px;
+        padding: 0;
+        border: 0;
+    }
+
+        input[type=checkbox].css-checkbox + label.css-label2 {
+            padding-left: 15px;
+            height: 15px;
+            display: inline-block;
+            line-height: 15px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            font-size: 12px;
+            vertical-align: middle;
+            font-family: Roboto,Tahoma,Arial;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding-right: 10px;
+        }
+
+        input[type=checkbox].css-checkbox:checked + label.css-label2 {
+            background-position: 0 -15px;
+        }
+
+    label.css-label2 {
+        background-image: url('../Content/Icons/csscheckbox_100.png');
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        font-family: Roboto,Tahoma,Arial;
+        text-transform: uppercase;
+        margin-left: 6px;
+    }
+
+    .bordePreguntas {
+        border: 1px solid #ccc;
+        background-color: white;
+    }
+</style>
+
+<div style="width: 100%">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 10px;">
+
+        @if (Model.preguntaXpersonaGen.pre_TipoCampo == "CL" || Model.preguntaXpersonaGen.pre_TipoCampo == "LT")
+        {
+            var pregunta = new System.Web.HtmlString(Model.preguntaXpersonaGen.pre_pregunta);
+
+            if (Model.preguntaXpersonaGen.pre_TipoPregunta == "GE")
+            {
+            <tr>
+                <td style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; background: white url('../Content/Imagenes/pattern-4i7c.png') repeat">
+                    @Html.Label("", "Pregunta " + Model.preguntaXpersonaGen.ipx_Orden.ToString() + ". ", new { style = "text-transform:uppercase;;font-family:'Roboto'; font-size: 12px;" })
+                    @Html.Raw("<label style=\"text-transform:uppercase;font-family:'Roboto'; font-size: 12px;\">")
+                    @Html.Raw(pregunta.ToString())
+                    @Html.Raw("</label>")
+                </td>
+            </tr>
+            <tr id="tr_@Model.preguntaXpersonaGen.pre_IdPregunta" style="text-align: left;">
+                <td class=" marcoPreguntas efecto2 efecto1" style="width: 100%">
+
+                    @if (Model.preguntaXpersonaGen.pre_TipoCampo == "CL" || Model.preguntaXpersonaGen.pre_TipoCampo == "LT")
+                    {
+                       
+                        @GenerarValidadorCheck(Model, "", idPersonaEncuestada, "", false);
+                    }
+                </td>
+            </tr>
+            }
+            else if (Model.preguntaXpersonaGen.pre_TipoPregunta == "IN")
+            {
+            <tr>
+                <td colspan="2" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; background: white url('../Content/Imagenes/pattern-4i7c.png') repeat">
+                    @Html.Label("", "Pregunta " + Model.preguntaXpersonaGen.ipx_Orden.ToString() + ". ", new { style = "text-transform:uppercase;;font-family:'Roboto'; font-size: 12px;" })
+                    @Html.Raw("<label style=\"text-transform:uppercase;font-family:'Roboto'; font-size: 12px;\">")
+                    @Html.Raw(pregunta.ToString())
+                    @Html.Raw("</label>")
+                </td>
+            </tr>
+                foreach (AdministracionInstrumentos.gic_PreguntasxPersona personas in Model.colleccionPreguntas)
+                {
+                    nombres = personas.per_PrimerNombre + " " + personas.per_SegundoNombre + " " + personas.per_PrimerApellido + " " + personas.per_SegundoApellido;
+                    string tabla = "tbl_" + Model.preguntaXpersonaGen.pre_IdPregunta + "_per_" + personas.per_IdPersona;
+                    AdministracionInstrumentos.gic_RespuestaNuevo respuesta = new AdministracionInstrumentos.gic_RespuestaNuevo();
+                    List<AdministracionInstrumentos.gic_RespuestaNuevo> resValidadas = new List<AdministracionInstrumentos.gic_RespuestaNuevo>();
+                    resValidadas = respuesta.getRespuestasxPrexPersona(Model.preguntaXpersonaGen.pre_IdPregunta, 1, Model.codigoHogar, personas.per_IdPersona);
+            <tr>
+                <td style="width: 40%;" class=" marcoPreguntas efecto2 efecto1">
+                    @Html.Label(nombres, new { @style = "text-transform:uppercase; font-family:'Roboto';  font-size:12px; font-weight:normal; width:210px;text-align:center;" })
+
+                </td>
+                <td style="width: 60%" class=" marcoPreguntas efecto2 efecto1">
+                    <table id="@tabla" style="width:100%" >
+                        @foreach (AdministracionInstrumentos.gic_RespuestaNuevo respuestaText in resValidadas.OrderBy(x => x.res_OrdenRespuesta))
+                        {
+                            bool validaPersona = false;
+                            string eventoOnchange = string.Empty;
+                            string desahibilita = string.Empty;
+                            //check.Attributes.Add("onClick", "javascript:return mostrarOcultarCIndividual(this,'MainContent_txt_" + respuestaText.res_IdRespuesta + "_PER_" + personas.per_IdPersona + "','" + resConta + "','" + respuestaText.pre_Campo_Tex + "','" + perConta + "','"+respuestaText.res_Habilita+"','"+respuestaText.res_IdRespuesta+"');");
+                            if (respuestaText.pre_Campo_Tex == "AB" && Model.preguntaXpersonaGen.pre_TipoCampo == "LT" || respuestaText.res_Habilita == "SI")
+                            {
+                                eventoOnchange = "MostraHabilitaTextoFamiliarCheck(this,'txt_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona + "','" + Model.respuestasConcatenadas + "', '" + respuestaText.pre_Campo_Tex + "','" + Model.personasConcatenadas + "','" + respuestaText.res_Habilita + "','" + respuestaText.res_IdRespuesta + "')";
+                            }
+                            else
+                            {
+                                eventoOnchange = string.Empty;
+                            }
+
+                            if (personas.validacion_Persona != 0)
+                            {
+                                validaPersona = true;
+                            }
+
+                            //vcerifica si ahy alguan respuesta marcada
+                            var resHab = Model.opcionesRespuestaFiltrado.Where(y => y.res_Habilita == "SI");
+
+                            var respuestaHabilita = (Model.coleccionRespuestas.Find(x => x.per_IdPersona == personas.per_IdPersona && resHab.Where(t => t.res_IdRespuesta == x.res_IdRespuesta.res_IdRespuesta && t.res_Habilita == "SI") != null));
+
+                            var total = resHab.Where(x => x.res_IdRespuesta == respuestaHabilita.res_IdRespuesta.res_IdRespuesta);
+
+                            if (respuestaHabilita != null)
+                            {
+                                if (respuestaHabilita.res_IdRespuesta.res_IdRespuesta == respuestaText.res_IdRespuesta || total.Count() == 0)
+                                {
+
+                                    desahibilita = "false";
+                                }
+                                else
+                                {
+                                    desahibilita = "true";
+                                }
+                            }
+                            //validaPersona = true;
+                            //  string valorCampoTexto;
+                            //if (Model.respuestaPreguntaGen != null)
+                            //{
+                            //    foreach (AdministracionInstrumentos.gic_RespuestaxEncuesta resEn in Model.coleccionRespuestas)
+                            //    {
+                            //        valorCampoTexto = "";
+                            //        if (resEn.res_IdRespuesta.res_IdRespuesta == respuestaText.res_IdRespuesta && personas.per_IdPersona == resEn.per_IdPersona)
+                            //        {
+                            //            chekeado = true;
+
+                            //            if (Model.preguntaXpersonaGen.pre_TipoCampo == "LT")
+                            //            {
+                            //                if (Model.respuestaPreguntaGen.rxp_TextoRespuesta != "" && Model.respuestaPreguntaGen.rxp_TextoRespuesta != null)
+                            //                {
+                            //                    valorCampoTexto = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
+                            //                    if (TempData["FLUJO"].ToString() != "SIG" || valorCampoTexto != "")
+                            //                    {
+
+                            //                        clase = "visible";
+
+                            //                    }
+                            //                }
+                            //            }
+                            //        }
+                            //    }
+                            //}
+                            <tr>
+                                <td>
+                                    @GenerarCheckTexto(respuestaText, "chl_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona, "txt_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona, "chl_" + respuestaText.pre_IdPregunta.pre_IdPregunta + "_per_" + personas.per_IdPersona, validaPersona, personas.per_IdPersona, eventoOnchange, desahibilita)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+                
+                }
+
+            }
+        }
+    </table>
+</div>
+@helper GenerarValidadorCheck(AdministracionInstrumentos.gic_PreguntaRespuestasFlujo coleccionFlujo, string idControl, int idPersona, string valorTexto, bool validarControl)
+{
+    string respuestaRequerida = string.Empty;
+    string eventoOnchange = string.Empty;
+    string valorCampoTexto = string.Empty;
+    string desahibilita = string.Empty;
+    //bool chekeado = false;
+    //int idPersonaEncuestada = (int)TempData["IDPERSONAENCUESTADA"];
+    int idPersonaEncuestada = Model.idPersonaEncuesta;
+    AdministracionInstrumentos.gic_RespuestaNuevo respuesta = new AdministracionInstrumentos.gic_RespuestaNuevo();
+    List<AdministracionInstrumentos.gic_RespuestaNuevo> resValidadas = new List<AdministracionInstrumentos.gic_RespuestaNuevo>();
+    resValidadas = respuesta.getRespuestasxPrexPersona(Model.preguntaXpersonaGen.pre_IdPregunta, 1, Model.codigoHogar, idPersona);
+    respuesta = coleccionFlujo.opcionesRespuestaFiltrado.FirstOrDefault();
+    // string clase = "hidden";
+    respuestaRequerida = (respuesta.res_Obligatoria == "SI") ? "required" : "";
+
+
+    foreach (AdministracionInstrumentos.gic_RespuestaNuevo respuestaText in resValidadas.OrderBy(x => x.res_OrdenRespuesta))
+    {
+        //chekeado = false;
+        //check.Attributes.Add("onClick", "javascript:return mostrarOcultarC(this,'MainContent_txt_" + respuestaText.res_IdRespuesta + "','" + resConta + "','" + respuestaText.pre_Campo_Tex + "','" + respuestaText.res_Habilita + "','" + respuestaText.res_IdRespuesta + "');");
+
+        //if (respuestaText.res_IdRespuesta == 2)
+        //{
+        //    chekeado = true;
+        //}
+        if ((respuestaText.pre_Campo_Tex == "AB" && Model.preguntaXpersonaGen.pre_TipoCampo == "LT") || respuestaText.res_Habilita == "SI")
+        {
+            eventoOnchange = "MuestraHabilitaTextoCheck(this,'txt_" + respuestaText.res_IdRespuesta + "','" + Model.respuestasConcatenadas + "','" + respuestaText.pre_Campo_Tex + "','" + respuestaText.res_Habilita + "','" + respuestaText.res_IdRespuesta + "')";
+        }
+        else
+        {
+            eventoOnchange = string.Empty;
+        }
+
+        var resHab = Model.opcionesRespuestaFiltrado.Where(y => y.res_Habilita == "SI");
+
+        var respuestaHabilita = (Model.coleccionRespuestas.Find(x => x.per_IdPersona == idPersona && resHab.Where(t => t.res_IdRespuesta == x.res_IdRespuesta.res_IdRespuesta && t.res_Habilita == "SI") != null));
+
+        var total = resHab.Where(x => x.res_IdRespuesta == respuestaHabilita.res_IdRespuesta.res_IdRespuesta);
+
+        if (respuestaHabilita != null)
+        {
+            if (respuestaHabilita.res_IdRespuesta.res_IdRespuesta == respuestaText.res_IdRespuesta || total.Count() == 0)
+            {
+
+                desahibilita = "false";
+            }
+            else
+            {
+                desahibilita = "true";
+            }
+        }
+
+        //if (coleccionFlujo.respuestaPreguntaGen != null)
+        //{
+        //    if (respuestaText.res_IdRespuesta == coleccionFlujo.respuestaPreguntaGen.res_IdRespuesta.res_IdRespuesta && idPersona == Model.respuestaPreguntaGen.per_IdPersona)
+        //    {
+        //        chekeado = true;
+        //        if (Model.preguntaXpersonaGen.pre_TipoCampo == "LT")
+        //        {
+        //            if (coleccionFlujo.respuestaPreguntaGen.rxp_TextoRespuesta != "" && coleccionFlujo.respuestaPreguntaGen.rxp_TextoRespuesta != null)
+        //            {
+        //                valorCampoTexto = coleccionFlujo.respuestaPreguntaGen.rxp_TextoRespuesta;
+        //                if (TempData["FLUJO"].ToString() != "SIG" || valorCampoTexto != "")
+        //                {
+        //                    clase = "visible";
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+        
+
+    @GenerarCheckTexto(respuestaText, "chl_" + respuestaText.res_IdRespuesta.ToString(), "txt_" + respuestaText.res_IdRespuesta, "chl_" + respuestaText.pre_IdPregunta.pre_IdPregunta.ToString(), true, idPersonaEncuestada, eventoOnchange, desahibilita)
+    
+
+    }
+
+}
+
+
+@helper GenerarCheckTexto(AdministracionInstrumentos.gic_RespuestaNuevo respuestaText, string idControl, string controlTexto, string nombreRadio, bool validacionControl, int idPersona, string eventoOnchange, string dehabilita)
+{
+    string visibilidadControl = string.Empty;//, respuestaRequerida = "true";
+    string valorCampoTexto = string.Empty, clase = "none";//;, eventoOnchange = string.Empty;
+    bool chekeado = false;
+    bool requeridoTexto = false;
+    string sizeTdTexto = "50%";
+    string sizeTdTextBox = "50%";
+    var conCampo = (respuestaText.pre_Campo_Tex == "AB" && Model.preguntaXpersonaGen.pre_TipoCampo == "LT");
+    if(conCampo==false){
+        sizeTdTexto = "95%";
+        sizeTdTextBox = "5%";
+    }else{
+        sizeTdTexto = "40%";
+        sizeTdTextBox = "60%";
+    }
+    
+    if (validacionControl == false)
+    {
+        visibilidadControl = "block";
+        //  respuestaRequerida = "";
+    }
+    else
+    {
+        visibilidadControl = "block";
+        // respuestaRequerida = "required";
+    }
+
+
+    var respues = (Model.coleccionRespuestas.FirstOrDefault(x => x.res_IdRespuesta.res_IdRespuesta == respuestaText.res_IdRespuesta && idPersona == x.per_IdPersona));
+    //foreach (AdministracionInstrumentos.gic_RespuestaxEncuesta resEn in Model.coleccionRespuestas)
+    //{
+    valorCampoTexto = "";
+    //var respues = (Model.coleccionRespuestas.FirstOrDefault(x => x.res_IdRespuesta.res_IdRespuesta== respuestaText.res_IdRespuesta &&  8 == x.per_IdPersona ));
+    if (respues != null)
+    {
+        chekeado = true;
+
+        if (respues.rxp_TextoRespuesta != "" && respues.rxp_TextoRespuesta != null)
+        {
+            valorCampoTexto = respues.rxp_TextoRespuesta;
+            if (Model.flujo != "SIG" || valorCampoTexto != "")
+            {
+
+                clase = "block";
+                //     respuestaRequerida = "required";
+                requeridoTexto = true;
+            }
+        }
+        else
+        {
+            visibilidadControl = "none";
+            //   respuestaRequerida = "";
+            requeridoTexto = false;
+        }
+        // }
+    }
+    if (validacionControl == true)
+    {
+    
+    <table style="width: 100%; border-color: red">
+        <tr>
+            <td style="margin: -1px; width: 2%">
+                @if (dehabilita == "true")
+                {
+                    //@Html.CheckBox(nombreRadio, chekeado, new { id = idControl, @style = "visibility:" + visibilidadControl + ";", @class = "css-checkbox", disabled = "", @onchange = eventoOnchange })
+                    <input class="css-checkbox" id="@idControl" value="" required style="width: 15px;visibility:@visibilidadControl;" type="checkbox" disabled = "" onchange ="@eventoOnchange"/>
+                    <label for="@idControl" class="css-label2"></label>
+                }
+                else
+                {
+                    // @Html.CheckBox(nombreRadio, chekeado, new { id = idControl, @style = "visibility:" + visibilidadControl + ";", @class = "css-checkbox", @onchange = eventoOnchange })
+                    if (chekeado)
+                    {
+                    <input class="css-checkbox" id="@idControl"   checked style="width: 15px;visibility:@visibilidadControl;" type="checkbox" onchange="@eventoOnchange"/>
+                    }
+                    else
+                    {
+                    <input class="css-checkbox" id="@idControl"   style="width: 15px;visibility:@visibilidadControl;" type="checkbox"  onchange ="@eventoOnchange"/>
+                    }
+                        
+                    <label for="@idControl" class="css-label2"></label>
+                }
+            </td>
+
+            <td style="text-align: left; width: @sizeTdTexto">
+                @Html.Label(respuestaText.res_Respuesta, new { @style = "font-size:11px; font-weight:normal;font-family:'Roboto';   width:210px;text-align:center;" })
+                </td>
+            <td style="text-align: left; width: @sizeTdTextBox">
+                @if (respuestaText.pre_Campo_Tex == "AB" && Model.preguntaXpersonaGen.pre_TipoCampo == "LT")
+                {
+                    @GenerarValidador(respuestaText, controlTexto, 0, valorCampoTexto, requeridoTexto, false, clase)
+                }
+            </td>
+
+
+        </tr>
+
+    </table>
+    }
+}
+
+
+@helper GenerarValidador(AdministracionInstrumentos.gic_RespuestaNuevo respuesta, string idControl, int idPersona, string valorTexto, bool validarControl, bool autocompletar, string visibilidadControl = "block")
+{
+    string respuestaRequerida = "";
+    int longCampo = 0;
+    string eventoOnchange = string.Empty;
+    string eventoOnkey = string.Empty;
+    string claseAutocompletar = string.Empty;
+    string claseRequerido = string.Empty;
+    AdministracionInstrumentos.gic_RespuestaNuevo resObj = new AdministracionInstrumentos.gic_RespuestaNuevo();
+    string width = "width:250px;";
+    string heigth = string.Empty;
+    //if (respuesta.res_Obligatoria == "SI")
+    //{
+    //    respuestaRequerida = "true";
+    //}
+
+    respuestaRequerida = (respuesta.res_Obligatoria == "SI") ? "required" : "";
+    DateTime? MyDateTime;
+    MyDateTime = new DateTime();
+    string valorMinimo = (respuesta.pre_Validador_Min != null) ? respuesta.pre_Validador_Min : "1";
+    string valorMaximo = (respuesta.pre_Validador_Max != null) ? respuesta.pre_Validador_Max : "10";
+    if (respuesta.pre_Validador == "FE")
+    {
+
+        if (valorTexto != "")
+        {
+            MyDateTime = DateTime.ParseExact(valorTexto, "dd/MM/yyyy",
+                                         null);
+        }
+        else
+        {
+            MyDateTime = null;
+        }
+    }
+    //if (respuesta.res_Obligatoria == "S
+    //Valida que no vega vacio el campo de logitud
+
+    if (!string.IsNullOrEmpty(respuesta.pre_longcampo.ToString()) || respuesta.pre_longcampo > 0)
+    {
+        longCampo = respuesta.pre_longcampo;
+        eventoOnkey = "validarOnkey(this, " + longCampo + ");";
+    }
+    //Si el validador_Max viene con SYSDATE, coloca la fecha actual.
+    if (respuesta.pre_Validador_Max == "SYSDATE")
+    {
+        respuesta.pre_Validador_Max = DateTime.Now.ToShortDateString();
+    }
+
+    //Valida si esa pregunta cumple los validadores para mostrar o no el campo de texto.
+    if (validarControl == false)
+    {
+        visibilidadControl = "none";
+        respuestaRequerida = "false";
+    }
+
+    if (autocompletar == true)
+    {
+        claseAutocompletar = "autocompletar";
+    }
+
+    if (valorTexto != "")
+    {
+        claseRequerido = "requerido";
+        respuestaRequerida = "required";
+
+    }
+
+    if (respuesta.pre_Validador == "TE")
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "    " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+        else
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = valorMaximo, respuestaRequerida, maxlength = longCampo, id = idControl, @class = " entrada " + claseAutocompletar, @onkeypress =eventoOnkey,@onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+
+    }
+    else if (respuesta.pre_Validador == "NU")
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + " ; " + width + " ", pattern = "[0-9]*", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada", @onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');" , type="number" })
+        }
+        else
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + " ; " + width + " ", pattern = "[0-9]*", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada",@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');" , type="number" })
+        }
+    }
+    else if (respuesta.pre_Validador == "FE")
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, MyDateTime, "{0:yyyy-MM-dd}", new { @style = "display:" + visibilidadControl + "; " + width + " ", type = "date", pattern = "^([0-9]{1,2})[./-]+([0-9]{1,2})[./-]+([0-9]{2}|[0-9]{4})$", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+        else
+        {
+        @Html.TextBox(idControl, MyDateTime, "{0:yyyy-MM-dd}", new { @style = "display:" + visibilidadControl + "; " + width + " ", type = "date", pattern = "^([0-9]{1,2})[./-]+([0-9]{1,2})[./-]+([0-9]{2}|[0-9]{4})$", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+    }
+    else if (respuesta.pre_Validador == "DI")
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^[A-Z0-9 a-z # \-  áéíóú]*$", min = valorMinimo, max = valorMaximo, required = "", maxlength = respuesta.pre_longcampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+        else
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^[A-Z0-9 a-z # \-  áéíóú]*$", min = valorMinimo, max = valorMaximo, maxlength = respuesta.pre_longcampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+    }
+    else if (respuesta.pre_Validador == "EM")
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+        else
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+    }
+    else if (respuesta.pre_Validador == "TI")
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"\d{2}-\d{7}", min = valorMinimo, max = valorMaximo, required = "", maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+        else
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " ", pattern = @"\d{2}-\d{7}", min = valorMinimo, max = valorMaximo, maxlength = longCampo, id = idControl, @class = "requerido entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+    }
+    else
+    {
+        if (respuestaRequerida == "required")
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = valorMaximo, maxlength = longCampo, required = "", id = idControl, @class = " entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+        else
+        {
+        @Html.TextBox(idControl, valorTexto, new { @style = "display:" + visibilidadControl + "; " + width + " " + heigth + " ", pattern = @"^[A-Z0-9 a-z # \- , . ñÑáéíóú]*$", min = valorMinimo, max = respuesta.pre_Validador_Max, maxlength = longCampo, id = idControl, @class = " entrada " + claseAutocompletar,@onkeypress =eventoOnkey, @onchange = eventoOnchange, oninvalid="InvalidMsg(this,'"+respuesta.pre_Validador+"');",  oninput="InvalidMsg(this,'"+respuesta.pre_Validador+"');"  })
+        }
+
+    }
+
+}
+
+<script type="text/javascript">
+
+
+    function convertArray(objeto) {
+        var arr = [];
+        for (var i in objeto) {
+            if (objeto.hasOwnProperty(i)) {
+                arr.push(objeto[i]);
+            }
+        }
+
+        return arr;
+    }
+
+    function MuestraHabilitaTextoCheck(obj, id_obj, idRespuestas, campo, habilita, idRespuesta) {
+
+        //var idRes = id_obj.split("_")[2];
+        var idRes = idRespuesta;
+        var arrRespuestas = [];
+        var repuestas = idRespuestas.split(",");
+        arrRespuestas = convertArray(repuestas);
+        //console.log("idRes_" + idRes);
+        var tipoControl = "chl";
+        if (habilita == "SI" && obj.checked) {
+            // console.log("entro desha");
+            deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl);
+            habilitaCampoTextoGeneral(obj, id_obj, idRes, campo, arrRespuestas, tipoControl);
+            // document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
+        } else {
+            //  console.log("idRes_" + id_obj);
+            habilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl);
+            habilitaCampoTextoGeneral(obj, id_obj, idRes, campo, arrRespuestas, tipoControl);
+        }
+        // document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
+    }
+
+    function habilitaCampoTextoGeneral(obj, campoTexto, idRespuesta, campo, arrRespuestas, tipoControl) {
+        //console.log("campo_" + campo);
+        if (campo == "AB") {
+            if (obj.checked) {
+                /*   console.log("campoTextto_" + idRespuesta);
+                   console.log("objeto_" + obj.id);*/
+                if (campoTexto != "") {
+                    $('#' + campoTexto).show('slow');
+                    //$('#'+campoTexto).css('visibility', 'visible').fadeIn( 5000 );
+                    //document.getElementById(campoTexto).style.visibility = 'visible';
+
+                    //habilitarRequerido(idRespuesta);
+                    $('#txt_' + idRespuesta).prop("required", true);
+                    $('#txt_' + idRespuesta).addClass("requerido");
+                }
+                //document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
+            } else {
+                if (campoTexto != "") {
+                    //document.getElementById(campoTexto).style.visibility = 'hidden';
+                    $('#' + campoTexto).hide('slow');
+                    // desRequerido(idRespuesta);
+                    $('#txt_' + idRespuesta).prop("required", false);
+                    $('#txt_' + idRespuesta).removeClass("requerido");
+                }
+                //if (verificarControlCheked(arrRespuestas, "", tipoControl) == false) {
+                //    //      console.log("ELSE VAL FALSE_" + idPregunta + "_PER_" + idPersona);
+                //    //document.getElementById('MainContent_val_' + idPregunta + "_PER_" + idPersona).style.visibility = 'visible';
+                //    //document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'visible';
+                //}
+            }
+        } else {
+            //console.log("ELSE VAL FALSE_" + idPregunta);
+            //document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
+            // deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl)
+        }
+    }
+
+    function habilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl) {
+        var controlDes;
+        for (i = 0; i < arrRespuestas.length; i++) {
+            //   console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
+            var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
+            controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
+            if (controlDes != null) {
+                document.getElementById(tipoControl + '_' + arrRespuestas[i]).disabled = false;
+            }
+        }
+    }
+
+    function deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl) {
+        var controlDes;
+        for (i = 0; i < arrRespuestas.length; i++) {
+            //console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
+            if (arrRespuestas[i] != idRespuesta) {
+                var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
+                controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
+                if (controlDes != null) {
+                    //   console.log("entro");
+                    document.getElementById(tipoControl + '_' + arrRespuestas[i]).disabled = true;
+                    document.getElementById(tipoControl + '_' + arrRespuestas[i]).checked = false;
+                }
+                //var textoDes = document.getElementById('txt_' + arrRespuestas[i]);
+                var textoDes = $("#txt_" + arrRespuestas[i]);
+                if (textoDes != null) {
+
+                    //textoDes.style.visibility = 'hidden';
+                    textoDes.hide('slow');
+                    var idRequerido = arrRespuestas[i];
+                    $('#txt_' + idRespuesta).prop("required", false);
+                    $('#txt_' + idRespuesta).removeClass("requerido");
+                    //desRequerido(idRequerido);
+                }
+            }
+        }
+    }
+
+    function MostraHabilitaTextoFamiliarCheck(obj, id_obj, idRespuestas, campo, idPersonas, habilita, idRespuesta) {
+
+        var arrPersonas = [];
+        var id = obj.id.split("_");
+        // var objetoTexto = id_obj;
+        //console.log("objetoTexto_" + id_obj);
+        var personas = idPersonas.split(",");
+        arrPersonas = convertArray(personas);
+        var idCampoTexto = id_obj.substring(16);
+        // var idRespuesta = id_obj.substring(16, 17);
+        var tipoControl = "chl";
+        var idPersona = id[3];
+        //console.log("ID::" + idRespuesta + "idRespuesta[1]" + idRespuestas + "_HABILITA_" + habilita);
+        var arrRespuestas = [];
+        var repuestas = idRespuestas.split(",");
+        arrRespuestas = convertArray(repuestas);
+        if (habilita == "SI" && obj.checked) {
+            deshabilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl);
+            //console.log("objetoTextoENTRO_" + objetoTexto);
+            habilitaCampoTextoIndividual(obj, arrPersonas, idPersona, id_obj, idCampoTexto, arrRespuestas, campo, idRespuesta, tipoControl);
+        } else {
+            //console.log("entroHabilitar");
+            habilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl);
+            habilitaCampoTextoIndividual(obj, arrPersonas, idPersona, id_obj, idCampoTexto, arrRespuestas, campo, idRespuesta, tipoControl);
+        }
+    }
+
+    function deshabilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl) {
+
+
+        for (i = 0; i < arrRespuestas.length; i++) {
+            //  console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
+            if (arrRespuestas[i] != idRespuesta) {
+                var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
+                var controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
+                //  console.log("CONTRODES_" + controlDes);
+                if (controlDes != null) {
+                    document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).disabled = true;
+                    document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).checked = false;
+                }
+                //var textoDes = document.getElementById('txt_' + arrRespuestas[i] + "_per_" + idPersona);
+                var textoDes = $('#txt_' + arrRespuestas[i] + "_per_" + idPersona);
+                if (textoDes != null) {
+                    // textoDes.style.visibility = 'hidden';
+                    textoDes.hide('slow');
+                    var idRequerido = "chl_" + arrRespuestas[i] + "_per_" + idPersona;
+                    //"txt_" + respuestaText.res_IdRespuesta + "_per_" + personas.per_IdPersona
+                    $('#' + idRequerido).prop("required", false);
+                    $('#' + idRequerido).removeClass("requerido");
+                    //desRequerido(idRequerido);
+                }
+            }
+        }
+    }
+
+    function habilitaCampoTextoIndividual(obj, arrPersonas, idPersona, objetoTexto, idCampoTexto, arrRespuestas, campo, idRespuesta, tipoControl) {
+
+        for (i = 0; i < arrPersonas.length; i++) {
+            if (idPersona == arrPersonas[i]) {
+                if (obj.checked) {
+                    if (campo == "AB") {
+                        console.log("OBJETO_TEXTOSS_" + objetoTexto + "_habilitarRequerido_" + idCampoTexto);
+                        if (objetoTexto != "") {
+                            $('#' + objetoTexto).show('slow');
+                            //document.getElementById(objetoTexto).style.visibility = 'visible';
+                        }
+                    }
+                    // console.log("habilitar::" + objetoTexto);
+                    $('#' + objetoTexto).prop("required", true);
+                    $('#' + objetoTexto).addClass("requerido");
+
+                    ;
+                } else {
+                    if (campo == "AB") {
+                        //   console.log("OBJETO_TEXTO_ELSE_" + objetoTexto);
+                        if (objetoTexto != "") {
+                            $('#' + objetoTexto).hide('slow');
+                            //document.getElementById(objetoTexto).style.visibility = 'hidden';
+                        }
+                    }
+                    $('#' + objetoTexto).prop("required", false);
+                    $('#' + objetoTexto).removeClass("requerido");
+                }
+            }
+        }
+    }
+
+    function habilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl) {
+        var controlDes;
+        // console.log("respuestas_" + idRespuestas + "_persona_" + idHab);
+        for (i = 0; i < arrRespuestas.length; i++) {
+            // 
+            var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
+            controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
+            // console.log("CONTROL" + controlDes);
+            if (controlDes != null) {
+                document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).disabled = false;
+            }
+            //$("#MainContent__chl_" + arrRespuestas[i] + "_PER_" + idHab + " input:checkbox").attr("disabled", "disabled");
+        }
+
+    }
+
+
+
+</script>

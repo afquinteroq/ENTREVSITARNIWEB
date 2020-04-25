@@ -115,7 +115,7 @@ namespace IgedEncuesta.Controllers
                 ////CAMBIO SESIONES --insercion primera vez
                 string variables = "ID_USUARIO,PERFILES,VALIDAPERFIL,MODELO,MODELOHOGAR,VALINCLUIDO,GRUPOVICTIMA,CODHOGAR,";
                 variables = variables + "TEMASVALIDAR,CAPTERMI,TEMA,IDTEMA,FLUJO,COLLECIONPERSONAS,PREGUNTAACTUAL,LISTADEPARTAMENTOS,";
-                variables = variables + "LISTAMUNICIPIOS,OPCIONESRESPUESTA,LISTAAUTO,TEMAS,PREGUNTAINICIAL,LISTADEPARTAMENTOSDT,LISTADT,LISTAPA,SYSGUID,LISTAMU,MODELOPERSONA";
+                variables = variables + "LISTAMUNICIPIOS,OPCIONESRESPUESTA,LISTAAUTO,TEMAS,PREGUNTAINICIAL,LISTADEPARTAMENTOSDT,LISTADT,LISTAPA,SYSGUID,LISTAMU,MODELOPERSONA,MODELOUNIFICADO";
                 objSesion.insertarVariablesSesion(variables, userIdApp);
                 string perfil = cargaPerfilesUsuario(userIdApp, app);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "PERFILES", perfil);
@@ -181,6 +181,9 @@ namespace IgedEncuesta.Controllers
             try
             {
                 //log.Info("ConformacionHogarController / cargarMaestroVictima , Entre : ");
+                FuentePersona objConsultaFuentePersona = new FuentePersona();
+                DataSet dsconsultaunificada = new DataSet();
+                IDataReader dataReaderconsultaunificadaTUP = null;
                 System.Collections.ArrayList arrayColeccion = new System.Collections.ArrayList();
                 Victima objConsultaVictima = new Victima();
                 Encuesta objSesion = new Encuesta();
@@ -189,7 +192,7 @@ namespace IgedEncuesta.Controllers
                 app = Request.Cookies["SesionIged"]["App"].ToString();
                 ViewBag.CerrarVentana = false;
                 DataSet dsSalida = new DataSet();
-                List<Victima> coleccion = new List<Victima>();
+                List<Victima> coleccion = new List<Victima>();                
 
                 DataSet datasetRegistraduria = new DataSet();
 
@@ -200,16 +203,56 @@ namespace IgedEncuesta.Controllers
                     switch (opcionBusqueda)
                     {
                         case "DOCUMENTO":
-                            //validar con expresión regular, que solo vengan número
                             coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app);
+                            //dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numeroDocumento);
+                            ////25/04/2020 consultar metodo unificado, serializar y guardar en base de datos
+                            /*var serializeMODELOUNIFICADO = Newtonsoft.Json.JsonConvert.SerializeObject(dsconsultaunificada);
+                            objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELOUNIFICADO", serializeMODELOUNIFICADO);*/
+                            //
+                            /*dataReaderconsultaunificadaTUP = dsconsultaunificada.Tables[1].CreateDataReader();
+                            Victima victima = null;
+                            while (dataReaderconsultaunificadaTUP.Read())
+                            {
+                                victima = new Victima();
+                                victima.TIPO_DOC = dataReaderconsultaunificadaTUP["PER_TIPODOC"].ToString();
+                                victima.DOCUMENTO = dataReaderconsultaunificadaTUP["PER_DOCUMENTO"].ToString();
+                                victima.NOMBRE1 = dataReaderconsultaunificadaTUP["PER_NOMBRE1"].ToString();
+                                victima.NOMBRE2 = dataReaderconsultaunificadaTUP["PER_NOMBRE2"].ToString();
+                                victima.APELLIDO1 = dataReaderconsultaunificadaTUP["PER_APELLIDO1"].ToString();
+                                victima.APELLIDO2 = dataReaderconsultaunificadaTUP["PER_APELLIDO2"].ToString();
+                                victima.NOMBRES_COMPLETOS = victima.NOMBRE1 + ' ' + victima.NOMBRE2 + ' ' + victima.APELLIDO1 + ' ' + victima.APELLIDO2;
+                                victima.F_NACIMIENTO = dataReaderconsultaunificadaTUP["PER_FECHANACIMIENTO"].ToString();
+                                victima.EDAD = dataReaderconsultaunificadaTUP["EDAD"].ToString();
+                                victima.GENERO_HOM = dataReaderconsultaunificadaTUP["PER_SEXO"].ToString();
+                                victima.DISCAP = dataReaderconsultaunificadaTUP["PER_DISCAPACIDAD"].ToString();
+                                victima.GENERO_HOM = dataReaderconsultaunificadaTUP["PER_IDENTIDAD_GENERO"].ToString();
+                                victima.PERT_ETNICA = dataReaderconsultaunificadaTUP["PER_ETNIA"].ToString();
+                                victima.HECHOS = dataReaderconsultaunificadaTUP["HECHOS"].ToString();
+                                victima.FECHA_HECHO = dataReaderconsultaunificadaTUP["FECHA_HECHO"].ToString();
+                                victima.FECHA_ULT_CARACTERIZACION = dataReaderconsultaunificadaTUP["FECHA_ULTI_ENCUESTA"].ToString();
+                                victima.HABILITADO_PARA_CARACTERIZACION = dataReaderconsultaunificadaTUP["HABILITADO_CARAC"].ToString();
+                                victima.COD_HOGAR = dataReaderconsultaunificadaTUP["COD_HOGAR"].ToString();
+                                victima.ID_CARACTERIZACION = dataReaderconsultaunificadaTUP["ID_CARACTERIZACION"].ToString();
+                                victima.TIPO_VICTIMA = dataReaderconsultaunificadaTUP["ESTADO_VICTIMA"].ToString().Trim();
+                                if (dataReaderconsultaunificadaTUP["ESTADO_VICTIMA"].ToString().Equals("INCLUIDO"))
+                                    victima.HABILITADO_PARA_CARACTERIZACION = "SI";
+                                victima.CONS_PERSONA = dataReaderconsultaunificadaTUP["PER_ID"].ToString().Trim();
+
+                                if (dataReaderconsultaunificadaTUP["PER_DOCUMENTO"].ToString().Length > 0 && dataReaderconsultaunificadaTUP["PER_NOMBRE1"].ToString().Length > 0
+                                    && dataReaderconsultaunificadaTUP["PER_APELLIDO1"].ToString().Length > 0 && dataReaderconsultaunificadaTUP["PER_APELLIDO1"] != null)
+                                    coleccion.Add(victima);
+
+
+                            }*/
                             break;
                     }
 
-
+                    
                     ViewBag.Lista = coleccion;
-
+                    
                     var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELO", serializedData);
+                    
 
                 }
 
@@ -226,7 +269,7 @@ namespace IgedEncuesta.Controllers
         {
             try
             {
-
+                
                 FuentePersona objConsultaFuentePersona = new FuentePersona();
                 Encuesta objSesion = new Encuesta();
                 string userIdApp, app;
@@ -234,12 +277,14 @@ namespace IgedEncuesta.Controllers
                 app = Request.Cookies["SesionIged"]["App"].ToString();
                 ViewBag.CerrarVentana = false;
                 List<FuentePersona> coleccionFuente = new List<FuentePersona>();
+                
                 DataSet fichaunica_caracterizacion = new DataSet();
                 DataSet dsSalidaRENEC = new DataSet();
                 DataSet dsSalidaPMI = new DataSet();
                 DataSet dsSalidaRUV = new DataSet();
-                DataSet dsSalidaSIRAV = new DataSet();
-                IDataReader dataReader = null;
+                DataSet dsSalidaSIRAV = new DataSet();                
+                DataSet dsconsultaunificada = new DataSet();
+                IDataReader dataReaderconsultaunificada = null;
 
 
                 bool cargarModelo = true;
@@ -248,177 +293,55 @@ namespace IgedEncuesta.Controllers
 
                 if (cargarModelo)
                 {
+                    
                     switch (opcionBusqueda)
                     {
                         case "DOCUMENTO":
-
+                    
                             try
                             {
-                                coleccionFuente.Add(objConsultaFuentePersona.modeloRegistraduria(numeroDocumento));
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.ToString();
-                            }
-
-                            try
-                            {
-                                //10/04/2020
-                                var MODELOPERSONA = objSesion.getValorCampoSesion("MODELOPERSONA", userIdApp);
-                                DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(MODELOPERSONA);
-                                dsSalidaPMI = dataSet;
+                                //coleccionFuente.Add(objConsultaFuentePersona.modeloRegistraduria(numeroDocumento));
+                                //25/04/2020 leer modelo serializado de la base de datos
+                                /*var MODELOUNIFICADO = objSesion.getValorCampoSesion("MODELOUNIFICADO", userIdApp);
+                                DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(MODELOUNIFICADO);
+                                dsconsultaunificada = dataSet;*/
                                 //
-                                //dsSalidaPMI = objConsultaVictima.consultarPersonasModeloINntegrado(numeroDocumento, userIdApp, app);
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.ToString();
-                            }
+                                dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numeroDocumento);
+                                dataReaderconsultaunificada = dsconsultaunificada.Tables[0].CreateDataReader();
 
-                            try
-                            {
-                                fichaunica_caracterizacion = objConsultaVictima.consultarFichaUnicaFichaCaracterizacion(numeroDocumento, userIdApp, app);
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.ToString();
-                            }
-
-                            if (fichaunica_caracterizacion.Tables.Count > 0)
-                            {
-
-                                dataReader = fichaunica_caracterizacion.Tables[0].CreateDataReader();
-                                while (dataReader.Read())
+                                while (dataReaderconsultaunificada.Read())
                                 {
-
-                                    objFuente = new FuentePersona();
-                                    objFuente.CONS_PERSONA = "";
-                                    objFuente.ID_TBPERSONA = "";
-                                    if (!DBNull.Value.Equals(dataReader["PROGRAMA"])) objFuente.FUENTE = dataReader["PROGRAMA"].ToString();
-                                    if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) objFuente.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
-                                    if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objFuente.NUMERO_DOC = dataReader["PER_DOCUMENTO"].ToString();
-
-
-                                    string nombrecompleto = dataReader["PER_NOMBRE1"].ToString(); nombrecompleto += " " + dataReader["PER_NOMBRE2"].ToString();
-                                    nombrecompleto += " " + dataReader["PER_APELLIDO1"].ToString(); nombrecompleto += " " + dataReader["PER_APELLIDO2"].ToString();
-
-                                    objFuente.NOMBRES_COMPLETOS = nombrecompleto;
-
-                                    if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objFuente.GENERO = dataReader["PER_SEXO"].ToString().ToUpper();
-                                    if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
-
-                                    if (!DBNull.Value.Equals(dataReader["CODIGO_HOGAR"])) objFuente.CODIGO_HOGAR = dataReader["CODIGO_HOGAR"].ToString().ToUpper();
-                                    if (!DBNull.Value.Equals(dataReader["FECHA_ENCUESTA"])) objFuente.FECHA_ENCUESTA = dataReader["FECHA_ENCUESTA"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
-                                    if (!DBNull.Value.Equals(dataReader["ESTADO_ENCUESTA"])) objFuente.ESTADO_ENCUESTA = dataReader["ESTADO_ENCUESTA"].ToString().ToUpper();
-                                    if (!DBNull.Value.Equals(dataReader["VIGENCIA_ENCUESTA"])) objFuente.VIGENCIA_ENCUESTA = dataReader["VIGENCIA_ENCUESTA"].ToString().Replace("12:00:00 AM", "");
-
+                                    try
+                                    {
+                                        objFuente = new FuentePersona();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["FUENTE"])) objFuente.FUENTE = dataReaderconsultaunificada["FUENTE"].ToString();
+                                        objFuente.CONS_PERSONA = "";
+                                        objFuente.ID_TBPERSONA = "";
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["NUIP"])) objFuente.NUMERO_DOC = dataReaderconsultaunificada["NUIP"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["ESTADO_CEDULA"])) objFuente.ESTADO_CEDULA = dataReaderconsultaunificada["ESTADO_CEDULA"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["NOMBRE_completo"])) objFuente.NOMBRES_COMPLETOS = dataReaderconsultaunificada["NOMBRE_completo"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["GENERO"])) objFuente.GENERO = dataReaderconsultaunificada["GENERO"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReaderconsultaunificada["FECHANACIMIENTO"].ToString().Substring(0, 10);
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["ESTADO_VALORACION"])) objFuente.ESTADO_VALORACION = dataReaderconsultaunificada["ESTADO_VALORACION"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["NUM_FUD"])) objFuente.NUMERO_FORMULARIO = dataReaderconsultaunificada["NUM_FUD"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["NUM_DECL"])) objFuente.CODIGO_DECLARACION = dataReaderconsultaunificada["NUM_DECL"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["F_OCU"])) objFuente.FECHA_HECHO = dataReaderconsultaunificada["F_OCU"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["HECHO"])) objFuente.HECHO_VICTIMIZANTE = dataReaderconsultaunificada["HECHO"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["ENCUESTA"])) objFuente.CODIGO_HOGAR = dataReaderconsultaunificada["ENCUESTA"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["ESTADO_ENC"])) objFuente.ESTADO_ENCUESTA = dataReaderconsultaunificada["ESTADO_ENC"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["FECH_ENC"])) objFuente.FECHA_ENCUESTA = dataReaderconsultaunificada["FECH_ENC"].ToString();
+                                        if (!DBNull.Value.Equals(dataReaderconsultaunificada["VIGENCIA_ENC"])) objFuente.VIGENCIA_ENCUESTA = dataReaderconsultaunificada["VIGENCIA_ENC"].ToString();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.Message.ToString();
+                                    }
 
                                     coleccionFuente.Add(objFuente);
-                                }
-
-                            }
-                            try
-                            {
-                                if (dsSalidaPMI.Tables.Count > 0)
-                                {
-
-                                    dataReader = dsSalidaPMI.Tables[0].CreateDataReader();
-                                    while (dataReader.Read())
-                                    {
-
-                                        objFuente = new FuentePersona();
-                                        try
-                                        {
-                                            objFuente.CONS_PERSONA = "";
-                                            objFuente.ID_TBPERSONA = "";
-                                            objFuente.FUENTE = "TUP";
-                                            if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) objFuente.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
-                                            if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objFuente.NUMERO_DOC = dataReader["PER_DOCUMENTO"].ToString();
-
-                                            string nombrecompleto = dataReader["PER_NOMBRE1"].ToString(); nombrecompleto += " " + dataReader["PER_NOMBRE2"].ToString();
-                                            nombrecompleto += " " + dataReader["PER_APELLIDO1"].ToString(); nombrecompleto += " " + dataReader["PER_APELLIDO2"].ToString();
-
-                                            objFuente.NOMBRES_COMPLETOS = nombrecompleto;
-
-                                            if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objFuente.GENERO = dataReader["PER_SEXO"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            objFuente.FUENTE = dataReader["FUENTE"].ToString();
-                                            objFuente.ESTADO_CEDULA = e.Message.ToString();
-                                        }
-
-
-                                        coleccionFuente.Add(objFuente);
-                                    }
-
-                                }
-                            }
-
-                            catch (Exception e)
-                            {
-                                e.Message.ToString();
-                            }
-
-
-                            try
-                            {
-                                dsSalidaRUV = objConsultaFuentePersona.consultarFuentesALL(numeroDocumento, "DOCUMENTO");
-
-                            }
-                            catch (Exception e)
-                            {
-                                e.Message.ToString();
-                            }
-
-                            try
-                            {
-
-                                if (dsSalidaRUV.Tables.Count > 0)
-                                {
-
-                                    dataReader = dsSalidaRUV.Tables[0].CreateDataReader();
-                                    while (dataReader.Read())
-                                    {
-
-                                        objFuente = new FuentePersona();
-                                        try
-                                        {
-                                            objFuente.CONS_PERSONA = "";
-                                            objFuente.ID_TBPERSONA = "";
-                                            //objFuente.FUENTE = dataReader["FUENTE"].ToString();
-                                            if (!DBNull.Value.Equals(dataReader["FUENTE"].ToString())) objFuente.FUENTE = dataReader["FUENTE"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["TIPO_DOCUMENTO"])) objFuente.TIPO_DOC = dataReader["TIPO_DOCUMENTO"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["DOCUMENTO"])) objFuente.NUMERO_DOC = dataReader["DOCUMENTO"].ToString();
-
-                                            string nombrecompleto = dataReader["NOMBRE1"].ToString(); nombrecompleto += " " + dataReader["NOMBRE2"].ToString();
-                                            nombrecompleto += " " + dataReader["APELLIDO1"].ToString(); nombrecompleto += " " + dataReader["APELLIDO2"].ToString();
-
-                                            objFuente.NOMBRES_COMPLETOS = nombrecompleto;
-
-                                            if (!DBNull.Value.Equals(dataReader["RELACION"])) objFuente.PARENTESCO = dataReader["RELACION"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["GENERO"])) objFuente.GENERO = dataReader["GENERO"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["F_NACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["F_NACIMIENTO"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
-                                            if (!DBNull.Value.Equals(dataReader["ESTADO"])) objFuente.ESTADO_VALORACION = dataReader["ESTADO"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["NUM_FUD_NUM_CASO"])) objFuente.NUMERO_FORMULARIO = dataReader["NUM_FUD_NUM_CASO"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["ID_DECLARACION"])) objFuente.CODIGO_DECLARACION = dataReader["ID_DECLARACION"].ToString().ToUpper();
-                                            if (!DBNull.Value.Equals(dataReader["FECHA_SINIESTRO"])) objFuente.FECHA_HECHO = dataReader["FECHA_SINIESTRO"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
-                                            if (!DBNull.Value.Equals(dataReader["HECHO"])) objFuente.HECHO_VICTIMIZANTE = dataReader["HECHO"].ToString().ToUpper();
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            if (!DBNull.Value.Equals(dataReader["FUENTE"].ToString())) objFuente.FUENTE = dataReader["FUENTE"].ToString().ToUpper();
-                                            objFuente.ESTADO_CEDULA = e.Message.ToString();
-
-                                        }
-
-                                        coleccionFuente.Add(objFuente);
-                                    }
-
 
                                 }
 
+                                
                             }
                             catch (Exception e)
                             {

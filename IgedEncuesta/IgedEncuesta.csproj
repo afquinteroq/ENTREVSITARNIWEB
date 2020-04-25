@@ -200,6 +200,7 @@
     <Compile Include="Models\mdlEncuesta\HechosPersona.cs" />
     <Compile Include="Models\mdlEncuesta\Persona.cs" />
     <Compile Include="Models\mdlFuente\FuentePersona.cs" />
+    <Compile Include="Models\mdlGenerico\ConsultaUnificada.cs" />
     <Compile Include="Models\mdlGenerico\GIC_REPORTEXHOGAR.cs" />
     <Compile Include="Models\mdlGenerico\TipoDocumento.cs" />
     <Compile Include="Models\mdlEncuesta\Victima.cs" />

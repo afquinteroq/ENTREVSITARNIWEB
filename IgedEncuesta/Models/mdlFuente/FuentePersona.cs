@@ -1,4 +1,5 @@
-﻿using ObjetosTipos;
+﻿using IgedEncuesta.Models.mdlEncuesta;
+using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,10 +28,10 @@ namespace IgedEncuesta.Models.mdlFuente
         public string NUMERO_FORMULARIO { get; set; }
         public string FECHA_HECHO { get; set; }
         public string PARENTESCO { get; set; }
-        
+
         public string ESTADO_ENCUESTA { get; set; }
         public string FECHA_ENCUESTA { get; set; }
-        
+
         public string CODIGO_HOGAR { get; set; }
         public string VIGENCIA_ENCUESTA { get; set; }
         public string FECHA_EXPEDIENTE { get; set; }
@@ -38,20 +39,21 @@ namespace IgedEncuesta.Models.mdlFuente
 
 
 
-        public FuentePersona modeloRegistraduria(string documento)
+        public DataSet/*List<FuentePersona>*/ modeloRegistraduria(string documento)
         {
+            //List<FuentePersona> listfuentepersona = new List<FuentePersona>();
+            //IDataReader dataReader = null;
             
-            IDataReader dataReader = null;
-            DataSet ds = new DataSet();
-            ds = consultarRegistraduria(documento);
-            dataReader = ds.Tables[0].CreateDataReader();
+            //DataSet ds = new DataSet();
+            DataSet dsconsultaunificada = new DataSet();
+            //ds = consultarRegistraduria(documento);
+            ConsultaUnificada objConsultaUnificada = new ConsultaUnificada();
+            dsconsultaunificada = objConsultaUnificada.consultUnificadaFuentes_y_RUV(documento);
+            //dataReader = ds.Tables[0].CreateDataReader();
 
-            FuentePersona objFuente = new FuentePersona();
+            /*
             while (dataReader.Read())
             {
-
-                //NOM1_RENEC	NOM2_RENEC	APE1_RENEC	APE2_RENEC	DEPTO_EXP	MUN_EXP	F_EXP	COD_EST_CEDULA	ESTADO_CEDULA	NUM_RESOL	ANO_RESOL, SIN INFORMACION		0
-
                 objFuente = new FuentePersona();
 
                 
@@ -70,11 +72,13 @@ namespace IgedEncuesta.Models.mdlFuente
                 if (!DBNull.Value.Equals(dataReader["NOMBRES"])) objFuente.NOMBRES_COMPLETOS = dataReader["NOMBRES"].ToString();
                 if (!DBNull.Value.Equals(dataReader["GENERO"])) objFuente.GENERO = dataReader["GENERO"].ToString();
                 if (!DBNull.Value.Equals(dataReader["FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["FECHANACIMIENTO"].ToString().Substring(0,10);
-            }
+            }*/
 
-            return (objFuente);
+            //return (objFuente);
+            //return listfuentepersona;
+            return dsconsultaunificada;
         }
-        
+
         public DataSet consultarRegistraduria(string documento)
         {
 
@@ -94,13 +98,13 @@ namespace IgedEncuesta.Models.mdlFuente
                 param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
                 dsSalida = datos.ConsultarTablasConComando("SELECT T.NOM1_RENEC ||' '|| T.NOM2_RENEC ||' '|| T.APE1_RENEC ||' '|| T.APE2_RENEC NOMBRES, T.* FROM  TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_CONSULTA_RENEC(" + documento + ")) T");
                 return dsSalida;
-            }            
+            }
             finally
             {
                 dsSalida.Dispose();
             }
 
-        }        
+        }
 
         public DataSet consultarFuenteRUV(string numDocumento, string opcionBusqueda)
         {
@@ -116,8 +120,8 @@ namespace IgedEncuesta.Models.mdlFuente
             {
                 try
                 {
-                    if (opcionBusqueda == "DOCUMENTO")                        
-                        dsSalida = datos.ConsultarTablasConComando("select 'RUV' FUENTE, T.* from TABLE(PKG_VICTIMAS_RNI.CM_FUN_HECHOS_PERSONA_RUV((select F.ID_PERSONA from TABLE(PKG_VICTIMAS_RNI.cm_fun_persona_ruv("+ numDocumento + " )) F))) T");
+                    if (opcionBusqueda == "DOCUMENTO")
+                        dsSalida = datos.ConsultarTablasConComando("select 'RUV' FUENTE, T.* from TABLE(PKG_VICTIMAS_RNI.CM_FUN_HECHOS_PERSONA_RUV((select F.ID_PERSONA from TABLE(PKG_VICTIMAS_RNI.cm_fun_persona_ruv(" + numDocumento + " )) F))) T");
                     else if (opcionBusqueda == "NOMBRES Y APELLIDOS")
                     {
                         var primerNombre = numDocumento.Substring(0, numDocumento.IndexOf('|'));
@@ -234,10 +238,10 @@ namespace IgedEncuesta.Models.mdlFuente
             }
         }
 
-        
+
         public DataSet consultarFuenteSIRAV(string numDocumento, string opcionBusqueda)
         {
-            
+
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             DataSet dsSalida = new DataSet();
             datos.MotorBasedatos = false;
@@ -250,23 +254,23 @@ namespace IgedEncuesta.Models.mdlFuente
                     //dsSalida = datos.ConsultarTablasConComando("select 'SIRAV' FUENTE,   T.PRIMER_NOMBRE NOMBRE1, T.SEGUNDO_NOMBRE NOMBRE2, T.PRIMER_APELLIDO APELLIDO1, T.SEGUNDO_APELLIDO APELLIDO2, T.TIPO_DOCUMENTO TIPO_DOCUMENTO, T.DOCUMENTO DOCUMENTO, T.*  from SIRAVNegocio.dbo.f_DatosPersona_RNI('" + numDocumento + "') T");
                     dsSalida = datos.ConsultarTablasConComando("SELECT 'SIRAV' FUENTE, T.ID_PERSONA, T.PRIMERNOMBRE, T.SEGUNDONOMBRE, T.PRIMERAPELLIDO, T.SEGUNDOAPELLIDO, " +
                         " T.TIPO_DOC,  T.NUMERODOCUMENTO, T.F_NACIMIENTO, T.ESTADO, T.NUM_FUD_NUM_CASO, T.ID_DECLARACION,T.RELACION,T.GENERO, T.FECHASINIESTRO FECHA_SINIESTRO, T.HECHO FROM SIRAVNegocio.dbo.CM_FUN_HECHOS_PERSONA_SIRAV_DOC(" + numDocumento + ") T");
-                    
-
-                    if (dsSalida.Tables[0].Rows.Count > 0)
-                    {
-                        String vacio = "VACIO";
-                        Console.WriteLine(vacio);
 
 
-                    }
-                    else if (dsSalida.Tables[0].Rows.Count > 0)
-                    {
-                        String NOMBRE = dsSalida.Tables[0].TableName;
-                        Console.WriteLine(NOMBRE);
-                        String idPersona = dsSalida.Tables[NOMBRE].Rows[0]["ID_PERSONA"].ToString();                        
-                    }
-                
-                        
+                if (dsSalida.Tables[0].Rows.Count > 0)
+                {
+                    String vacio = "VACIO";
+                    Console.WriteLine(vacio);
+
+
+                }
+                else if (dsSalida.Tables[0].Rows.Count > 0)
+                {
+                    String NOMBRE = dsSalida.Tables[0].TableName;
+                    Console.WriteLine(NOMBRE);
+                    String idPersona = dsSalida.Tables[NOMBRE].Rows[0]["ID_PERSONA"].ToString();
+                }
+
+
                 else if (opcionBusqueda == "NOMBRES Y APELLIDOS")
                 {
                     var primerNombre = numDocumento.Substring(0, numDocumento.IndexOf('|'));
@@ -315,8 +319,8 @@ namespace IgedEncuesta.Models.mdlFuente
                 {
                     if (opcionBusqueda == "DOCUMENTO")
                         //dsSalida = datos.ConsultarTablasConComando("select 'RUV' FUENTE, T.* from TABLE(PKG_VICTIMAS_RNI.CM_FUN_HECHOS_PERSONA_RUV((select F.ID_PERSONA from TABLE(PKG_VICTIMAS_RNI.cm_fun_persona_ruv(" + numDocumento + " )) F))) T");
-                        dsSalida = datos.ConsultarTablasConComando("SELECT * FROM TABLE(registraduria.PKG_ACREDITACION.CM_FUN_ACREDIT_HECHOS_PERSONA("+ numDocumento + "))");
-                        
+                        dsSalida = datos.ConsultarTablasConComando("SELECT * FROM TABLE(registraduria.PKG_ACREDITACION.CM_FUN_ACREDIT_HECHOS_PERSONA(" + numDocumento + "))");
+
                     else if (opcionBusqueda == "NOMBRES Y APELLIDOS")
                     {
                         var primerNombre = numDocumento.Substring(0, numDocumento.IndexOf('|'));

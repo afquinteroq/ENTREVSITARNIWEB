@@ -54,6 +54,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public string HV14 { get; set; }
         public string FECHA_HECHO14 { get; set; }
         public string TIPO_VICTIMA { get; set; }
+        
         public bool JEFE_HOGAR { get; set; }
         public string ID_TBPERSONA { get; set; }
         public string FECHA_ULT_CARACTERIZACION { get; set; }
@@ -1019,7 +1020,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_DOCUMENTO", 1, "System.String", documento));
-               /param.Add(asignarParametro("P_TEMATICA", 1, "System.Int32", "518"));
+                param.Add(asignarParametro("P_TEMATICA", 1, "System.Int32", "518"));
 
                 param.Add(asignarParametro("P_RESULT", 2, "System.String", ""));
                 param.Add(asignarParametro("P_MENSAJE", 2, "System.String", ""));

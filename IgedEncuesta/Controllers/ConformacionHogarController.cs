@@ -302,11 +302,10 @@ namespace IgedEncuesta.Controllers
                             {
                                 //coleccionFuente.Add(objConsultaFuentePersona.modeloRegistraduria(numeroDocumento));
                                 //25/04/2020 leer modelo serializado de la base de datos
-                                /*var MODELOUNIFICADO = objSesion.getValorCampoSesion("MODELOUNIFICADO", userIdApp);
+                                var MODELOUNIFICADO = objSesion.getValorCampoSesion("MODELOUNIFICADO", userIdApp);
                                 DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(MODELOUNIFICADO);
-                                dsconsultaunificada = dataSet;*/
-                                //
-                                dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numeroDocumento);
+                                dsconsultaunificada = dataSet;
+                               //dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numeroDocumento);
                                 dataReaderconsultaunificada = dsconsultaunificada.Tables[0].CreateDataReader();
 
                                 while (dataReaderconsultaunificada.Read())

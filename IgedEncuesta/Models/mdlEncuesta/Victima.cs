@@ -5,6 +5,7 @@ using System.Web;
 using System.Data;
 using ObjetosTipos;
 using AdministracionInstrumentos;
+using IgedEncuesta.Models.mdlFuente;
 
 namespace IgedEncuesta.Models.mdlEncuesta
 {
@@ -133,14 +134,19 @@ namespace IgedEncuesta.Models.mdlEncuesta
         {
             DataSet dsSalida = new DataSet();
             List<Victima> coleccion = new List<Victima>();
-            List<Persona> personas = new List<Persona>();
+            //List<Persona> personas = new List<Persona>();
+            DataSet dsconsultaunificada = new DataSet();
             HechosPersona hechos = new HechosPersona();
-            dsSalida = consultarPersonasModeloINntegrado(numDoc, idUsuario, idAplicacion);
+            FuentePersona objConsultaFuentePersona = new FuentePersona();
+            dsSalida = objConsultaFuentePersona.modeloRegistraduria(numDoc);
+            dsconsultaunificada = dsSalida;
+            //dsSalida = consultarPersonasModeloINntegrado(numDoc, idUsuario, idAplicacion);
             ////10/04/2020
             Encuesta objSesion = new Encuesta();
             var serializeMODELOPERSONA = Newtonsoft.Json.JsonConvert.SerializeObject(dsSalida);
             objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOPERSONA", serializeMODELOPERSONA);
-            //
+            var serializeMODELOUNIFICADO = Newtonsoft.Json.JsonConvert.SerializeObject(dsconsultaunificada);
+            objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOUNIFICADO", serializeMODELOUNIFICADO);
             coleccion = modeloVictimasMI(dsSalida);
             string vhechos = string.Empty;
             string fechashechos = string.Empty;
@@ -151,7 +157,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             {
                 foreach (Victima item in coleccion)
                 {
-
+                    /*
                     try
                     {
                         DateTime parsedDate = DateTime.Parse(item.F_NACIMIENTO.ToString());
@@ -170,15 +176,15 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     catch (Exception e)
                     {
                         item.EDAD = "0";
-                    }
+                    }*/
 
                     // Verifica si la victima identificada en RUV ya fue caracterizada en la tabla GIC_RUV_PERSONAS
-                    hechos = hechos.hechosVictimizantes(item.MI_IDPERSONA);
-                    if (hechos.PER_ID != null)
+                    //hechos = hechos.hechosVictimizantes(item.MI_IDPERSONA);
+                    /*if (hechos.PER_ID != null)
                         item.TIPO_VICTIMA = "INCLUIDO";
                     else
-                        item.TIPO_VICTIMA = "NO INCLUIDO";
-                    item.HV1 = hechos.HV1;
+                        item.TIPO_VICTIMA = "NO INCLUIDO";*/
+                    /*item.HV1 = hechos.HV1;
 
                     if (Convert.ToInt32(hechos.HV5) > 0)
                     {
@@ -485,9 +491,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         e.Message.ToString();
                     }
+                    */
 
-
-
+                    /*
                     item.ID_CARACTERIZACION = hechos.ID_CARACTERIZACION;
                     item.ID_TBPERSONA = hechos.ID_CARACTERIZACION;
                     item.FECHA_ULT_CARACTERIZACION = hechos.FECHA_ULTI_ENCUESTA;
@@ -497,6 +503,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                         item.HABILITADO_PARA_CARACTERIZACION = "SI";
                     else
                         item.HABILITADO_PARA_CARACTERIZACION = hechos.HABILITADO_CARAC;
+                    */
 
                 }
 
@@ -614,7 +621,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         {
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
-            dataReader = ds.Tables[0].CreateDataReader();
+            dataReader = ds.Tables[1].CreateDataReader();
             List<Victima> maestroHogar = new List<Victima>();
             bool cargarVictima = true;
             while (dataReader.Read())
@@ -638,6 +645,45 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     if (!DBNull.Value.Equals(dataReader["PER_DISCAPACIDAD"])) objVictima.DISCAP = dataReader["PER_DISCAPACIDAD"].ToString();
                     if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
                     if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objVictima.GENERO_HOM = dataReader["PER_SEXO"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["EDAD"])) objVictima.EDAD = dataReader["EDAD"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HECHOS"])) objVictima.HECHOS = dataReader["HECHOS"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["FECHA_HECHO"])) objVictima.FECHA_HECHO = dataReader["FECHA_HECHO"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV1"])) objVictima.HV1 = dataReader["HV1"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV2"])) objVictima.HV2 = dataReader["HV2"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV3"])) objVictima.HV3 = dataReader["HV3"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV4"])) objVictima.HV4 = dataReader["HV4"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV5"])) objVictima.HV5 = dataReader["HV5"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV6"])) objVictima.HV6 = dataReader["HV6"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV7"])) objVictima.HV7 = dataReader["HV7"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV8"])) objVictima.HV8 = dataReader["HV8"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV9"])) objVictima.HV9 = dataReader["HV9"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV10"])) objVictima.HV10 = dataReader["HV10"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV11"])) objVictima.HV11 = dataReader["HV11"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV12"])) objVictima.HV12 = dataReader["HV12"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV13"])) objVictima.HV13 = dataReader["HV13"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV14"])) objVictima.HV14 = dataReader["HV14"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV1_FECHA"])) objVictima.FECHA_HECHO1 = dataReader["HV1_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV2_FECHA"])) objVictima.FECHA_HECHO2 = dataReader["HV2_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV3_FECHA"])) objVictima.FECHA_HECHO3 = dataReader["HV3_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV4_FECHA"])) objVictima.FECHA_HECHO4 = dataReader["HV4_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV5_FECHA"])) objVictima.FECHA_HECHO5 = dataReader["HV5_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV6_FECHA"])) objVictima.FECHA_HECHO6 = dataReader["HV6_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV7_FECHA"])) objVictima.FECHA_HECHO7 = dataReader["HV7_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV8_FECHA"])) objVictima.FECHA_HECHO8 = dataReader["HV8_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV9_FECHA"])) objVictima.FECHA_HECHO9 = dataReader["HV9_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV10_FECHA"])) objVictima.FECHA_HECHO10 = dataReader["HV10_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV11_FECHA"])) objVictima.FECHA_HECHO11 = dataReader["HV11_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV12_FECHA"])) objVictima.FECHA_HECHO12 = dataReader["HV12_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV13_FECHA"])) objVictima.FECHA_HECHO13 = dataReader["HV13_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HV14_FECHA"])) objVictima.FECHA_HECHO14 = dataReader["HV14_FECHA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["ESTADO_VICTIMA"])) objVictima.TIPO_VICTIMA = dataReader["ESTADO_VICTIMA"].ToString().ToUpper();
+                    if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_CARACTERIZACION = dataReader["ID_CARACTERIZACION"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_TBPERSONA = dataReader["ID_CARACTERIZACION"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["FECHA_ULTI_ENCUESTA"])) objVictima.FECHA_ULT_CARACTERIZACION = dataReader["FECHA_ULTI_ENCUESTA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["COD_HOGAR"])) objVictima.COD_HOGAR = dataReader["COD_HOGAR"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["ESTADO_ENCUESTA"])) objVictima.ESTADO_ENCUESTA = dataReader["ESTADO_ENCUESTA"].ToString();
+                    if (!DBNull.Value.Equals(dataReader["HABILITADO_CARAC"])) objVictima.HABILITADO_PARA_CARACTERIZACION = dataReader["HABILITADO_CARAC"].ToString();
+                        
 
                     //objVictima.TIPO_VICTIMA = "INCLUIDO";
                     //------------------------------------------------

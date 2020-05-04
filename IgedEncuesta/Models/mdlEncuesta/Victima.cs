@@ -132,19 +132,18 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public List<Victima> consultarVictimasMI(string numDoc, string idUsuario, string idAplicacion)
         {
-            DataSet dsSalida = new DataSet();
+            
             List<Victima> coleccion = new List<Victima>();
             DataSet dsconsultaunificada = new DataSet();
             HechosPersona hechos = new HechosPersona();
             FuentePersona objConsultaFuentePersona = new FuentePersona();
-            dsSalida = objConsultaFuentePersona.modeloRegistraduria(numDoc);
-            dsconsultaunificada = dsSalida;
+            dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numDoc);
             Encuesta objSesion = new Encuesta();
-            var serializeMODELOPERSONA = Newtonsoft.Json.JsonConvert.SerializeObject(dsSalida);
+            var serializeMODELOPERSONA = Newtonsoft.Json.JsonConvert.SerializeObject(dsconsultaunificada);
             objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOPERSONA", serializeMODELOPERSONA);
             var serializeMODELOUNIFICADO = Newtonsoft.Json.JsonConvert.SerializeObject(dsconsultaunificada);
             objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOUNIFICADO", serializeMODELOUNIFICADO);
-            coleccion = modeloVictimasMI(dsSalida);
+            coleccion = modeloVictimasMI(dsconsultaunificada);
             string vhechos = string.Empty;
             string fechashechos = string.Empty;
             
@@ -265,7 +264,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
             bool cargarVictima = true;
             while (dataReader.Read())
             {
-                //PER_ID, ID_PER_TIPODOC, PER_TIPODOC, PER_DOCUMENTO, PER_NOMBRE1, PER_NOMBRE2, PER_APELLIDO1, PER_APELLIDO2, PER_FECHANACIMIENTO, PER_NACIONALIDAD, PER_PAIS_EXPEDICION, PER_DPTO_EXPEDICION, PER_RNEC, PER_MUN_EXPEDICION, PER_FECHA_EXPEDICION, ID_SEXO, PER_SEXO, PER_DISCAPACIDAD, PER_INHABILITADO_TRABAJO, PER_LIBRETA_MILITAR, PER_SITUACION_MILITAR, PER_DISC_DESCRI, ID_PER_ORIENTACION_SEXUAL, PER_ORIENTACION_SEXUAL, ID_IDENTIDAD_GENERO, PER_IDENTIDAD_GENERO, ID_ETNIA, PER_ETNIA, ID_PER_PUEBLO, PER_PUEBLO, ID_PER_REGUSARDO, PER_RESGUARDO, ID_CONSEJO_COM, PER_CONSEJO_COMUNITARIO, ID_PER_RNEC_ESTADO, NOMBRE_RNEC_ESTADO
                 if (cargarVictima)
                 {
                     Victima objVictima = new Victima();
@@ -322,15 +320,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     if (!DBNull.Value.Equals(dataReader["COD_HOGAR"])) objVictima.COD_HOGAR = dataReader["COD_HOGAR"].ToString();
                     if (!DBNull.Value.Equals(dataReader["ESTADO_ENCUESTA"])) objVictima.ESTADO_ENCUESTA = dataReader["ESTADO_ENCUESTA"].ToString();
                     if (!DBNull.Value.Equals(dataReader["HABILITADO_CARAC"])) objVictima.HABILITADO_PARA_CARACTERIZACION = dataReader["HABILITADO_CARAC"].ToString();
-                        
-
-                    //objVictima.TIPO_VICTIMA = "INCLUIDO";
-                    //------------------------------------------------
-                    //MODIFICACION: JOSE VASQUEZ OCT.28.2015
-                    // LAS VICTIMAS NO HAN SIDO CARACTERIZADAS HASTA BUSCAR EN CARACTERIZACION
-                    //-----------------------------------------------
-                    //objVictima.HABILITADO_PARA_CARACTERIZACION = "SI";
-                    //FIN JOSE VASQUEZ OCT.28.2015
+                    
 
                     coleccion.Add(objVictima);
                 }

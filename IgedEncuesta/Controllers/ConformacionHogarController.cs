@@ -183,7 +183,6 @@ namespace IgedEncuesta.Controllers
                 //log.Info("ConformacionHogarController / cargarMaestroVictima , Entre : ");
                 FuentePersona objConsultaFuentePersona = new FuentePersona();
                 DataSet dsconsultaunificada = new DataSet();
-                IDataReader dataReaderconsultaunificadaTUP = null;
                 System.Collections.ArrayList arrayColeccion = new System.Collections.ArrayList();
                 Victima objConsultaVictima = new Victima();
                 Encuesta objSesion = new Encuesta();
@@ -204,46 +203,6 @@ namespace IgedEncuesta.Controllers
                     {
                         case "DOCUMENTO":
                             coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app);
-                            //dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numeroDocumento);
-                            ////25/04/2020 consultar metodo unificado, serializar y guardar en base de datos
-                            /*var serializeMODELOUNIFICADO = Newtonsoft.Json.JsonConvert.SerializeObject(dsconsultaunificada);
-                            objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELOUNIFICADO", serializeMODELOUNIFICADO);*/
-                            //
-                            /*dataReaderconsultaunificadaTUP = dsconsultaunificada.Tables[1].CreateDataReader();
-                            Victima victima = null;
-                            while (dataReaderconsultaunificadaTUP.Read())
-                            {
-                                victima = new Victima();
-                                victima.TIPO_DOC = dataReaderconsultaunificadaTUP["PER_TIPODOC"].ToString();
-                                victima.DOCUMENTO = dataReaderconsultaunificadaTUP["PER_DOCUMENTO"].ToString();
-                                victima.NOMBRE1 = dataReaderconsultaunificadaTUP["PER_NOMBRE1"].ToString();
-                                victima.NOMBRE2 = dataReaderconsultaunificadaTUP["PER_NOMBRE2"].ToString();
-                                victima.APELLIDO1 = dataReaderconsultaunificadaTUP["PER_APELLIDO1"].ToString();
-                                victima.APELLIDO2 = dataReaderconsultaunificadaTUP["PER_APELLIDO2"].ToString();
-                                victima.NOMBRES_COMPLETOS = victima.NOMBRE1 + ' ' + victima.NOMBRE2 + ' ' + victima.APELLIDO1 + ' ' + victima.APELLIDO2;
-                                victima.F_NACIMIENTO = dataReaderconsultaunificadaTUP["PER_FECHANACIMIENTO"].ToString();
-                                victima.EDAD = dataReaderconsultaunificadaTUP["EDAD"].ToString();
-                                victima.GENERO_HOM = dataReaderconsultaunificadaTUP["PER_SEXO"].ToString();
-                                victima.DISCAP = dataReaderconsultaunificadaTUP["PER_DISCAPACIDAD"].ToString();
-                                victima.GENERO_HOM = dataReaderconsultaunificadaTUP["PER_IDENTIDAD_GENERO"].ToString();
-                                victima.PERT_ETNICA = dataReaderconsultaunificadaTUP["PER_ETNIA"].ToString();
-                                victima.HECHOS = dataReaderconsultaunificadaTUP["HECHOS"].ToString();
-                                victima.FECHA_HECHO = dataReaderconsultaunificadaTUP["FECHA_HECHO"].ToString();
-                                victima.FECHA_ULT_CARACTERIZACION = dataReaderconsultaunificadaTUP["FECHA_ULTI_ENCUESTA"].ToString();
-                                victima.HABILITADO_PARA_CARACTERIZACION = dataReaderconsultaunificadaTUP["HABILITADO_CARAC"].ToString();
-                                victima.COD_HOGAR = dataReaderconsultaunificadaTUP["COD_HOGAR"].ToString();
-                                victima.ID_CARACTERIZACION = dataReaderconsultaunificadaTUP["ID_CARACTERIZACION"].ToString();
-                                victima.TIPO_VICTIMA = dataReaderconsultaunificadaTUP["ESTADO_VICTIMA"].ToString().Trim();
-                                if (dataReaderconsultaunificadaTUP["ESTADO_VICTIMA"].ToString().Equals("INCLUIDO"))
-                                    victima.HABILITADO_PARA_CARACTERIZACION = "SI";
-                                victima.CONS_PERSONA = dataReaderconsultaunificadaTUP["PER_ID"].ToString().Trim();
-
-                                if (dataReaderconsultaunificadaTUP["PER_DOCUMENTO"].ToString().Length > 0 && dataReaderconsultaunificadaTUP["PER_NOMBRE1"].ToString().Length > 0
-                                    && dataReaderconsultaunificadaTUP["PER_APELLIDO1"].ToString().Length > 0 && dataReaderconsultaunificadaTUP["PER_APELLIDO1"] != null)
-                                    coleccion.Add(victima);
-
-
-                            }*/
                             break;
                     }
 
@@ -300,14 +259,11 @@ namespace IgedEncuesta.Controllers
                     
                             try
                             {
-                                //coleccionFuente.Add(objConsultaFuentePersona.modeloRegistraduria(numeroDocumento));
-                                //25/04/2020 leer modelo serializado de la base de datos
+                                
                                 var MODELOUNIFICADO = objSesion.getValorCampoSesion("MODELOUNIFICADO", userIdApp);
                                 DataSet dataSet = JsonConvert.DeserializeObject<DataSet>(MODELOUNIFICADO);
                                 dsconsultaunificada = dataSet;
-                               //dsconsultaunificada = objConsultaFuentePersona.modeloRegistraduria(numeroDocumento);
                                 dataReaderconsultaunificada = dsconsultaunificada.Tables[0].CreateDataReader();
-
                                 while (dataReaderconsultaunificada.Read())
                                 {
                                     try

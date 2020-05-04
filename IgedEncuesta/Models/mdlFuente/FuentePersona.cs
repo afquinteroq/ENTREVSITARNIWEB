@@ -39,43 +39,12 @@ namespace IgedEncuesta.Models.mdlFuente
 
 
 
-        public DataSet/*List<FuentePersona>*/ modeloRegistraduria(string documento)
+        public DataSet modeloRegistraduria(string documento)
         {
-            //List<FuentePersona> listfuentepersona = new List<FuentePersona>();
-            //IDataReader dataReader = null;
             
-            //DataSet ds = new DataSet();
             DataSet dsconsultaunificada = new DataSet();
-            //ds = consultarRegistraduria(documento);
             ConsultaUnificada objConsultaUnificada = new ConsultaUnificada();
             dsconsultaunificada = objConsultaUnificada.consultUnificadaFuentes_y_RUV(documento);
-            //dataReader = ds.Tables[0].CreateDataReader();
-
-            /*
-            while (dataReader.Read())
-            {
-                objFuente = new FuentePersona();
-
-                
-                objFuente.FUENTE = "REGISTRADURIA";
-                objFuente.CONS_PERSONA = "";
-                objFuente.ID_TBPERSONA = "";
-                if (!DBNull.Value.Equals(dataReader["NUIP"])) objFuente.NUMERO_DOC = dataReader["NUIP"].ToString();
-                if (!DBNull.Value.Equals(dataReader["ESTADO_CEDULA"])) objFuente.ESTADO_CEDULA = dataReader["ESTADO_CEDULA"].ToString();
-                if (!DBNull.Value.Equals(dataReader["NOM1_RENEC"])) objFuente.PRIMER_NOMBRE = dataReader["NOM1_RENEC"].ToString();
-                if (!DBNull.Value.Equals(dataReader["NOM1_RENEC"])) objFuente.PRIMER_NOMBRE = dataReader["NOM1_RENEC"].ToString();
-                if (objFuente.PRIMER_NOMBRE == null)
-                    return objFuente;
-                if (!DBNull.Value.Equals(dataReader["NOM2_RENEC"])) objFuente.SEGUNDO_NOMBRE = dataReader["NOM2_RENEC"].ToString();
-                if (!DBNull.Value.Equals(dataReader["APE1_RENEC"])) objFuente.PRIMER_APELLIDO = dataReader["APE1_RENEC"].ToString();
-                if (!DBNull.Value.Equals(dataReader["APE2_RENEC"])) objFuente.SEGUNDO_APELLIDO = dataReader["APE2_RENEC"].ToString();
-                if (!DBNull.Value.Equals(dataReader["NOMBRES"])) objFuente.NOMBRES_COMPLETOS = dataReader["NOMBRES"].ToString();
-                if (!DBNull.Value.Equals(dataReader["GENERO"])) objFuente.GENERO = dataReader["GENERO"].ToString();
-                if (!DBNull.Value.Equals(dataReader["FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["FECHANACIMIENTO"].ToString().Substring(0,10);
-            }*/
-
-            //return (objFuente);
-            //return listfuentepersona;
             return dsconsultaunificada;
         }
 
@@ -91,7 +60,6 @@ namespace IgedEncuesta.Models.mdlFuente
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionRegistraduriaNUBE"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", documento));
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));

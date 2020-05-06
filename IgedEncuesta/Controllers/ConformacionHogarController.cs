@@ -239,7 +239,7 @@ namespace IgedEncuesta.Controllers
                 DataSet dsSalidaPMI = new DataSet();
                 DataSet dsSalidaRUV = new DataSet();
                 DataSet dsSalidaSIRAV = new DataSet();
-                //IDataReader dataReader = null;
+                IDataReader dataReader = null;
 
 
                 bool cargarModelo = true;

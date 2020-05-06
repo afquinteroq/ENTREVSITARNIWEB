@@ -1006,7 +1006,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         }
 
-        public DataSet consultarFichaUnicaFichaCaracterizacion(string documento, string idUsuario, string idAplicacion)
+        public DataSet consultarFichaUnicaFichaCaracterizacion(string documento/*, string idUsuario, string idAplicacion*/)
         {
             List<Parametros> param = new List<Parametros>();
             DataSet dsSalida = new DataSet();
@@ -1019,7 +1019,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_DOCUMENTO", 1, "System.String", documento));
-               /param.Add(asignarParametro("P_TEMATICA", 1, "System.Int32", "518"));
+                param.Add(asignarParametro("P_TEMATICA", 1, "System.Int32", "518"));
 
                 param.Add(asignarParametro("P_RESULT", 2, "System.String", ""));
                 param.Add(asignarParametro("P_MENSAJE", 2, "System.String", ""));

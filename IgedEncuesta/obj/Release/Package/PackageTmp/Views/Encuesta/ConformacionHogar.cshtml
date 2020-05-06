@@ -295,16 +295,41 @@
                             <!--05/032020 quitar esto para dejarlo todo igual-->
                             <div>
                                 <table>
+                                    <tr id="filaGridBuscarFuente" style="display: none">
+                                        <td style="text-align: center;">
+                                            <div id="maestroVictimas">
+                                            </div>
+                                            <div style="padding: 8px;">
+                                                <input type="button" value="Consultar Registraduría" id="btnConsultarRegistraduria" style="margin: auto; height: 30px; padding: 3px; width: 200px; font-family: Roboto;" />
+                                                <input type="button" value="Consultar Caracterización" id="btnConsultarFicha" style="margin: auto; height: 30px; padding: 3px; width: 200px; font-family: Roboto;" />
+                                                <input type="button" value="Consultar RUV" id="btnConsultarRUV" style="margin: auto; height: 30px; padding: 3px; width: 200px; font-family: Roboto;" />
+                                            </div>
+                                            <div id="iddivregistraduria" style="display: none; padding: 8px;">
+                                                <h2><span>REGISTRADURÍA</span></h2>
+                                            </div>
+                                            <div id="fuentePersonasRegistraduria">
+                                            </div>
+                                            <div id="iddientrevistaficha" style="display: none; padding: 8px;">
+                                                <h2><span>ENTREVISTA Y FICHA CARACTERIZACIÓN</span></h2>
+                                            </div>
+                                            <div id="fuentePersonasCaracterizacion">
+                                            </div>
+                                            <div id="iddfuentesruv" style="display: none; padding: 8px;">
+                                                <h2><span>FUENTES RUV</span></h2>
+                                            </div>
+                                            <div id="fuentePersonasRUV">
+                                            </div>
+                                        </td>
+                                    </tr>
                                     <tr id="filaGridMaestro" style="display: none">
                                         <td style="text-align: center;">
                                             <div id="maestroVictimas">
                                             </div>
                                             <br />
-
                                             <input type="button" value="Agregar Víctima No Incluida" id="btnAgregarVictimaNoIncluida" style="margin: auto; height: 30px; padding: 3px; width: 200px; font-family: Roboto;" />
                                             &nbsp;
 
-                                            <div>
+                                            <div id="idfuentesall" style="display: none">
                                                 &nbsp;
                                                 &nbsp;
                                                 <h2>FUENTES</h2>
@@ -597,56 +622,47 @@
             var total = $('#totalConsulta').val();
             //  alert(total);
             if (total == '0') {
+                $('#fuentePersonasRUV').html('');
                 //console.log('Total == ' + total);
                 $('#filaGridMaestro').hide('slow');
                 $("#CargandoDatosMaestro").hide();
                 //05/03/2020
                 $("#filaGridMaestro").show('slow');
+                $('#filaGridBuscarFuente').show('slow');
                 //
                 //alert('No se encontraron registros con el criterio de busqueda suministrado.');
                 mostrarDialogoHogar('No se encontraron registros con el criterio de busqueda suministrado.<br/>¿Desea agregar una víctima no incluida?');
             }
             else {
-                //console.log('Total == ' + total);
                 $("#CargandoDatosMaestro").hide();
-                //$('#maestroVictimas').show();
-                //$("#btnAgregarVictima").show();
                 $("#filaGridMaestro").show('slow');
+                $('#filaGridBuscarFuente').show('slow');
             }
 
             document.body.style.cursor = "default";
         }
         else if (opcionAjax == 2) {
             $('#filaGridMaestro').hide('slow');
+            $('#filaGridBuscarFuente').hide('slow');
         }
         opcionAjax = 0;
         $.LoadingOverlay("hide");
     });
 
-    $(document).ajaxStart(function () {        
-        //console.log('Inicio ajax conformaiconhogar linea 608');
+    $(document).ajaxStart(function () {
         var ruta_Cargando2 = '@Url.Content("~/Content/Imagenes/Cargando2.gif")';
         $.LoadingOverlay("show", "image: " + ruta_Cargando2);
         if (opcionAjax == 1) {
-            //console.log('Inicio ajax conformaiconhogar linea 612 opcionAjax == 1');
             $('#filaGridMaestro').hide();
+            $('#filaGridBuscarFuente').hide();
             $("#CargandoDatosMaestro").show();
         } else {
-            
+
            // console.log('Inicio ajax conformaiconhogar linea 616 opcionAjax ' + opcionAjax);
         }
     });
 
-    @*$(document).ajaxStop(function () {
-        console.log('entro a la funcion loadingoverlay stop');
-        $.LoadingOverlay("hide");
-    });
 
-    $(document).ajaxStart(function () {
-        console.log('entro a la funcion loadingoverlay start');
-        var ruta_Cargando2 = '@Url.Content("~/Content/Imagenes/Cargando2.gif")';
-        $.LoadingOverlay("show", "image: " + ruta_Cargando2);
-    });*@
 
 
 
@@ -674,35 +690,28 @@
 
     });
 
-    $('#btnAgregarVictimaNoIncluida').click(function () {        
+    $('#btnAgregarVictimaNoIncluida').click(function () {
         $("#tabNoIncluida").show('slow');
         $("#tabs-min").tabs({ active: 1 });
         $("#txtNumDoc2").val($("#txtNumDoc").val());
-        //CAMBIO JOSE VASQUEZ  FECHA: 11.NOV.2015
         $("#ddlTipoDocumento").val("CC");
-        //FIN CAMBIO JOSE VASQUEZ
-
     });
 
 
 
     $('#btnBuscarVictima').click(function () {
-        // alert($("form")[0].id);
-
-        //   alert($("form")[0].checkValidity().toString());
+        $('#iddivregistraduria').hide();
+        $('#iddientrevistaficha').hide();
+        $('#iddfuentesruv').hide();
+        $('#fuentePersonasRegistraduria').html('');
+        $('#fuentePersonasCaracterizacion').html('');
+        $('#fuentePersonasRUV').html('');
         if ($('#txtNumDoc')[0].checkValidity()) {
-            //var $theForm = $('#myForm')
-
-            //if ($("form")[0].checkValidity()) {
-            //  alert($('#txtNumDoc').val().trim());
             var valBusqueda = '';
             var varOpcion = $('#opcionBusqueda option:selected ').text();
             var msj = 'Escriba por favor el criterio de busqueda para realizar la consulta.';
             var className = $("#txtNumDoc").attr('class');
             var VictimaSeleccionada = '';  //se selecciono una victima para formar el hogar - JVASQUEZ 29.10.2015
-            //$('#maestroVictimas').hide();
-            //$("#btnAgregarVictima").hide();
-            //$('#filaGridMaestro').hide('slow');
 
             //JAIME ANDRES LOBATON  - SE AGREGA PARA  VALIDAR CAMPO REQUERIDOS VICTIMA NO INCLUIDA
             $('#txtPrimerApellido2').prop("required", false);
@@ -758,58 +767,85 @@
                     });
 
                 $('#fuentePersonas').html('');
-                $.ajax(
-                    {
-                        data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
-                        dataType: 'html',
-                        url: '@Url.Action("cargarFuentePersona", "ConformacionHogar")',
-                        success: function (result) { 
-                            //console.log('Entro a conformacionhogar linea 738');
-                            $('#fuentePersonas').append(result);
-                            //console.log('Entro a conformacionhogar linea 740');
-                            $('#fuentePersonas').show();
-                        },
-                        error: function (xhr, textStatus, errorThrown) {
-                            //console.log('Entro a conformacionhogar linea 743');
-                            alert("ha ocurrido un error al consultar las bases");
-                        }
-                    })
-
 
                  }
-                 else {
-                //    if (isNaN(valBusqueda)) msj = 'El valor de busqueda debe ser numérico.';
-                //    $('#filaGridMaestro').hide('slow');
-                //   alert(msj);
-                 }
              }
-             else {
-            //$('#txtNumDoc').setCustomValidity("PLZ CREATE A USERNAME, YO!");
-            //   alert('entro2');
-            //   $myForm.find(':submit').click();
-            // $("#formulario").submit();
-            //   $('#formulario .submit').click();
-            //  $('#formulario').submit();
-            //      return false;
-            //  return;
-             }
+
     });
 
+    $('#btnConsultarRegistraduria').click(function () {
+        $('#fuentePersonasRegistraduria').html('');
+            var valBusqueda = '';
+            var varOpcion = $('#opcionBusqueda option:selected ').text();
+            valBusqueda = $("#txtNumDoc").val().trim();
 
+        $.ajax(
+            {
+                data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                dataType: 'html',
+                url: '@Url.Action("cargarFuenteResgistraduria", "ConformacionHogar")',
+                success: function (result) {
+                    $('#fuentePersonasRegistraduria').append(result);
+                    $('#iddivregistraduria').show();
+                    $('#fuentePersonasRegistraduria').show();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Entro a conformacionhogar linea 801');
+                    alert("ha ocurrido un error al consultar las bases");
+                }
+            })
+    });
 
-         //function check(input) {
-         //    alert('entro');
-         //    if (input.validity.typeMismatch) {
-         //        input.setCustomValidity("Dude '" + input.value + "' is not a valid email. Enter something nice!!");
-         //    }
-         //    else {
-         //        input.setCustomValidity("");
-         //    }
-         //}
+    $('#btnConsultarFicha').click(function () {
+        $('#fuentePersonasCaracterizacion').html('');
+            var valBusqueda = '';
+            var varOpcion = $('#opcionBusqueda option:selected ').text();
+            valBusqueda = $("#txtNumDoc").val().trim();
+
+        $.ajax(
+            {
+                data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                dataType: 'html',
+                url: '@Url.Action("cargarFuenteFichaUnicaCaracterizacion", "ConformacionHogar")',
+                success: function (result) {
+                    $('#fuentePersonasCaracterizacion').append(result);
+                    $('#iddientrevistaficha').show();
+                    $('#fuentePersonasCaracterizacion').show();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Entro a conformacionhogar linea 801');
+                    alert("ha ocurrido un error al consultar las bases");
+                }
+            })
+    });
+
+    $('#btnConsultarRUV').click(function () {
+        $('#fuentePersonasRUV').html('');
+            var valBusqueda = '';
+            var varOpcion = $('#opcionBusqueda option:selected ').text();
+            valBusqueda = $("#txtNumDoc").val().trim();
+
+        $.ajax(
+            {
+                data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                dataType: 'html',
+                url: '@Url.Action("cargarFuenteRUV", "ConformacionHogar")',
+                success: function (result) {
+                    $('#fuentePersonasRUV').append(result);
+                    $('#iddfuentesruv').show();
+                    $('#fuentePersonasRUV').show();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Entro a conformacionhogar linea 801');
+                    alert("ha ocurrido un error al consultar las bases");
+                }
+            })
+    });
 
          $('#opcionBusqueda').change(function () {
              var varOpcion = $('#opcionBusqueda option:selected ').text();
              $('#filaGridMaestro').hide('slow');
+             $('#filaGridBuscarFuente').hide('slow');
 
              if (varOpcion == 'NOMBRES Y APELLIDOS') {
                  $('#divBuscarDoc').css("display", "none");
@@ -845,7 +881,7 @@
 
 
          $('#btnAgregarVictimaNI').click(function () {
-             
+
              var DocumentoSeleccionado = $('#ddlTipoDocumento  option:selected').val();
              var fechanacimiento = $('#txtFechaNacimiento2').val();
              //console.log('Imprmie DocumentoSeleccionado:: ' + DocumentoSeleccionado + ' fecha nacimiento ' + fechanacimiento);
@@ -860,7 +896,7 @@
                  var diaVF = parseInt(array_fechaVF[2]);
                  var edad = 0;
 
-                 //if (yearVF >= yearActual) {                 
+                 //if (yearVF >= yearActual) {
                  if (yearVF >= yearActual && mesVF >= mesActual && diaVF >= diaActual) {
                      $("#CargandoDatosMaestro").hide();
                      //console.log('Fecha seleccionada:' + yearVF + ' ' + mesVF + ' ' + diaVF);
@@ -927,16 +963,16 @@
                  //    alert("Por favor diligencie todos los campos requeridos antes de continuar.");
                  //    return;
                  //}
-                 
+
                  var existe = false;
-                 
+
                  var doc = $('#txtNumDoc2').val().toString().trim().toUpperCase();
                  var tipodocumento = $('#ddlTipoDocumento option:selected').text().toString().trim().toUpperCase();
                  // alert(doc);
                  if (doc != '')
                      //+ '-' + integranteGrupo.length
                  {
-                     integranteGrupo = $("." + doc.substring(doc.indexOf('|') + 1));                     
+                     integranteGrupo = $("." + doc.substring(doc.indexOf('|') + 1));
                      if (integranteGrupo.length) {
                          integranteGrupo.each(function () {
                              valor = $(this).data("tipodoc");
@@ -944,22 +980,19 @@
                                  existe = true;
                                  return;
                              }
-                         });  
-                         
+                         });
+
                      }
                  }
 
                  if (existe) {
-                     
+
                      //opcionDialogo = 3;
                      opcionDialogo = 5;
                      window.confirm('El número de documento <b>' + doc.substring(id.indexOf('|') + 1) + '</b> y tipo de documento <b>' + tipodocumento +'</b> ya existe en la conformación del hogar.');
-                     //alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
-                     // $('#txtNumDoc').val('');
-                     // $('#filaGridMaestro').hide('slow');                     
                      return;
                  }
-                 else agregarVictimaNIHogar();                 
+                 else agregarVictimaNIHogar();
                  //  id = idChequeados.toString().trim();
 
                  //  if (id != '')
@@ -989,7 +1022,7 @@
 
 
 
-         function agregarVictimaNIHogar() {             
+         function agregarVictimaNIHogar() {
              //JOSE VASQUEZ  FECHA:03.11.2015
              //MODIFICACION: CARGA TIPO DE DOCUMENTO NOMBRE CORTO.
              var datos = $('#ddlTipoDocumento  option:selected').text().toString().trim().toUpperCase() + '|' + $('#txtNumDoc2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtFechaNacimiento2').val().toString().trim().toUpperCase();
@@ -1019,12 +1052,12 @@
                           div.append(result);
                       },
                       error: function (error) {
-                          
+
                       }
                   });
               }
 
-         function enrutarOpcion() {             
+         function enrutarOpcion() {
                   switch (opcionDialogo) {
                       case 1:
                           //alert('opcion 1');
@@ -1108,14 +1141,11 @@
                       });
               };
     function incluirVictima(obj) {
-        
+
         document.body.style.cursor = "wait";
         $("#CargandoDatosMaestro").show();
         var existe = false;
-        //id = idChequeados.toString().trim();
-        //id = $(this).attr('id');
         id = obj.id;
-        //alert(id);
         if (id != '')
             //+ '-' + integranteGrupo.length
         {
@@ -1130,12 +1160,10 @@
             opcionDialogo = 2;
             window.confirm('El número de documento <b>' + id.substring(id.indexOf('-') + 1) + '</b> ya existe en la conformación del hogar. ¿Esta seguro de incluir esta persona?');
             $('#txtNumDoc').val('');
-            //  $('#filaGridMaestro').hide('slow');
             return;
 
         }
         else {
-            //console.log('exite = falso');
             agregarVictimaIHogar();
         }
 
@@ -1186,8 +1214,6 @@
                      //alert(consPersona);
                      if ($('#panelHogar').css('display') == 'none') $('#panelHogar').show('slow');
                      $('#txtNumDoc').val('');
-                     //console.log('linea 1071');
-                     //$('#filaGridMaestro').hide('slow');
                      //'@Url.Content("~/Content/Icons/check-3.png")';
                      $('#imgIncluirMaestro_' + idVictima.substring(0, idVictima.indexOf('|'))).attr("src", "@Url.Content("~/Content/Icons/check-3.png")");
                      //console.log('linea 1075');
@@ -1239,8 +1265,8 @@
 
          function busquedaRegistraduria(value) {
              //$("#divBusqueda").hide('slow');
-             
-             alert(value);             
+
+             alert(value);
              $.getJSON("@Url.Action("validacionRegistraduria")" + "/" + value, updateFields);
     };
 
@@ -1252,11 +1278,12 @@
         public string APELLIDO1 { get; set; }
         public string APELLIDO2 { get; set; }
         */
-        
+
         //console.log("DOC_ANTE4S_" + data.DOCUMENTO);
-        $("#tabNoIncluida").show('slow');        
-        $("#tabs-min").tabs({ active: 1 });        
+        $("#tabNoIncluida").show('slow');
+        $("#tabs-min").tabs({ active: 1 });
         $("#filaGridMaestro").show('slow');
+        $('#filaGridBuscarFuente').show('slow');
         //
         if (data.DOCUMENTO != null) {
 

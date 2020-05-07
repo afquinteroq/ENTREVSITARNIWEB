@@ -59,7 +59,7 @@ namespace IgedEncuesta.Controllers
                 ViewBag.VerAyudas = false;
                 //comentar desde acá para publicar
                 // ESTOS SON DE ADMINSUAURIOS
-                
+
                 List<NivelAcceso> coleccionNivelAcceso = new List<NivelAcceso>();
                 NivelAcceso nivelAcceso = new NivelAcceso();
                 var SesionIged = new HttpCookie("SesionIged");
@@ -77,7 +77,7 @@ namespace IgedEncuesta.Controllers
                 coleccionNivelAcceso = JsonConvert.DeserializeObject<List<Autenticacion.NivelAcceso>>(na);
                 var cookie = new HttpCookie("nivelAcceso", serializedData);
                 HttpContext.Response.Cookies.Add(cookie);
-                
+
 
                 // ESTOS SON DE ADMINSUAURIOSPRUEBAS
                 /*
@@ -188,29 +188,12 @@ namespace IgedEncuesta.Controllers
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 app = Request.Cookies["SesionIged"]["App"].ToString();
                 ViewBag.CerrarVentana = false;
-                DataSet dsSalida = new DataSet();
                 List<Victima> coleccion = new List<Victima>();
-
                 DataSet datasetRegistraduria = new DataSet();
-
-                bool cargarModelo = true;
-
-                if (cargarModelo)
-                {
-                    switch (opcionBusqueda)
-                    {
-                        case "DOCUMENTO":
-                            coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app);
-                            break;
-                    }
-
-                    ViewBag.Lista = coleccion;
-
-                    var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
-                    objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELO", serializedData);
-
-                }
-
+                coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app);
+                ViewBag.Lista = coleccion;
+                var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
+                objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELO", serializedData);
                 return PartialView("_MaestroVictima", coleccion);
             }
             catch (Exception e)
@@ -588,7 +571,7 @@ namespace IgedEncuesta.Controllers
                 {
                     Victima objConsultaVictima = new Victima();
                     ViewBag.CerrarVentana = false;
-                    
+
                     Victima victima = new Victima();
                     var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                     if (String.IsNullOrEmpty(modeloHogarJson))

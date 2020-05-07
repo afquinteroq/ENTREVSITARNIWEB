@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using ObjetosTipos;
-using AdministracionInstrumentos;
 
 namespace IgedEncuesta.Models.mdlEncuesta
 {
@@ -77,8 +76,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarRegistraduria(string documento)
         {
 
-            List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            List<Parametros> param;
+            DataSet dsSalida;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -95,7 +94,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                dsSalida.Dispose();
+                //dsSalida.Dispose();
                 //datos.Dispose();
             }
 
@@ -103,12 +102,12 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public Victima modeloRegistraduria(string documento)
         {
-            List<Victima> coleccion = new List<Victima>();
+            
             IDataReader dataReader = null;
-            DataSet ds = new DataSet();
+            DataSet ds;
             ds = consultarRegistraduria(documento);
             dataReader = ds.Tables[0].CreateDataReader();
-            List<Victima> maestroHogar = new List<Victima>();
+            
             Victima objVictima = new Victima();
             while (dataReader.Read())
             {
@@ -130,15 +129,14 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public List<Victima> consultarVictimasMI(string numDoc, string idUsuario, string idAplicacion)
         {
-            DataSet dsSalida = new DataSet();
-            List<Victima> coleccion = new List<Victima>();
-            List<Persona> personas = new List<Persona>();
+            DataSet dsSalida;
+            List<Victima> coleccion;
             HechosPersona hechos = new HechosPersona();
             dsSalida = consultarPersonasModeloINntegrado(numDoc, idUsuario, idAplicacion);
             ////10/04/2020
-            Encuesta objSesion = new Encuesta();
+            /*Encuesta objSesion = new Encuesta();
             var serializeMODELOPERSONA = Newtonsoft.Json.JsonConvert.SerializeObject(dsSalida);
-            objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOPERSONA", serializeMODELOPERSONA);
+            objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOPERSONA", serializeMODELOPERSONA);*/
             //
             coleccion = modeloVictimasMI(dsSalida);
             string vhechos = string.Empty;

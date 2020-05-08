@@ -103,7 +103,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
             }
            
         }

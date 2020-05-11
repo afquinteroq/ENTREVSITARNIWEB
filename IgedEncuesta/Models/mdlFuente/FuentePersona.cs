@@ -1,10 +1,12 @@
-﻿using IgedEncuesta.Models.mdlEncuesta;
-using ObjetosTipos;
+﻿using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Configuration;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace IgedEncuesta.Models.mdlFuente
 {
@@ -39,13 +41,41 @@ namespace IgedEncuesta.Models.mdlFuente
 
 
 
-        public DataSet modeloRegistraduria(string documento)
+        public FuentePersona modeloRegistraduria(string documento)
         {
-            
-            DataSet dsconsultaunificada = new DataSet();
-            ConsultaUnificada objConsultaUnificada = new ConsultaUnificada();
-            dsconsultaunificada = objConsultaUnificada.consultUnificadaFuentes_y_RUV(documento);
-            return dsconsultaunificada;
+
+            IDataReader dataReader = null;
+            DataSet ds = new DataSet();
+            ds = consultarRegistraduria(documento);
+            dataReader = ds.Tables[0].CreateDataReader();
+
+            FuentePersona objFuente = new FuentePersona();
+            while (dataReader.Read())
+            {
+
+                //NOM1_RENEC	NOM2_RENEC	APE1_RENEC	APE2_RENEC	DEPTO_EXP	MUN_EXP	F_EXP	COD_EST_CEDULA	ESTADO_CEDULA	NUM_RESOL	ANO_RESOL, SIN INFORMACION		0
+
+                objFuente = new FuentePersona();
+
+
+                objFuente.FUENTE = "REGISTRADURIA";
+                objFuente.CONS_PERSONA = "";
+                objFuente.ID_TBPERSONA = "";
+                if (!DBNull.Value.Equals(dataReader["NUIP"])) objFuente.NUMERO_DOC = dataReader["NUIP"].ToString();
+                if (!DBNull.Value.Equals(dataReader["ESTADO_CEDULA"])) objFuente.ESTADO_CEDULA = dataReader["ESTADO_CEDULA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["NOM1_RENEC"])) objFuente.PRIMER_NOMBRE = dataReader["NOM1_RENEC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["NOM1_RENEC"])) objFuente.PRIMER_NOMBRE = dataReader["NOM1_RENEC"].ToString();
+                if (objFuente.PRIMER_NOMBRE == null)
+                    return objFuente;
+                if (!DBNull.Value.Equals(dataReader["NOM2_RENEC"])) objFuente.SEGUNDO_NOMBRE = dataReader["NOM2_RENEC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["APE1_RENEC"])) objFuente.PRIMER_APELLIDO = dataReader["APE1_RENEC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["APE2_RENEC"])) objFuente.SEGUNDO_APELLIDO = dataReader["APE2_RENEC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["NOMBRES"])) objFuente.NOMBRES_COMPLETOS = dataReader["NOMBRES"].ToString();
+                if (!DBNull.Value.Equals(dataReader["GENERO"])) objFuente.GENERO = dataReader["GENERO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["FECHANACIMIENTO"].ToString().Substring(0, 10);
+            }
+
+            return (objFuente);
         }
 
         public DataSet consultarRegistraduria(string documento)
@@ -60,6 +90,7 @@ namespace IgedEncuesta.Models.mdlFuente
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionRegistraduriaNUBE"].ConnectionString;
                 datos.Conexion = connString;
+                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", documento));
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
@@ -73,6 +104,342 @@ namespace IgedEncuesta.Models.mdlFuente
             }
 
         }
+
+        public DataSet retornaRenec(string numDoc)
+        {
+
+            try
+            {
+                
+                AccesoDatos.AccesoDatos conexionBD = new AccesoDatos.AccesoDatos();
+                conexionBD.MotorBasedatos = true;
+                string cadenaConex = ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
+                DataSet dataRenec = new DataSet();
+                conexionBD.Conexion = cadenaConex;
+                List<Parametros> parametro = new List<Parametros>();
+                parametro.Add(asignarParametro("p_documento", 1, "System.String", numDoc));
+                parametro.Add(asignarParametro("p_result", 2, "System.Int32", ""));
+                parametro.Add(asignarParametro("p_mensaje", 2, "System.String", ""));
+                parametro.Add(asignarParametro("p_cur_renec", 2, "Cursor", ""));
+                dataRenec = conexionBD.ConsultarConProcedimientoAlmacenado("rni_mi_pru.pkg_consulta_caracterizacion.ps_validacion_rnec", ref parametro);
+                return dataRenec;
+            }
+            catch (Exception e)
+            {
+                e.Message.ToString();
+                return null;
+            }
+        }
+
+        public DataSet retornaFuenteALL(string numDoc)
+        {
+
+            try
+            {
+
+                AccesoDatos.AccesoDatos conexionBD = new AccesoDatos.AccesoDatos();
+                conexionBD.MotorBasedatos = true;
+                string cadenaConex = ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
+                DataSet dataFuenAll = new DataSet();
+                conexionBD.Conexion = cadenaConex;
+                List<Parametros> parametro = new List<Parametros>();
+                parametro.Add(asignarParametro("p_documento", 1, "System.String", numDoc));
+                parametro.Add(asignarParametro("p_result", 2, "System.Int32", ""));
+                parametro.Add(asignarParametro("p_mensaje", 2, "System.String", ""));
+                parametro.Add(asignarParametro("p_cur_fte", 2, "Cursor", ""));
+                dataFuenAll = conexionBD.ConsultarConProcedimientoAlmacenado("rni_mi_pru.pkg_consulta_caracterizacion.ps_validacion_fuentes", ref parametro);
+                return dataFuenAll;
+            }
+            catch (Exception e)
+            {
+                e.Message.ToString();
+                return null;
+            }
+        }
+
+        
+
+           public DataSet retornaFuenteEnc(string numDoc)
+           {
+
+            try
+            {
+
+                AccesoDatos.AccesoDatos conexionBD = new AccesoDatos.AccesoDatos();
+                conexionBD.MotorBasedatos = true;
+                string cadenaConex = ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
+                DataSet dataFuenAll = new DataSet();
+                conexionBD.Conexion = cadenaConex;
+                List<Parametros> parametro = new List<Parametros>();
+                parametro.Add(asignarParametro("p_documento", 1, "System.String", numDoc));
+                parametro.Add(asignarParametro("p_result", 2, "System.Int32", ""));
+                parametro.Add(asignarParametro("p_mensaje", 2, "System.String", ""));
+                parametro.Add(asignarParametro("p_cursor", 2, "Cursor", ""));
+                dataFuenAll = conexionBD.ConsultarConProcedimientoAlmacenado("rni_mi_pru.pkg_consulta_caracterizacion.sp_entrevistas_caract", ref parametro);
+                return dataFuenAll;
+            }
+            catch (Exception e)
+            {
+                e.Message.ToString();
+                return null;
+            }
+        }
+
+
+        //public async Task<List<FuentePersona>> dataRegistraduria(string numDoc)
+        //   {
+        //    return await Task.Run(() =>
+        //    {
+
+        //        List<FuentePersona> arregloFuente = new List<FuentePersona>();
+        //        DataSet dataRenec = new DataSet();
+        //        dataRenec = retornaRenec(numDoc);
+        //        IDataReader leeDatos = null;
+
+        //        try
+        //        {
+        //            leeDatos = dataRenec.Tables[0].CreateDataReader();
+
+        //            while (leeDatos.Read())
+        //            {
+        //                FuentePersona dataFuente = new FuentePersona();
+        //                if (!DBNull.Value.Equals(leeDatos["FUENTE"]))
+        //                    dataFuente.FUENTE = leeDatos["FUENTE"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["TIPO_DOC"]))
+        //                    dataFuente.TIPO_DOC = leeDatos["TIPO_DOC"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["ESTADO_CEDULA"]))
+        //                    dataFuente.ESTADO_CEDULA = leeDatos["ESTADO_CEDULA"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["NOMBRE_COMPLETO"]))
+        //                    dataFuente.NOMBRES_COMPLETOS = leeDatos["NOMBRE_COMPLETO"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["PARENTESCO"]))
+        //                    dataFuente.PARENTESCO = leeDatos["PARENTESCO"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["GENERO"]))
+        //                    dataFuente.GENERO = leeDatos["GENERO"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["FECHANACIMIENTO"]))
+        //                    dataFuente.FECHA_NACIMIENTO = leeDatos["FECHANACIMIENTO"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["ESTADO_VALORACION"]))
+        //                    dataFuente.ESTADO_VALORACION = leeDatos["ESTADO_VALORACION"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["NUM_FUD"]))
+        //                    dataFuente.NUMERO_FORMULARIO = leeDatos["NUM_FUD"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["NUM_DECL"]))
+        //                    dataFuente.CODIGO_DECLARACION = leeDatos["NUM_DECL"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["F_OCU"]))
+        //                    dataFuente.FECHA_HECHO = leeDatos["F_OCU"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["HECHO"]))
+        //                    dataFuente.HECHO_VICTIMIZANTE = leeDatos["HECHO"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["ENCUESTA"]))
+        //                    dataFuente.ESTADO_ENCUESTA = leeDatos["ENCUESTA"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["ESTADO_ENC"]))
+        //                    dataFuente.ESTADO_ENCUESTA = leeDatos["ESTADO_ENC"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["FECH_ENC"]))
+        //                    dataFuente.FECHA_ENCUESTA = leeDatos["FECH_ENC"].ToString();
+        //                if (!DBNull.Value.Equals(leeDatos["VIGENCIA_ENC"]))
+        //                    dataFuente.VIGENCIA_ENCUESTA = leeDatos["VIGENCIA_ENC"].ToString();
+
+        //                arregloFuente.Add(dataFuente);
+        //            }
+        //            return arregloFuente;
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            e.Message.ToString();
+        //            return null;
+        //        }
+        //    });
+
+        //}
+
+        
+        public async Task<List<FuentePersona>> dataRenec(string numDoc)
+        {
+            return await Task.Run(() =>
+            {
+               
+
+                try
+                {
+                    List<FuentePersona> arregloFuente = new List<FuentePersona>();
+                    DataSet dataFuenteAll = new DataSet();
+                    dataFuenteAll = retornaRenec(numDoc);
+                    IDataReader leeDatos = null;
+                    leeDatos = dataFuenteAll.Tables[0].CreateDataReader();
+
+                    while (leeDatos.Read())
+                    {
+                        FuentePersona dataFuente = new FuentePersona();
+                        if (!DBNull.Value.Equals(leeDatos["FUENTE"]))
+                            dataFuente.FUENTE = leeDatos["FUENTE"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["TIPO_DOC"]))
+                            dataFuente.TIPO_DOC = leeDatos["TIPO_DOC"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_CEDULA"]))
+                            dataFuente.ESTADO_CEDULA = leeDatos["ESTADO_CEDULA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NOMBRE_COMPLETO"]))
+                            dataFuente.NOMBRES_COMPLETOS = leeDatos["NOMBRE_COMPLETO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["PARENTESCO"]))
+                            dataFuente.PARENTESCO = leeDatos["PARENTESCO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["GENERO"]))
+                            dataFuente.GENERO = leeDatos["GENERO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["FECHANACIMIENTO"]))
+                            dataFuente.FECHA_NACIMIENTO = leeDatos["FECHANACIMIENTO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_VALORACION"]))
+                            dataFuente.ESTADO_VALORACION = leeDatos["ESTADO_VALORACION"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NUM_FUD"]))
+                            dataFuente.NUMERO_FORMULARIO = leeDatos["NUM_FUD"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NUM_DECL"]))
+                            dataFuente.CODIGO_DECLARACION = leeDatos["NUM_DECL"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["F_OCU"]))
+                            dataFuente.FECHA_HECHO = leeDatos["F_OCU"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["HECHO"]))
+                            dataFuente.HECHO_VICTIMIZANTE = leeDatos["HECHO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ENCUESTA"]))
+                            dataFuente.ESTADO_ENCUESTA = leeDatos["ENCUESTA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_ENC"]))
+                            dataFuente.ESTADO_ENCUESTA = leeDatos["ESTADO_ENC"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["FECH_ENC"]))
+                            dataFuente.FECHA_ENCUESTA = leeDatos["FECH_ENC"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["VIGENCIA_ENC"]))
+                            dataFuente.VIGENCIA_ENCUESTA = leeDatos["VIGENCIA_ENC"].ToString();
+
+                        arregloFuente.Add(dataFuente);
+                        break;
+                    }
+                    return arregloFuente;
+                }
+                finally { }     
+            });
+
+
+        }
+
+        public async Task<List<FuentePersona>> dataFuentesCarac(string numDoc)
+        {
+            return await Task.Run(() =>
+            {
+
+             List<FuentePersona> arregloFuente = new List<FuentePersona>();
+                DataSet dataFuenteAll = new DataSet();
+                dataFuenteAll = retornaFuenteALL(numDoc);
+                IDataReader leeDatos = null;
+
+                try
+                {
+                    leeDatos = dataFuenteAll.Tables[0].CreateDataReader();
+
+                    while (leeDatos.Read())
+                    {
+                        FuentePersona dataFuente = new FuentePersona();
+                        if (!DBNull.Value.Equals(leeDatos["FUENTE"]))
+                            dataFuente.FUENTE = leeDatos["FUENTE"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["TIPO_DOCUMENTO"]))
+                            dataFuente.TIPO_DOC = leeDatos["TIPO_DOCUMENTO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["DOCUMENTO"]))
+                            dataFuente.NUMERO_DOC = leeDatos["DOCUMENTO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_CEDULA"]))
+                            dataFuente.ESTADO_CEDULA = leeDatos["ESTADO_CEDULA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NOMBRE_COMPLETO"]))
+                            dataFuente.NOMBRES_COMPLETOS = leeDatos["NOMBRE_COMPLETO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["RELACION"]))
+                            dataFuente.PARENTESCO = leeDatos["RELACION"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["GENERO"]))
+                            dataFuente.GENERO = leeDatos["GENERO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["F_NACIMIENTO"]))
+                            dataFuente.FECHA_NACIMIENTO = leeDatos["F_NACIMIENTO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO"]))
+                            dataFuente.ESTADO_VALORACION = leeDatos["ESTADO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NUM_FUD_NUM_CASO"]))
+                            dataFuente.NUMERO_FORMULARIO = leeDatos["NUM_FUD_NUM_CASO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ID_DECLARACION"]))
+                            dataFuente.CODIGO_DECLARACION = leeDatos["ID_DECLARACION"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["FECHA_SINIESTRO"]))
+                            dataFuente.FECHA_HECHO = leeDatos["FECHA_SINIESTRO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["HECHO"]))
+                            dataFuente.HECHO_VICTIMIZANTE = leeDatos["HECHO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ENCUESTA"]))
+                            dataFuente.CODIGO_HOGAR = leeDatos["ENCUESTA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_ENCUESTA"]))
+                            dataFuente.ESTADO_ENCUESTA = leeDatos["ESTADO_ENCUESTA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["FECHA_ENCUESTA"]))
+                            dataFuente.FECHA_ENCUESTA = leeDatos["FECHA_ENCUESTA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["VIGENCIA_ENCUESTA"]))
+                            dataFuente.VIGENCIA_ENCUESTA = leeDatos["VIGENCIA_ENCUESTA"].ToString();
+
+                        arregloFuente.Add(dataFuente);
+                    }
+                    return arregloFuente;
+                }
+                catch (Exception e)
+                {
+                    e.Message.ToString();
+                    return null;
+                }
+            });
+        }
+
+        public async Task<List<FuentePersona>> dataFuentesCaracEncues(string numDoc)
+        {
+            return await Task.Run(() =>
+            {
+
+                List<FuentePersona> arregloFuente = new List<FuentePersona>();
+                DataSet dataFuenteAll = new DataSet();
+                dataFuenteAll = retornaFuenteEnc(numDoc);
+                IDataReader leeDatos = null;
+
+                try
+                {
+                    leeDatos = dataFuenteAll.Tables[0].CreateDataReader();
+
+                    while (leeDatos.Read())
+                    {
+                        FuentePersona dataFuente = new FuentePersona();
+                        if (!DBNull.Value.Equals(leeDatos["PROGRAMA"]))
+                            dataFuente.FUENTE = leeDatos["PROGRAMA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["PER_TIPODOC"]))
+                            dataFuente.TIPO_DOC = leeDatos["PER_TIPODOC"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["PER_DOCUMENTO"]))
+                            dataFuente.NUMERO_DOC = leeDatos["PER_DOCUMENTO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_CED"]))
+                            dataFuente.ESTADO_CEDULA = leeDatos["ESTADO_CED"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NOMBRE_COMPLETO"]))
+                            dataFuente.NOMBRES_COMPLETOS = leeDatos["NOMBRE_COMPLETO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["RELACION"]))
+                            dataFuente.PARENTESCO = leeDatos["RELACION"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["PER_SEXO"]))
+                            dataFuente.GENERO = leeDatos["PER_SEXO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["R_FECHANACIMIENTO"]))
+                            dataFuente.FECHA_NACIMIENTO = leeDatos["R_FECHANACIMIENTO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_VALO"]))
+                            dataFuente.ESTADO_VALORACION = leeDatos["ESTADO_VALO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NUM_FOR"]))
+                            dataFuente.NUMERO_FORMULARIO = leeDatos["NUM_FOR"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["NUM_DECL"]))
+                            dataFuente.CODIGO_DECLARACION = leeDatos["NUM_DECL"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["F_SINIESTRO"]))
+                            dataFuente.FECHA_HECHO = leeDatos["F_SINIESTRO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["HECHO"]))
+                            dataFuente.HECHO_VICTIMIZANTE = leeDatos["HECHO"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["CODIGO_HOGAR"]))
+                            dataFuente.CODIGO_HOGAR = leeDatos["CODIGO_HOGAR"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["ESTADO_ENCUESTA"]))
+                            dataFuente.ESTADO_ENCUESTA = leeDatos["ESTADO_ENCUESTA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["FECHA_ENCUESTA"]))
+                            dataFuente.FECHA_ENCUESTA = leeDatos["FECHA_ENCUESTA"].ToString();
+                        if (!DBNull.Value.Equals(leeDatos["VIGENCIA_ENCUESTA"]))
+                            dataFuente.VIGENCIA_ENCUESTA = leeDatos["VIGENCIA_ENCUESTA"].ToString();
+
+                        arregloFuente.Add(dataFuente);
+                    }
+                    return arregloFuente;
+                }
+                catch (Exception e)
+                {
+                    e.Message.ToString();
+                    return null;
+                }
+            });
+        }
+
+
 
         public DataSet consultarFuenteRUV(string numDocumento, string opcionBusqueda)
         {
@@ -337,3 +704,6 @@ namespace IgedEncuesta.Models.mdlFuente
 
     }
 }
+    
+   
+   

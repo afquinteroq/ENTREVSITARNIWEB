@@ -75,7 +75,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                //datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
             return finalizado;
@@ -92,7 +92,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            //DataSet datoConsulta = new DataSet();
             List<Parametros> param = new List<Parametros>();
             param.Add(baseDatos.asignarParametro("pcod_hogar", 1, "System.String",codHogar));
             param.Add(baseDatos.asignarParametro("pidTema", 1, "System.String", idTema.ToString()));
@@ -180,12 +180,12 @@ namespace AdministracionInstrumentos
                     dataReader.Close();
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ex.Message.ToString();
+                Console.WriteLine(e.Message);
             }
             finally{
-                //datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
             return finalizado;
@@ -257,7 +257,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                //datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
 
@@ -327,7 +327,7 @@ namespace AdministracionInstrumentos
                 List<Parametros> param = new List<Parametros>();
                 param.Add(baseDatos.asignarParametro("TOTCAPITULOS", 4, "System.Int32", ""));
                 param.Add(baseDatos.asignarParametro("HOGCODIGO", 1, "System.String", hogCodigo.ToString()));
-                //param.Add(baseDatos.asignarParametro("pCODHOGAR", 1, "System.String", codHogar));
+                
                 numero = int.Parse(datos.EjecutarFunciones(funcion, ref param));
                 return numero;
             }

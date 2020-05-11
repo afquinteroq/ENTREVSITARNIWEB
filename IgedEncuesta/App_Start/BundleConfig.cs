@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace IgedEncuesta
 {
@@ -32,9 +31,7 @@ namespace IgedEncuesta
             
 
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/Site.css"));
-
-            //bundles.Add(new StyleBundle("~/Content/themes/base").Include("~/Content/themes/base/jquery-ui.css"));
-                        //bundles.Add(new StyleBundle("~/Styles2/css").Include(
+            
             bundles.Add(new StyleBundle("~/Content/themes/Jquery/css").Include(
                     "~/Content/themes/Jquery/jquery-ui.css",
                     "~/Content/themes/Jquery/jquery-ui.min.css",

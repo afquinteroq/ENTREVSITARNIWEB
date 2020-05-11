@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using AdministracionInstrumentos;
 using log4net;
-
-using System.IO;
 
 
 namespace IgedEncuesta.Controllers
@@ -71,7 +65,6 @@ namespace IgedEncuesta.Controllers
             int codigo = 0;
             gic_Hogar hogar = new gic_Hogar();            
             codigo = hogar.existeConstanciaFirmada(codHogar);
-            //return codigo;
             return Json(codigo, JsonRequestBehavior.AllowGet);
         }
 

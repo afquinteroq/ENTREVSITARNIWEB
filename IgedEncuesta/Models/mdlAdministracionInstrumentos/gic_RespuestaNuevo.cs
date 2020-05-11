@@ -3,8 +3,6 @@ using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
 namespace AdministracionInstrumentos
 {
@@ -249,7 +247,6 @@ namespace AdministracionInstrumentos
             DataSet datoConsulta = new DataSet();
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;//pPRE_IDPREGUNTA, pHOG_CODIGO
-//            param.Add(baseDatos.asignarParametro("pINS_IDINSTRUMENTO", 1, "System.Int32", idInstrumento.ToString()));
             param.Add(baseDatos.asignarParametro("pPRE_IDPREGUNTA", 1, "System.Int32", idPregunta.ToString()));
             param.Add(baseDatos.asignarParametro("pINS_IDINSTRUMENTO", 1, "System.Int32", idInstrumento.ToString()));
             param.Add(baseDatos.asignarParametro("pHOG_CODIGO", 1, "System.String", codHogar.ToString()));

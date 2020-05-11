@@ -182,7 +182,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                //datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
         }

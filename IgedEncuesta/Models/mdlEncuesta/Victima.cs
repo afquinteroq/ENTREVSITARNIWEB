@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using ObjetosTipos;
+using System.Text;
 
 namespace IgedEncuesta.Models.mdlEncuesta
 {
@@ -84,7 +85,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionRegistraduria"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
+
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", documento));
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
@@ -102,12 +103,12 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public Victima modeloRegistraduria(string documento)
         {
-            
+
             IDataReader dataReader = null;
             DataSet ds;
             ds = consultarRegistraduria(documento);
             dataReader = ds.Tables[0].CreateDataReader();
-            
+
             Victima objVictima = new Victima();
             while (dataReader.Read())
             {
@@ -139,9 +140,10 @@ namespace IgedEncuesta.Models.mdlEncuesta
             objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOPERSONA", serializeMODELOPERSONA);*/
             //
             coleccion = modeloVictimasMI(dsSalida);
-            string vhechos = string.Empty;
-            string fechashechos = string.Empty;
 
+            StringBuilder vhechos = new StringBuilder("");
+
+            StringBuilder fechashechos = new StringBuilder("");
 
             // Entra si encontró victimas registradas en el RUV para el número de documento suministrado
             if (coleccion.Count > 0)
@@ -179,18 +181,19 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
                     if (Convert.ToInt32(hechos.HV5) > 0)
                     {
-                        vhechos += "Desplazamiento forzado";
+                        vhechos.Append("Desplazamiento forzado");
                         if (!DBNull.Value.Equals(hechos.Fecha_HV5) && hechos.Fecha_HV5 != null)
                         {
                             try
                             {
                                 item.FECHA_HECHO = hechos.Fecha_HV5.ToString().ToUpper().Substring(0, 10).Trim();
                                 item.FECHA_HECHO5 = hechos.Fecha_HV5.ToString().Substring(0, 10);
-                                fechashechos = hechos.Fecha_HV5.ToString().ToUpper().Substring(0, 10).Trim();
+
+                                fechashechos.Append(hechos.Fecha_HV5.ToString().ToUpper().Substring(0, 10).Trim());
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                         }
@@ -201,8 +204,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Acto terrosita";
-                            fechashechos += " - " + hechos.Fecha_HV1.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Acto terrosita");
+                            fechashechos.Append(" - " + hechos.Fecha_HV1.ToString().ToUpper().Substring(0, 10).Trim());
                         }
                         if (!DBNull.Value.Equals(hechos.Fecha_HV1) && hechos.Fecha_HV1 != null)
                             try
@@ -211,7 +214,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                     }
@@ -220,8 +223,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Amenaza";
-                            fechashechos += " - " + hechos.Fecha_HV2.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Amenaza");
+                            fechashechos.Append(" - " + hechos.Fecha_HV2.ToString().ToUpper().Substring(0, 10).Trim());
                         }
                         if (!DBNull.Value.Equals(hechos.Fecha_HV2) && hechos.Fecha_HV2 != null)
                             try
@@ -230,7 +233,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
 
@@ -239,8 +242,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Delitos contra la libertad e integridad";
-                            fechashechos += " - " + hechos.Fecha_HV3.ToString().ToUpper().Substring(0, 10).Trim();
+
+                            vhechos.Append(" - " + "Delitos contra la libertad e integridad");
+                            fechashechos.Append(" - " + hechos.Fecha_HV3.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV3) && hechos.Fecha_HV3 != null)
@@ -250,7 +254,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                     }
@@ -258,8 +262,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Desaparición forzada";
-                            fechashechos += " - " + hechos.Fecha_HV4.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Desaparición forzada");
+                            fechashechos.Append(" - " + hechos.Fecha_HV4.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV4) && hechos.Fecha_HV4 != null)
@@ -269,7 +273,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
                     }
 
@@ -277,8 +281,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Homicido";
-                            fechashechos += " - " + hechos.Fecha_HV6.ToString().ToUpper().Substring(0, 10).Trim();
+
+                            vhechos.Append(" - " + "Homicido");
+                            fechashechos.Append(" - " + hechos.Fecha_HV6.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV6) && hechos.Fecha_HV6 != null)
@@ -288,7 +293,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                     }
@@ -296,8 +301,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Minas antipersonal MUSE";
-                            fechashechos += " - " + hechos.Fecha_HV7.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Minas antipersonal MUSE");
+                            fechashechos.Append(" - " + hechos.Fecha_HV7.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV7) && hechos.Fecha_HV7 != null)
@@ -307,7 +312,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
 
@@ -316,8 +321,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Secuestro";
-                            fechashechos += " - " + hechos.Fecha_HV8.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Secuestro");
+                            fechashechos.Append(" - " + hechos.Fecha_HV8.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV8) && hechos.Fecha_HV8 != null)
@@ -327,7 +332,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                     }
@@ -335,8 +340,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Tortura";
-                            fechashechos += " - " + hechos.Fecha_HV9.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Tortura");
+                            fechashechos.Append(" - " + hechos.Fecha_HV9.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV9) && hechos.Fecha_HV9 != null)
@@ -346,7 +351,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                     }
@@ -354,8 +359,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Vinculación NNA";
-                            fechashechos += " - " + hechos.Fecha_HV10.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Vinculación NNA");
+                            fechashechos.Append(" - " + hechos.Fecha_HV10.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV10) && hechos.Fecha_HV10 != null)
@@ -365,7 +370,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
 
@@ -374,8 +379,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Abandono o despojo forzado de tierras";
-                            fechashechos += " - " + hechos.Fecha_HV11.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Abandono o despojo forzado de tierras");
+                            fechashechos.Append(" - " + hechos.Fecha_HV11.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV11) && hechos.Fecha_HV11 != null)
@@ -385,7 +390,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
 
@@ -394,8 +399,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Perdida de bienes muebles e inmuebles";
-                            fechashechos += " - " + hechos.Fecha_HV12.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Perdida de bienes muebles e inmuebles");
+                            fechashechos.Append(" - " + hechos.Fecha_HV12.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV12) && hechos.Fecha_HV12 != null)
@@ -405,7 +410,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
 
@@ -414,8 +419,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Otros";
-                            fechashechos += " - " + hechos.Fecha_HV13.ToString().ToUpper().Substring(0, 10).Trim();
+                            vhechos.Append(" - " + "Otros");
+                            fechashechos.Append(" - " + hechos.Fecha_HV13.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV13) && hechos.Fecha_HV13 != null)
@@ -425,7 +430,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
 
@@ -434,8 +439,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (Convert.ToInt32(hechos.HV5) == 0)
                         {
-                            vhechos += " - " + "Sin información";
-                            fechashechos += " - " + hechos.Fecha_HV14.ToString().ToUpper().Substring(0, 10).Trim();
+
+                            vhechos.Append(" - " + "Sin información");
+                            fechashechos.Append(" - " + hechos.Fecha_HV14.ToString().ToUpper().Substring(0, 10).Trim());
                         }
 
                         if (!DBNull.Value.Equals(hechos.Fecha_HV14) && hechos.Fecha_HV14 != null)
@@ -445,18 +451,18 @@ namespace IgedEncuesta.Models.mdlEncuesta
                             }
                             catch (Exception e)
                             {
-                                e.Message.ToString();
+                                Console.WriteLine(e.Message);
                             }
 
                     }
                     try
                     {
 
-                        item.FECHA_HECHO = fechashechos;
+                        item.FECHA_HECHO = fechashechos.ToString();
                     }
                     catch (Exception e)
                     {
-                        e.Message.ToString();
+                        Console.WriteLine(e.Message);
                     }
 
                     item.HV2 = hechos.HV2;
@@ -476,11 +482,11 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
                     try
                     {
-                        item.HECHOS = vhechos;
+                        item.HECHOS = vhechos.ToString();
                     }
                     catch (Exception e)
                     {
-                        e.Message.ToString();
+                        Console.WriteLine(e.Message);
                     }
 
 
@@ -509,7 +515,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         {
             List<Victima> coleccion = new List<Victima>();
             List<Parametros> param = new List<Parametros>();
-            Victima usuario = new Victima();
+            //Victima usuario = new Victima();
             DataSet dsSalida = new DataSet();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
@@ -527,7 +533,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
+
             }
             return dsSalida;
         }
@@ -538,69 +544,63 @@ namespace IgedEncuesta.Models.mdlEncuesta
             IDataReader dataReader = null;
             dataReader = ds.Tables[0].CreateDataReader();
             List<Victima> maestroHogar = new List<Victima>();
-            bool cargarVictima = true;
+
 
             maestroHogar = (List<Victima>)HttpContext.Current.Session["ModeloHogar"];
             while (dataReader.Read())
             {
-                //if (maestroHogar == null) cargarVictima = true;
-                //     else cargarVictima = !maestroHogar.Any(x => x.CONS_PERSONA == dataReader["CONS_PERSONA"].ToString());
 
-                //if (!DBNull.Value.Equals(dataReader["CONS_PERSONA"]))
-                // {
-                if (cargarVictima)
-                {
-                    Victima objVictima = new Victima();
-                    if (!DBNull.Value.Equals(dataReader["MI_IDPERSONA"])) objVictima.MI_IDPERSONA = dataReader["MI_IDPERSONA"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["CONS_PERSONA"])) objVictima.CONS_PERSONA = dataReader["CONS_PERSONA"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["TIPO_DOC"])) objVictima.TIPO_DOC = dataReader["TIPO_DOC"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["DOCUMENTO"])) objVictima.DOCUMENTO = dataReader["DOCUMENTO"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["NOMBRE1"])) objVictima.NOMBRE1 = dataReader["NOMBRE1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["NOMBRE2"])) objVictima.NOMBRE2 = dataReader["NOMBRE2"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["APELLIDO1"])) objVictima.APELLIDO1 = dataReader["APELLIDO1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["APELLIDO2"])) objVictima.APELLIDO2 = dataReader["APELLIDO2"].ToString();
 
-                    //------------------------------------------------
-                    //MODIFICACION: JOSE VASQUEZ OCT.27.2015
-                    // ADICION CAMPO DOCUMENTO RUV
-                    //-----------------------------------------------
-                    objVictima.DOCUMENTO_RUV = objVictima.DOCUMENTO;
-                    //FIN MODIFICACION OCT.27.2015
+                Victima objVictima = new Victima();
+                if (!DBNull.Value.Equals(dataReader["MI_IDPERSONA"])) objVictima.MI_IDPERSONA = dataReader["MI_IDPERSONA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["CONS_PERSONA"])) objVictima.CONS_PERSONA = dataReader["CONS_PERSONA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["TIPO_DOC"])) objVictima.TIPO_DOC = dataReader["TIPO_DOC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["DOCUMENTO"])) objVictima.DOCUMENTO = dataReader["DOCUMENTO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["NOMBRE1"])) objVictima.NOMBRE1 = dataReader["NOMBRE1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["NOMBRE2"])) objVictima.NOMBRE2 = dataReader["NOMBRE2"].ToString();
+                if (!DBNull.Value.Equals(dataReader["APELLIDO1"])) objVictima.APELLIDO1 = dataReader["APELLIDO1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["APELLIDO2"])) objVictima.APELLIDO2 = dataReader["APELLIDO2"].ToString();
 
-                    objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
+                //------------------------------------------------
+                //MODIFICACION: JOSE VASQUEZ OCT.27.2015
+                // ADICION CAMPO DOCUMENTO RUV
+                //-----------------------------------------------
+                objVictima.DOCUMENTO_RUV = objVictima.DOCUMENTO;
+                //FIN MODIFICACION OCT.27.2015
 
-                    if (!DBNull.Value.Equals(dataReader["GENERO_HOM"])) objVictima.GENERO_HOM = dataReader["GENERO_HOM"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PERT_ETNICA"])) objVictima.PERT_ETNICA = dataReader["PERT_ETNICA"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["DISCAP"])) objVictima.DISCAP = dataReader["DISCAP"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["F_NACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["F_NACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
+                objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
 
-                    if (!DBNull.Value.Equals(dataReader["SOBREVIVENCIA"])) objVictima.SOBREVIVENCIA = dataReader["SOBREVIVENCIA"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["IDENTIFICADO"])) objVictima.IDENTIFICADO = dataReader["IDENTIFICADO"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV1"])) objVictima.HV1 = dataReader["HV1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV2"])) objVictima.HV2 = dataReader["HV2"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV3"])) objVictima.HV3 = dataReader["HV3"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV4"])) objVictima.HV4 = dataReader["HV4"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV5"])) objVictima.HV5 = dataReader["HV5"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV6"])) objVictima.HV6 = dataReader["HV6"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV7"])) objVictima.HV7 = dataReader["HV7"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV8"])) objVictima.HV8 = dataReader["HV8"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV9"])) objVictima.HV9 = dataReader["HV9"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV10"])) objVictima.HV10 = dataReader["HV10"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV11"])) objVictima.HV11 = dataReader["HV11"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV12"])) objVictima.HV12 = dataReader["HV12"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV13"])) objVictima.HV13 = dataReader["HV13"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["HV14"])) objVictima.HV14 = dataReader["HV14"].ToString();
-                    objVictima.TIPO_VICTIMA = "INCLUIDO";
-                    //------------------------------------------------
-                    //MODIFICACION: JOSE VASQUEZ OCT.28.2015
-                    // LAS VICTIMAS NO HAN SIDO CARACTERIZADAS HASTA BUSCAR EN CARACTERIZACION
-                    //-----------------------------------------------
-                    objVictima.HABILITADO_PARA_CARACTERIZACION = "SI";
-                    //FIN JOSE VASQUEZ OCT.28.2015
+                if (!DBNull.Value.Equals(dataReader["GENERO_HOM"])) objVictima.GENERO_HOM = dataReader["GENERO_HOM"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PERT_ETNICA"])) objVictima.PERT_ETNICA = dataReader["PERT_ETNICA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["DISCAP"])) objVictima.DISCAP = dataReader["DISCAP"].ToString();
+                if (!DBNull.Value.Equals(dataReader["F_NACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["F_NACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
 
-                    coleccion.Add(objVictima);
-                }
-                //    }
+                if (!DBNull.Value.Equals(dataReader["SOBREVIVENCIA"])) objVictima.SOBREVIVENCIA = dataReader["SOBREVIVENCIA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["IDENTIFICADO"])) objVictima.IDENTIFICADO = dataReader["IDENTIFICADO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV1"])) objVictima.HV1 = dataReader["HV1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV2"])) objVictima.HV2 = dataReader["HV2"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV3"])) objVictima.HV3 = dataReader["HV3"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV4"])) objVictima.HV4 = dataReader["HV4"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV5"])) objVictima.HV5 = dataReader["HV5"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV6"])) objVictima.HV6 = dataReader["HV6"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV7"])) objVictima.HV7 = dataReader["HV7"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV8"])) objVictima.HV8 = dataReader["HV8"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV9"])) objVictima.HV9 = dataReader["HV9"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV10"])) objVictima.HV10 = dataReader["HV10"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV11"])) objVictima.HV11 = dataReader["HV11"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV12"])) objVictima.HV12 = dataReader["HV12"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV13"])) objVictima.HV13 = dataReader["HV13"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV14"])) objVictima.HV14 = dataReader["HV14"].ToString();
+                objVictima.TIPO_VICTIMA = "INCLUIDO";
+                //------------------------------------------------
+                //MODIFICACION: JOSE VASQUEZ OCT.28.2015
+                // LAS VICTIMAS NO HAN SIDO CARACTERIZADAS HASTA BUSCAR EN CARACTERIZACION
+                //-----------------------------------------------
+                objVictima.HABILITADO_PARA_CARACTERIZACION = "SI";
+                //FIN JOSE VASQUEZ OCT.28.2015
+
+                coleccion.Add(objVictima);
+
             }
 
             return (coleccion);
@@ -612,41 +612,38 @@ namespace IgedEncuesta.Models.mdlEncuesta
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
             dataReader = ds.Tables[0].CreateDataReader();
-            List<Victima> maestroHogar = new List<Victima>();
-            bool cargarVictima = true;
+            //List<Victima> maestroHogar = new List<Victima>();
+
             while (dataReader.Read())
             {
-                //PER_ID, ID_PER_TIPODOC, PER_TIPODOC, PER_DOCUMENTO, PER_NOMBRE1, PER_NOMBRE2, PER_APELLIDO1, PER_APELLIDO2, PER_FECHANACIMIENTO, PER_NACIONALIDAD, PER_PAIS_EXPEDICION, PER_DPTO_EXPEDICION, PER_RNEC, PER_MUN_EXPEDICION, PER_FECHA_EXPEDICION, ID_SEXO, PER_SEXO, PER_DISCAPACIDAD, PER_INHABILITADO_TRABAJO, PER_LIBRETA_MILITAR, PER_SITUACION_MILITAR, PER_DISC_DESCRI, ID_PER_ORIENTACION_SEXUAL, PER_ORIENTACION_SEXUAL, ID_IDENTIDAD_GENERO, PER_IDENTIDAD_GENERO, ID_ETNIA, PER_ETNIA, ID_PER_PUEBLO, PER_PUEBLO, ID_PER_REGUSARDO, PER_RESGUARDO, ID_CONSEJO_COM, PER_CONSEJO_COMUNITARIO, ID_PER_RNEC_ESTADO, NOMBRE_RNEC_ESTADO
-                if (cargarVictima)
-                {
-                    Victima objVictima = new Victima();
-                    if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.MI_IDPERSONA = dataReader["PER_ID"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.CONS_PERSONA = dataReader["PER_ID"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) objVictima.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objVictima.DOCUMENTO = dataReader["PER_DOCUMENTO"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_NOMBRE1"])) objVictima.NOMBRE1 = dataReader["PER_NOMBRE1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_NOMBRE2"])) objVictima.NOMBRE2 = dataReader["PER_NOMBRE2"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_APELLIDO1"])) objVictima.APELLIDO1 = dataReader["PER_APELLIDO1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_APELLIDO2"])) objVictima.APELLIDO2 = dataReader["PER_APELLIDO2"].ToString();
-                    objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
 
-                    if (!DBNull.Value.Equals(dataReader["PER_IDENTIDAD_GENERO"])) objVictima.GENERO_HOM = dataReader["PER_IDENTIDAD_GENERO"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_ETNIA"])) objVictima.PERT_ETNICA = dataReader["PER_ETNIA"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_DISCAPACIDAD"])) objVictima.DISCAP = dataReader["PER_DISCAPACIDAD"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
-                    if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objVictima.GENERO_HOM = dataReader["PER_SEXO"].ToString();
+                Victima objVictima = new Victima();
+                if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.MI_IDPERSONA = dataReader["PER_ID"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.CONS_PERSONA = dataReader["PER_ID"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) objVictima.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objVictima.DOCUMENTO = dataReader["PER_DOCUMENTO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_NOMBRE1"])) objVictima.NOMBRE1 = dataReader["PER_NOMBRE1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_NOMBRE2"])) objVictima.NOMBRE2 = dataReader["PER_NOMBRE2"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_APELLIDO1"])) objVictima.APELLIDO1 = dataReader["PER_APELLIDO1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_APELLIDO2"])) objVictima.APELLIDO2 = dataReader["PER_APELLIDO2"].ToString();
+                objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
 
-                    //objVictima.TIPO_VICTIMA = "INCLUIDO";
-                    //------------------------------------------------
-                    //MODIFICACION: JOSE VASQUEZ OCT.28.2015
-                    // LAS VICTIMAS NO HAN SIDO CARACTERIZADAS HASTA BUSCAR EN CARACTERIZACION
-                    //-----------------------------------------------
-                    //objVictima.HABILITADO_PARA_CARACTERIZACION = "SI";
-                    //FIN JOSE VASQUEZ OCT.28.2015
+                if (!DBNull.Value.Equals(dataReader["PER_IDENTIDAD_GENERO"])) objVictima.GENERO_HOM = dataReader["PER_IDENTIDAD_GENERO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_ETNIA"])) objVictima.PERT_ETNICA = dataReader["PER_ETNIA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_DISCAPACIDAD"])) objVictima.DISCAP = dataReader["PER_DISCAPACIDAD"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
+                if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objVictima.GENERO_HOM = dataReader["PER_SEXO"].ToString();
 
-                    coleccion.Add(objVictima);
-                }
-                //    }
+                //objVictima.TIPO_VICTIMA = "INCLUIDO";
+                //------------------------------------------------
+                //MODIFICACION: JOSE VASQUEZ OCT.28.2015
+                // LAS VICTIMAS NO HAN SIDO CARACTERIZADAS HASTA BUSCAR EN CARACTERIZACION
+                //-----------------------------------------------
+                //objVictima.HABILITADO_PARA_CARACTERIZACION = "SI";
+                //FIN JOSE VASQUEZ OCT.28.2015
+
+                coleccion.Add(objVictima);
+
             }
 
             return (coleccion);
@@ -654,9 +651,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public DataSet consultarGrupoFamiliar(string cons_persona)
         {
-            List<Victima> coleccion = new List<Victima>();
+            //List<Victima> coleccion = new List<Victima>();
             List<Parametros> param = new List<Parametros>();
-            Victima usuario = new Victima();
+            //Victima usuario = new Victima();
             DataSet dsSalida = new DataSet();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
@@ -674,7 +671,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
             }
 
         }
@@ -706,7 +702,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
             }
 
         }
@@ -749,7 +744,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             List<Parametros> param = new List<Parametros>();
             DataSet dsSalida = new DataSet();
             IDataReader dataReader = null;
-            List<string> idPersonas = new List<string>();
+            //List<string> idPersonas = new List<string>();
             List<Persona> personas = new List<Persona>();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
@@ -776,7 +771,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                         if (!DBNull.Value.Equals(dataReader["PER_PRIMERAPELLIDO"])) p.PRIMER_APELLIDO = dataReader["PER_PRIMERAPELLIDO"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_SEGUNDOAPELLIDO"])) p.SEGUNDO_APELLIDO = dataReader["PER_SEGUNDOAPELLIDO"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_ESTADO"])) p.ESTADO = dataReader["PER_ESTADO"].ToString();
-                        //if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) p.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString();
+
                         if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) p.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_NUMERODOC"])) p.NUMERO_DOC = dataReader["PER_NUMERODOC"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) p.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
@@ -811,7 +806,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 
@@ -842,7 +837,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
         }
@@ -909,7 +904,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 
@@ -925,7 +920,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
+
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_IDPERSONA", 1, "System.Int32", IdPersona));
                 param.Add(asignarParametro("P_APPLICATIONID", 1, "System.String", idAplicacion));
@@ -934,12 +929,12 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MSGERROR", 2, "System.String", ""));
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CONSULTAS.MI_PERSONAS_UNICA", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_PERSONAS_UNICA", ref param);
+
                 return dsSalida;
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 
@@ -958,7 +953,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
+
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_DOCUMENTO", 1, "System.String", documento));
                 param.Add(asignarParametro("P_NOMBRE1", 1, "System.String", ""));
@@ -998,7 +993,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 
@@ -1014,46 +1009,21 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_DOCUMENTO", 1, "System.String", documento));
                 param.Add(asignarParametro("P_TEMATICA", 1, "System.Int32", "518"));
 
                 param.Add(asignarParametro("P_RESULT", 2, "System.String", ""));
                 param.Add(asignarParametro("P_MENSAJE", 2, "System.String", ""));
-
                 param.Add(asignarParametro("P_CURSOR", 2, "Cursor", ""));
-
-                
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("Rni_mi_pru.SP_ENTREVISTA_UNICA", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_PERSONAS", ref param);
-
                 string resultado = param.Find(x => x.Nombre == "P_RESULT").Valor;
                 string mensaje = param.Find(x => x.Nombre == "P_MENSAJE").Valor;
-                /*
-                int totalpersonas = dsSalida.Tables[0].Rows.Count;
-
-
-                if (dsSalida.Tables[0].Rows.Count == 0)
-                {
-                    String vacio =  "VACIO";
-                    Console.WriteLine(vacio);
-
-
-                }
-                else if(dsSalida.Tables[0].Rows.Count > 0)
-                {
-                    String NOMBRE = dsSalida.Tables[0].TableName;
-                    Console.WriteLine(NOMBRE);
-                    String PDOCUMENTO = dsSalida.Tables[NOMBRE].Rows[1]["PER_DOCUMENTO"].ToString();                    
-                }*/
-
-
                 return dsSalida;
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 
@@ -1061,9 +1031,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public DataSet consultarGrupoFamiliarNuevo(string idPersonaModelo)
         {
-            List<Victima> coleccion = new List<Victima>();
+
             List<Parametros> param = new List<Parametros>();
-            Victima usuario = new Victima();
+
             DataSet dsSalida = new DataSet();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
@@ -1076,13 +1046,11 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CARACTERIZACION.MI_PERSONAS_GRUPOS", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_PERSONAS_GRUPOS", ref param);
-
                 return dsSalida;
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
         }
@@ -1113,37 +1081,34 @@ namespace IgedEncuesta.Models.mdlEncuesta
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
             dataReader = ds.Tables[0].CreateDataReader();
-            List<Victima> maestroHogar = new List<Victima>();
-            bool cargarVictima = true;
+            //List<Victima> maestroHogar = new List<Victima>();
+
             while (dataReader.Read())
             {
-                if (cargarVictima)
+
+                Victima objVictima = new Victima();
+                if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.MI_IDPERSONA = dataReader["PER_ID"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.CONS_PERSONA = dataReader["PER_ID"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) objVictima.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objVictima.DOCUMENTO = dataReader["PER_DOCUMENTO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_NOMBRE1"])) objVictima.NOMBRE1 = dataReader["PER_NOMBRE1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_NOMBRE2"])) objVictima.NOMBRE2 = dataReader["PER_NOMBRE2"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_APELLIDO1"])) objVictima.APELLIDO1 = dataReader["PER_APELLIDO1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["PER_APELLIDO2"])) objVictima.APELLIDO2 = dataReader["PER_APELLIDO2"].ToString();
+                objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
+                if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
+                if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_CARACTERIZACION = dataReader["ID_CARACTERIZACION"].ToString();
+                try
                 {
-                    Victima objVictima = new Victima();
-                    if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.MI_IDPERSONA = dataReader["PER_ID"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_ID"])) objVictima.CONS_PERSONA = dataReader["PER_ID"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) objVictima.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objVictima.DOCUMENTO = dataReader["PER_DOCUMENTO"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_NOMBRE1"])) objVictima.NOMBRE1 = dataReader["PER_NOMBRE1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_NOMBRE2"])) objVictima.NOMBRE2 = dataReader["PER_NOMBRE2"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_APELLIDO1"])) objVictima.APELLIDO1 = dataReader["PER_APELLIDO1"].ToString();
-                    if (!DBNull.Value.Equals(dataReader["PER_APELLIDO2"])) objVictima.APELLIDO2 = dataReader["PER_APELLIDO2"].ToString();
-                    objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
-                    if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
-                    if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_CARACTERIZACION = dataReader["ID_CARACTERIZACION"].ToString();
-                    try
-                    {
-                        if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objVictima.GENERO_HOM = dataReader["PER_SEXO"].ToString();
-                    }
-                    catch (Exception e)
-                    {
-                        e.Message.ToString();
-                    }
-
-
-                    coleccion.Add(objVictima);
+                    if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objVictima.GENERO_HOM = dataReader["PER_SEXO"].ToString();
                 }
-                //    }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                coleccion.Add(objVictima);
+
             }
 
             return (coleccion);
@@ -1153,7 +1118,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         {
             DataSet dsSalida = new DataSet();
             List<Victima> coleccion = new List<Victima>();
-            List<Persona> personas = new List<Persona>();
+
             HechosPersona hechos = new HechosPersona();
             dsSalida = consultarGrupoFamiliarNuevo(idPersonaModelo);
             coleccion = modeloGrupoFamilairMi(dsSalida);
@@ -1219,7 +1184,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_IDPERSONA", 1, "System.Int32", documento));
                 param.Add(asignarParametro("P_APPLICATIONID", 1, "System.String", idAplicacion));
@@ -1228,12 +1192,10 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MSGERROR", 2, "System.String", ""));
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CONSULTAS.MI_PERSONAS_UNICA", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_PERSONAS_UNICA", ref param);
                 return dsSalida;
             }
             finally
             {
-                //datos.Dispose();
                 dsSalida.Dispose();
             }
 
@@ -1242,7 +1204,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public Victima consultaDatosRUV(string consPersona)
         {
-            List<Victima> coleccion = new List<Victima>();
+            //List<Victima> coleccion = new List<Victima>();
             List<Parametros> param = new List<Parametros>();
             DataSet dsSalida = new DataSet();
             IDataReader dataReader = null;
@@ -1342,7 +1304,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
                         if (!DBNull.Value.Equals(dataReader["PER_PRIMERAPELLIDO"])) p.PRIMER_APELLIDO = dataReader["PER_PRIMERAPELLIDO"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_SEGUNDOAPELLIDO"])) p.SEGUNDO_APELLIDO = dataReader["PER_SEGUNDOAPELLIDO"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_ESTADO"])) p.ESTADO = dataReader["PER_ESTADO"].ToString();
-                        //if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) p.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) p.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_NUMERODOC"])) p.NUMERO_DOC = dataReader["PER_NUMERODOC"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) p.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString();
@@ -1364,7 +1325,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 
@@ -1401,15 +1362,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                         if (!DBNull.Value.Equals(dataReader["PER_PRIMERAPELLIDO"])) p.PRIMER_APELLIDO = dataReader["PER_PRIMERAPELLIDO"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_NUMERODOC"])) p.NUMERO_DOC = dataReader["PER_NUMERODOC"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_SEGUNDOAPELLIDO"])) p.SEGUNDO_APELLIDO = dataReader["PER_SEGUNDOAPELLIDO"].ToString();
-                        /*                        
-                        if (!DBNull.Value.Equals(dataReader["PER_ESTADO"])) p.ESTADO = dataReader["PER_ESTADO"].ToString();                        
-                        if (!DBNull.Value.Equals(dataReader["PER_TIPODOC"])) p.TIPO_DOC = dataReader["PER_TIPODOC"].ToString();
-                        if (!DBNull.Value.Equals(dataReader["PER_NUMERODOC"])) p.NUMERO_DOC = dataReader["PER_NUMERODOC"].ToString();
-                        if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) p.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString();
-                        p.NOMBRES_COMPLETOS = p.PRIMER_NOMBRE + ' ' + p.SEGUNDO_NOMBRE + ' ' + p.PRIMER_APELLIDO + ' ' + p.PRIMER_APELLIDO;                        
-                        if (!DBNull.Value.Equals(dataReader["FECHA_CARACTERIZACION"])) p.FECHA_ULT_CARACTERIZACION = dataReader["FECHA_CARACTERIZACION"].ToString();
-                        if (!DBNull.Value.Equals(dataReader["HABILITADO_CARAC"])) p.HABILITADO_PARA_CARACTERIZACION = dataReader["HABILITADO_CARAC"].ToString();
-                        */
+
 
                         personas.Add(p);
                     }
@@ -1418,7 +1371,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             finally
             {
-                //datos.Dispose();
+
                 dsSalida.Dispose();
             }
 

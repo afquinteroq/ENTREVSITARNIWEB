@@ -5,7 +5,6 @@ using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Web.Mvc;
 
 namespace AdministracionInstrumentos
@@ -190,7 +189,6 @@ namespace AdministracionInstrumentos
                         preguntas.Add(pregunta);
                     }
                     dataReader.Close();
-                    //conn.Close();
                     #endregion
                 }
                 return preguntas;
@@ -350,7 +348,7 @@ namespace AdministracionInstrumentos
                         }
                     }
                     dataReader.Close();
-                    // conn.Close();
+                    
                 }
             }
             catch (Exception e)
@@ -361,7 +359,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
             return padreYorden;
         }

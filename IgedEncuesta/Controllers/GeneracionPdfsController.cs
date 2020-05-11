@@ -62,25 +62,25 @@ namespace IgedEncuesta.Controllers
             try
             {
                 Boolean val = false;
-                string codHogar = string.Empty;
+                //string codHogar = string.Empty;
                 string Usuario = string.Empty;
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 Usuario = Request.Cookies["SesionIged"]["USUARIO"].ToString();
                 int IdUsuario = 0;
                 IdUsuario = int.Parse(userIdApp);
-                gic_Hogar hogar = new gic_Hogar();
+                //gic_Hogar hogar = new gic_Hogar();
                 man_ArchivoPdf pdf = new man_ArchivoPdf();
                 string rutaArchivo = string.Empty;
                 string nombreArchivo = string.Empty;                    
                 
                     val = pdf.descargarConstanciaSAAHSinFirmar("1", hogcodigo, out rutaArchivo);
-                    if (val == true) {
+                    if (val) {
                         pathsArchivos.Add(rutaArchivo);
                         nombreArchivo = "constancia_"+ hogcodigo + ".pdf";
                     }
 
-                if (val == true) {
+                if (val) {
                     Response.ContentType = "application/pdf";
                     Response.AppendHeader(
                       "Content-Disposition",
@@ -383,14 +383,18 @@ namespace IgedEncuesta.Controllers
             {
                 webPageWidth = System.Convert.ToInt32(webPageWidth);
             }
-            catch { }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
 
             int webPageHeight = 0;
             try
             {
                 webPageHeight = System.Convert.ToInt32(webPageHeight);
             }
-            catch { }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
 
             //         try { 
             // instantiate a html to pdf converter object
@@ -457,7 +461,7 @@ namespace IgedEncuesta.Controllers
 
                 Session["NombrePDF"] = fileName;
             } catch (Exception e) {
-                e.Message.ToString();
+                Console.WriteLine(e.Message);
             }            
 
             return RedirectToAction("Inicio", "ConformacionHogar");

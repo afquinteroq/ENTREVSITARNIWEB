@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using IgedEncuesta.Models.mdlGenerico;
 using System.Data;
 using ObjetosTipos;
-using System.Text;
+
 
 namespace AdministracionInstrumentos
 {
@@ -65,16 +62,12 @@ namespace AdministracionInstrumentos
 
         public string getValorCampoSesion(string campoSesion,string idUsuario)
         {
-            //AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
-            //baseDatos = new mdlGenerico();
-            //datos.Conexion = baseDatos.connStringCar;
             AdmonSesion.AdmonSesion datos = new AdmonSesion.AdmonSesion();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
             string campoDevuelto = string.Empty;
             try
             {
-                //campoDevuelto = datos.leerCampoCLOBConSentencia(campoSesion, idUsuario);
                 campoDevuelto= datos.leerSesion("GIC_VARIABLE_SESION", campoSesion, idUsuario);
             }
             catch (Exception ex)
@@ -86,7 +79,6 @@ namespace AdministracionInstrumentos
             {
                
             }
-            //StringBuilder s2 = new StringBuilder(campoDevuelto);
             return campoDevuelto;
 
         }
@@ -103,7 +95,6 @@ namespace AdministracionInstrumentos
         /// <returns></returns>
         public string guardarCampoSesion(int tipoGuardado, int idUsuario, string campo, string valor, string tipoDato)
         {
-            // DbConnection cnn = dbahe.CreateConnection();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             string codigo = "";
             try
@@ -145,18 +136,13 @@ namespace AdministracionInstrumentos
         /// <returns></returns>
         public bool guardarCampoSesion(int idUsuario, string campo, string valor)
         {
-            // DbConnection cnn = dbahe.CreateConnection();
-            //AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             AdmonSesion.AdmonSesion datos = new AdmonSesion.AdmonSesion();
             bool respuesta = false;
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
             try
             {
-
-              //respuesta =   datos.ActualizarCampoCLOBConSentencia(campo, idUsuario.ToString(), valor);
-                respuesta = datos.actualizarSesion("GIC_VARIABLE_SESION", campo, idUsuario.ToString(), valor);
-
+             respuesta = datos.actualizarSesion("GIC_VARIABLE_SESION", campo, idUsuario.ToString(), valor);
             }
             catch (Exception)
             {
@@ -176,7 +162,6 @@ namespace AdministracionInstrumentos
         /// <param name="idUsuario"></param>
         public void eliminarSesionIdUsuario(string idUsuario)
         {
-            //AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             AdmonSesion.AdmonSesion datos = new AdmonSesion.AdmonSesion();
             try
             {
@@ -217,7 +202,6 @@ namespace AdministracionInstrumentos
 
         public string obtenerFechaUltimaTRansaccion(string idUsuario)
         {
-            // DbConnection cnn = dbahe.CreateConnection();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             string fecha = "";
             try

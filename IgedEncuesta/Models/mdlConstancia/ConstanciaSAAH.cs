@@ -1,11 +1,9 @@
 ﻿using ObjetosTipos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using IgedEncuesta.Models.mdlGenerico;
-using System.Data;
 
+using System.Data;
+using System.Text;
 
 namespace IgedEncuesta.Models.mdlConstancia
 {
@@ -55,8 +53,8 @@ namespace IgedEncuesta.Models.mdlConstancia
         public List<ConstanciaSAAH> get_ModeloConstancia(string cod_hogar)
         {
             ConstanciaSAAH constanciasaah = new ConstanciaSAAH();
-            String NECESIDAD_IDENTIFICADAT = string.Empty;
-            String MEDIDA_ASISTENCIAT = string.Empty;
+            StringBuilder NECESIDAD_IDENTIFICADAT = new StringBuilder("");
+            StringBuilder MEDIDA_ASISTENCIAT = new StringBuilder("");
             List<ConstanciaSAAH> lconstancia = new List<ConstanciaSAAH>();
             string stored = string.Empty;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
@@ -206,127 +204,127 @@ namespace IgedEncuesta.Models.mdlConstancia
                         ///NECESIDAD IDENTIFICADA
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA"]))
                         {
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA"].ToString();
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA"].ToString());
                         }
 
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_106"]))
                         {
-                                                       
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_106"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_106"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
 
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_248"]))
                         {
-                                                       
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_248"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_248"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3823"]))
-                        {                                                      
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3823"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+                        {
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3823"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_276"]))
                         {
-                            
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_276"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_276"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3859"]))
                         {
-                                                        
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3859"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3859"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
 
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3832"]))
                         {
-                                                        
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3832"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3832"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3833"]))
                         {
-                                                        
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3833"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3833"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3834"]))
                         {
-                                                        
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3834"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3834"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3835"]))
                         {
-                                                     
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3835"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3835"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3836"]))
                         {
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3836"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3836"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3837"]))
                         {
-                            NECESIDAD_IDENTIFICADAT += ";";
-                            NECESIDAD_IDENTIFICADAT += "\n";
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3837"].ToString();
+                            NECESIDAD_IDENTIFICADAT.Append(";");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3837"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3838"]))
                         {
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3838"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3838"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3839"]))
                         {
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3839"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3839"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3840"]))
                         {
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3840"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3840"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3841"]))
                         {
-                            NECESIDAD_IDENTIFICADAT += ";";
-                            NECESIDAD_IDENTIFICADAT += "\n";
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3841"].ToString();
+                            NECESIDAD_IDENTIFICADAT.Append(";");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3841"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3842"]))
                         {
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3842"].ToString();
-                            NECESIDAD_IDENTIFICADAT += "; ";
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3842"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("; ");
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
 
                         if (!DBNull.Value.Equals(dataReader["NECESIDAD_IDENTIFICADA_3864"]))
                         {
-                            
-                            NECESIDAD_IDENTIFICADAT += dataReader["NECESIDAD_IDENTIFICADA_3864"].ToString();                            
-                            NECESIDAD_IDENTIFICADAT += "\n";
+
+                            NECESIDAD_IDENTIFICADAT.Append(dataReader["NECESIDAD_IDENTIFICADA_3864"].ToString());
+                            NECESIDAD_IDENTIFICADAT.Append("\n");
                         }
 
                         //////////
@@ -334,117 +332,117 @@ namespace IgedEncuesta.Models.mdlConstancia
 
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA"]))
                         {
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA"].ToString();
-                            MEDIDA_ASISTENCIAT += ";";
-                            MEDIDA_ASISTENCIAT += "\n";
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA"].ToString());
+                            MEDIDA_ASISTENCIAT.Append(";");
+                            MEDIDA_ASISTENCIAT.Append("\n");
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_106"]))
-                        {                                                       
-                            
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_106"].ToString();
+                        {
+
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_106"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_248"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_248"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_248"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3823"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3823"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3823"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_276"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_276"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_276"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3859"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3859"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3859"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3832"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3832"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3832"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3833"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3833"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3833"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3834"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3834"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3834"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3835"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3835"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3835"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3836"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3836"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3836"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3837"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3837"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3837"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3838"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3838"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3838"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3839"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3839"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3839"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3840"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3840"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3840"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3841"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3841"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3841"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3842"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3842"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3842"].ToString());
                         }
                         if (!DBNull.Value.Equals(dataReader["MEDIDA_ASISTENCIA_3864"]))
                         {
-                            MEDIDA_ASISTENCIAT += "; ";
-                            MEDIDA_ASISTENCIAT += "\n";
-                            MEDIDA_ASISTENCIAT += dataReader["MEDIDA_ASISTENCIA_3864"].ToString();
+                            MEDIDA_ASISTENCIAT.Append("; ");
+                            MEDIDA_ASISTENCIAT.Append("\n");
+                            MEDIDA_ASISTENCIAT.Append(dataReader["MEDIDA_ASISTENCIA_3864"].ToString());
                         }                        
 
-                        constanciasaah.NECESIDAD_IDENTIFICADA = NECESIDAD_IDENTIFICADAT;
-                        constanciasaah.MEDIDA_ASISTENCIA = MEDIDA_ASISTENCIAT;
+                        constanciasaah.NECESIDAD_IDENTIFICADA = NECESIDAD_IDENTIFICADAT.ToString();
+                        constanciasaah.MEDIDA_ASISTENCIA = MEDIDA_ASISTENCIAT.ToString();
 
-                        NECESIDAD_IDENTIFICADAT = string.Empty;
-                        MEDIDA_ASISTENCIAT = string.Empty;
+                        NECESIDAD_IDENTIFICADAT = new StringBuilder("");
+                        MEDIDA_ASISTENCIAT = new StringBuilder("");
 
 
                         lconstancia.Add(constanciasaah);
@@ -454,8 +452,7 @@ namespace IgedEncuesta.Models.mdlConstancia
                 return lconstancia;
             }
             catch(Exception e)
-            {
-                e.Message.ToString();
+            {   
                 return null;
             }
             finally
@@ -483,10 +480,6 @@ namespace IgedEncuesta.Models.mdlConstancia
             {
                 return 0;
             }
-            finally
-            {
-
-            }
         }
 
         public int FN_UPDATE_HOGAR_SAAH(string codHogar, string estado, string userIdApp, string Usuario)
@@ -513,10 +506,6 @@ namespace IgedEncuesta.Models.mdlConstancia
             {
                 return 0;
             }
-            finally
-            {
-
-            }
         }
 
 
@@ -538,10 +527,6 @@ namespace IgedEncuesta.Models.mdlConstancia
             catch (Exception)
             {
                 return 0;
-            }
-            finally
-            {
-
             }
         }
 

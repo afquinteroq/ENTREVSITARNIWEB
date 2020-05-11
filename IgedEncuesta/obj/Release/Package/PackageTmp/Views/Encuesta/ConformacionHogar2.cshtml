@@ -363,8 +363,7 @@
         
         if (opcionAjax == 1) {
             var total = $('#totalConsulta').val();
-            console.log('#totalConsulta '+total);
-            //     alert(total);
+            
             if (total == '0') {
                 $('#filaGridMaestro').hide('slow');
                 $("#CargandoDatosMaestro").hide();
@@ -372,8 +371,6 @@
             }
             else {
                 $("#CargandoDatosMaestro").hide();
-                //$('#maestroVictimas').show();
-                //$("#btnAgregarVictima").show();
                 $("#filaGridMaestro").show('slow');
             }
 
@@ -805,52 +802,35 @@
     };
 
     function agregarVictimaIHogar() {
-        // if (idChequeados != '') {
         document.getElementById("maestroHogar").innerHTML = "";
         var div = $('#maestroHogar');
         var idVictima;
         idVictima = id.substring(15);
         idVictima = idVictima.replace("-", "|");
-
         opcionAjax = 2;
-        //     alert(idVictima);
-        //  alert('ss');
         $.ajax(
              {
                  type: 'POST',
                  data: { idVictima: idVictima, opcion: '1' },
                  dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
                  url: '@Url.Action("actualizarMaestroHogar", "ConformacionHogar")',
-                 //URL del action result que cargara la vista parcial
                  success: function (result) {
                      //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
-
-                     //alert(consPersona);
-                     console.log('conformacionHogar2 linea 825');
                      if ($('#panelHogar').css('display') == 'none') $('#panelHogar').show('slow');
                      $('#txtNumDoc').val('');
-                     //$('#filaGridMaestro').hide('slow');
-
                      $('#imgIncluirMaestro_' + idVictima.substring(0, idVictima.indexOf('|'))).attr("src", "@Url.Content("~/Content/Icons/check-3.png")");
-                     //    $('#imgIncluir_' + id).show(0);
                      $('#incluirMaestro_' + idVictima.replace("|", "-")).off();
                      $('#incluirMaestro_' + idVictima.replace("|", "-")).css('cursor', 'default');
                      div.append(result);
 
                  },
                  error: function (error) {
-                     console.log('conformacionHogar2 linea 838');
-                     // si hay un error lanzara el mensaje de error
                      alert('linea 838 Se presento un error para la persona con Id ' + id);
-                     //  alert(error.responseText);
                  }
              });
          }
 
          $("#formulario").submit(function (event) {
-             //$(document).on('submit', '.validateDontSubmit', function (e) {
-
-             //prevent the form from doing a submit
              alert('entro1');
 
                event.preventDefault();
@@ -858,5 +838,5 @@
 
          });
 
-         // });
+         
 </script>

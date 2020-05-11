@@ -89,12 +89,10 @@
             var conteo;
             if ($("#txtCodigo").val() != "") {
                 var codi = obtenerCodHogar();
-                //console.log(codi);
                 if ($('#idEncuesta').val() != "") {
                     $("#cargarSoporte").dialog('open');
                     var spanEstado = "#lblMensajeSop";
                     conteo = conteoSoporte();
-                    //   console.log("conteo"+conteo);
                     if (conteo == 0) {
                         $(spanEstado).html("Realize el cargue de la colilla.");
                         $("#btnVerSopo").hide();
@@ -104,8 +102,6 @@
                     }
                 } else {
                     alert("La entrevista no existe en la Base de Datos.");
-                    //$("#btnVerSopo").hide();
-                    //$("#btnCargarCol").hide();
                 }
             } else {
                 alert("Digite un codigo de Hogar.");
@@ -182,13 +178,8 @@
             url: '@Url.Action("conteoSoporte", "CargueSoporte")',
             data: { "codHogar": $("#txtCodigo").val() },
             async: false,
-            //data: { "idTema": idUsuario[1] },
             success: function (result) {
-                //   console.log(result);
                 codigo = result;
-                //$('#CargueDinamico').html(result);
-
-
             }
         });
 

@@ -1,11 +1,9 @@
 ﻿using AdministracionInstrumentos;
-using Autenticacion;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using log4net;
 using log4net.Config;
 using Newtonsoft.Json;
-using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,35 +41,29 @@ namespace IgedEncuesta.Controllers
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 gic_Tema tema = new gic_Tema();
-                List<gic_Tema> temas = new List<gic_Tema>();
-                int idInstrumento = int.Parse(System.Configuration.ConfigurationManager.AppSettings["IdInstrumento"].ToString());
+                List<gic_Tema> temas = null;
 
                 var perfiles = objSesion.getValorCampoSesion("PERFILES", userIdApp);
                 temas = tema.getTemasxInstrumento(1, 1, perfiles);
                 var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(temas);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "TEMAS", serializedData);
-                List<gic_Tema> temasValidar = new List<gic_Tema>();
-                //string codigoEncuesta = TempData["CODHOGAR"].ToString();
+                List<gic_Tema> temasValidar = null;
 
                 /************************************************************************
                 PARA QUE NO VALIDE LA SESION , 
                 *************************************************************************/
-                //if (codigoHogar != null)
-                //{
-
-                //TempData["CODHOGAR"] = codigoHogar;
                 if (codigoHogar == null)
                     codigoHogar = objSesion.getValorCampoSesion("CODHOGAR", userIdApp);
                 else
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", codigoHogar);
-                //objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", codigoHogar);
+                
                 codigoEncuesta = codigoHogar;
                 temasValidar = tema.getTemasValidados(codigoEncuesta);
-                //TempData["TEMASVALIDAR"] = temasValidar;
+                
                 var serializeTemas = Newtonsoft.Json.JsonConvert.SerializeObject(temasValidar);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "TEMASVALIDAR", serializeTemas);
                 int terminoCap = tema.get_VerficarCapitulosPrimeros(codigoEncuesta);
-                //TempData["CAPTERMI"] = terminoCap;
+                
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "CAPTERMI", terminoCap.ToString());
                 //adicion para  guardar los valores en una cookie
                 return View(temas);
@@ -105,7 +97,7 @@ namespace IgedEncuesta.Controllers
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "IDTEMA", idTema.ToString());
                 string codigoEncuesta = objSesion.getValorCampoSesion("CODHOGAR", userIdApp);
                 int idInstrumento = int.Parse(System.Configuration.ConfigurationManager.AppSettings["IdInstrumento"].ToString());
-                List<gic_PreguntasxPersona> colleccionPreguntas = new List<gic_PreguntasxPersona>();
+                //List<gic_PreguntasxPersona> colleccionPreguntas = new List<gic_PreguntasxPersona>();
                 gic_PreguntaRespuestasFlujo preguntasRespuestasFlujo = new gic_PreguntaRespuestasFlujo();
                 preguntasRespuestasFlujo = PreguntaMostrar(codigoEncuesta, int.Parse(idTema), idInstrumento, preguntaInicial, "TEM");
                 preguntasRespuestasFlujo.temaAmostrar = tema;
@@ -290,7 +282,7 @@ namespace IgedEncuesta.Controllers
                     watch.Stop();
                     elapsedMs = watch.ElapsedMilliseconds;
                     log.Info("metodo getRespuestasxPregunta , tiempoDuracion: " + elapsedMs);
-                    //TempData["OPCIONESRESPUESTA"] = opcionesRespuestas;
+                    
                     var serializeOpcionesRespuesta = Newtonsoft.Json.JsonConvert.SerializeObject(opcionesRespuestas);
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "OPCIONESRESPUESTA", serializeOpcionesRespuesta);
                     opcionesRespuestasFiltrado = objRespuestas.getRespuestasxPrexPersona(preguntaXpersonaGen.pre_IdPregunta, idInstrumento, codHogar, preguntaXpersonaGen.per_IdPersona);
@@ -386,7 +378,7 @@ namespace IgedEncuesta.Controllers
                 gic_Pregunta pregunta = new gic_Pregunta();
                 municipios = pregunta.datosMunicipios(id);
                 SelectMunicipios = pregunta.CrearLista(municipios, 2);
-                //TempData["LISTAMUNI"] = municipios;
+                
                 return this.Json(SelectMunicipios, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
@@ -660,7 +652,7 @@ namespace IgedEncuesta.Controllers
                     tema = JsonConvert.DeserializeObject<gic_Tema>(temaJson);
 
                 List<gic_PreguntasxPersona> colleccionPregXPersonas = new List<gic_PreguntasxPersona>();
-                gic_PreguntasxPersona personaxpregunta = new gic_PreguntasxPersona();
+                //gic_PreguntasxPersona personaxpregunta = new gic_PreguntasxPersona();
                 var modeloPersonasJson = objSesion.getValorCampoSesion("COLLECIONPERSONAS", userIdApp);
 
                 colleccionPregXPersonas = JsonConvert.DeserializeObject<List<gic_PreguntasxPersona>>(modeloPersonasJson);
@@ -852,7 +844,7 @@ namespace IgedEncuesta.Controllers
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 gic_RespuestaNuevo resObj = new gic_RespuestaNuevo();
-                gic_PreguntasxPersona personaxpregunta = new gic_PreguntasxPersona();
+                //gic_PreguntasxPersona personaxpregunta = new gic_PreguntasxPersona();
                 foreach (gic_PreguntasxPersona personas in colleccionPregXPersonas)
                 {
                     string nombre1 = string.Empty;
@@ -1221,7 +1213,7 @@ namespace IgedEncuesta.Controllers
                     string codigoHogar = objSesion.getValorCampoSesion("CODHOGAR", userIdApp);
                     perfilusuario = objSesion.getValorCampoSesion("PERFILES", userIdApp);
                     gic_Hogar hogar = new gic_Hogar();
-                    HttpCookie reqCookies = Request.Cookies["SesionIged"];
+                    //HttpCookie reqCookies = Request.Cookies["SesionIged"];
 
                     totalCT = hogar.consultarEstadoEncuesta(codigoHogar, userIdApp, perfilusuario);
 

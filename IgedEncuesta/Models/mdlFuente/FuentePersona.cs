@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
+
 
 namespace IgedEncuesta.Models.mdlFuente
 {
@@ -50,10 +49,8 @@ namespace IgedEncuesta.Models.mdlFuente
             while (dataReader.Read())
             {
 
-                //NOM1_RENEC	NOM2_RENEC	APE1_RENEC	APE2_RENEC	DEPTO_EXP	MUN_EXP	F_EXP	COD_EST_CEDULA	ESTADO_CEDULA	NUM_RESOL	ANO_RESOL, SIN INFORMACION		0
 
                 objFuente = new FuentePersona();
-
                 
                 objFuente.FUENTE = "REGISTRADURIA";
                 objFuente.CONS_PERSONA = "";
@@ -87,7 +84,6 @@ namespace IgedEncuesta.Models.mdlFuente
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionRegistraduriaNUBE"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", documento));
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
@@ -108,7 +104,6 @@ namespace IgedEncuesta.Models.mdlFuente
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             DataSet dsSalida = new DataSet();
             datos.MotorBasedatos = true;
-            //string connString = System.Configuration.ConfigurationManager.ConnectionStrings[/*"ConexionFuenteRUV" */"Conexioncar"].ConnectionString;
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionFuenteRUV"].ConnectionString;
             datos.Conexion = connString;
 
@@ -136,8 +131,7 @@ namespace IgedEncuesta.Models.mdlFuente
                 }
                 catch (Exception e)
                 {
-                    //log.Debug(e.Message);
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
                 }
 
                 return (dsSalida);
@@ -177,7 +171,7 @@ namespace IgedEncuesta.Models.mdlFuente
                 }
                 catch (Exception e)
                 {
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
                 }
 
                 return (dsSalida);
@@ -193,7 +187,6 @@ namespace IgedEncuesta.Models.mdlFuente
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             DataSet dsSalida = new DataSet();
             datos.MotorBasedatos = true;
-            //string connString = System.Configuration.ConfigurationManager.ConnectionStrings[/*"ConexionFuenteSIPODSIV"*/"Conexioncar"].ConnectionString;
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionFuenteSIPODSIV"].ConnectionString;
             datos.Conexion = connString;
 
@@ -222,8 +215,7 @@ namespace IgedEncuesta.Models.mdlFuente
                 }
                 catch (Exception e)
                 {
-                    //log.Debug(e.Message);
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
 
                 }
                 return (dsSalida);
@@ -247,7 +239,6 @@ namespace IgedEncuesta.Models.mdlFuente
             try
             {
                 if (opcionBusqueda == "DOCUMENTO")
-                    //dsSalida = datos.ConsultarTablasConComando("select 'SIRAV' FUENTE,   T.PRIMER_NOMBRE NOMBRE1, T.SEGUNDO_NOMBRE NOMBRE2, T.PRIMER_APELLIDO APELLIDO1, T.SEGUNDO_APELLIDO APELLIDO2, T.TIPO_DOCUMENTO TIPO_DOCUMENTO, T.DOCUMENTO DOCUMENTO, T.*  from SIRAVNegocio.dbo.f_DatosPersona_RNI('" + numDocumento + "') T");
                     dsSalida = datos.ConsultarTablasConComando("SELECT 'SIRAV' FUENTE, T.ID_PERSONA, T.PRIMERNOMBRE, T.SEGUNDONOMBRE, T.PRIMERAPELLIDO, T.SEGUNDOAPELLIDO, " +
                         " T.TIPO_DOC,  T.NUMERODOCUMENTO, T.F_NACIMIENTO, T.ESTADO, T.NUM_FUD_NUM_CASO, T.ID_DECLARACION,T.RELACION,T.GENERO, T.FECHASINIESTRO FECHA_SINIESTRO, T.HECHO FROM SIRAVNegocio.dbo.CM_FUN_HECHOS_PERSONA_SIRAV_DOC(" + numDocumento + ") T");
                     
@@ -287,7 +278,7 @@ namespace IgedEncuesta.Models.mdlFuente
                 }
                 catch (Exception e)
                 {
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
 
                 }
                 return (dsSalida);
@@ -305,7 +296,6 @@ namespace IgedEncuesta.Models.mdlFuente
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             DataSet dsSalida = new DataSet();
             datos.MotorBasedatos = true;
-            //string connString = System.Configuration.ConfigurationManager.ConnectionStrings[/*"ConexionFuenteRUV" */"Conexioncar"].ConnectionString;
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionRegistraduriaNUBE"].ConnectionString;
             datos.Conexion = connString;
 
@@ -314,7 +304,6 @@ namespace IgedEncuesta.Models.mdlFuente
                 try
                 {
                     if (opcionBusqueda == "DOCUMENTO")
-                        //dsSalida = datos.ConsultarTablasConComando("select 'RUV' FUENTE, T.* from TABLE(PKG_VICTIMAS_RNI.CM_FUN_HECHOS_PERSONA_RUV((select F.ID_PERSONA from TABLE(PKG_VICTIMAS_RNI.cm_fun_persona_ruv(" + numDocumento + " )) F))) T");
                         dsSalida = datos.ConsultarTablasConComando("SELECT * FROM TABLE(registraduria.PKG_ACREDITACION.CM_FUN_ACREDIT_HECHOS_PERSONA("+ numDocumento + "))");
                         
                     else if (opcionBusqueda == "NOMBRES Y APELLIDOS")
@@ -335,8 +324,7 @@ namespace IgedEncuesta.Models.mdlFuente
                 }
                 catch (Exception e)
                 {
-                    //log.Debug(e.Message);
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
                 }
 
                 return (dsSalida);

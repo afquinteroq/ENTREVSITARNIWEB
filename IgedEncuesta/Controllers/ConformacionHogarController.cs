@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using IgedEncuesta.Filters;
 using System.Data;
-using ObjetosTipos;
 using IgedEncuesta.Models.mdlGenerico;
 using IgedEncuesta.Models.mdlEncuesta;
 using Newtonsoft.Json;
@@ -17,10 +15,6 @@ using AdministracionInstrumentos;
 using IgedEncuesta.Models.mdlFuente;
 using System.Diagnostics;
 
-
-
-
-//using IgedEncuesta.Models.mdlAcceso;
 
 namespace IgedEncuesta.Controllers
 {
@@ -47,8 +41,6 @@ namespace IgedEncuesta.Controllers
             try
             {
                 string userIdApp, app;
-
-                //limpiarVariablesSesion();
                 cargarOpciones();
 
                 TipoDocumento objTipoDoc = new TipoDocumento();
@@ -59,7 +51,7 @@ namespace IgedEncuesta.Controllers
                 ViewBag.VerAyudas = false;
                 //comentar desde acá para publicar
                 // ESTOS SON DE ADMINSUAURIOS
-
+                
                 List<NivelAcceso> coleccionNivelAcceso = new List<NivelAcceso>();
                 NivelAcceso nivelAcceso = new NivelAcceso();
                 var SesionIged = new HttpCookie("SesionIged");
@@ -77,7 +69,7 @@ namespace IgedEncuesta.Controllers
                 coleccionNivelAcceso = JsonConvert.DeserializeObject<List<Autenticacion.NivelAcceso>>(na);
                 var cookie = new HttpCookie("nivelAcceso", serializedData);
                 HttpContext.Response.Cookies.Add(cookie);
-
+                          
 
                 // ESTOS SON DE ADMINSUAURIOSPRUEBAS
                 /*
@@ -149,16 +141,7 @@ namespace IgedEncuesta.Controllers
             try
             {
                 List<SelectListItem> li = new List<SelectListItem>();
-                li.Add(new SelectListItem { Text = "DOCUMENTO", Value = "0" });  //ALFA NUMERICO
-                //li.Add(new SelectListItem { Text = "CEDULA EXTRANJERIA", Value = "1" });  //ALFA NUMERICO 
-                //------------------------------------------------------
-                //COMENTA JOSE VASQUEZ   FECHA: OCT-27-2015
-                //REQUERIMIENTO: SE DEBE DEJAR SOLO LA BUSQUEDA POR DOCUMENTO.
-                //li.Add(new SelectListItem { Text = "NOMBRES Y APELLIDOS", Value = "1" });   //ALFANUMERICO 
-                //FIN CAMBIO - FECHA: OCT-27-2015
-
-
-                //ViewBag.Opciones = li;
+                li.Add(new SelectListItem { Text = "DOCUMENTO", Value = "0" });
                 TempData["Opciones"] = li;
             }
             catch (Exception e)
@@ -180,16 +163,14 @@ namespace IgedEncuesta.Controllers
         {
             try
             {
-                //log.Info("ConformacionHogarController / cargarMaestroVictima , Entre : ");
-                System.Collections.ArrayList arrayColeccion = new System.Collections.ArrayList();
+                
                 Victima objConsultaVictima = new Victima();
                 Encuesta objSesion = new Encuesta();
                 string userIdApp, app;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 app = Request.Cookies["SesionIged"]["App"].ToString();
                 ViewBag.CerrarVentana = false;
-                List<Victima> coleccion = new List<Victima>();
-                DataSet datasetRegistraduria = new DataSet();
+                List<Victima> coleccion = null;
                 coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app);
                 ViewBag.Lista = coleccion;
                 var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
@@ -218,7 +199,8 @@ namespace IgedEncuesta.Controllers
                 }
                 catch (Exception e)
                 {
-                    e.Message.ToString();
+                    
+                    Console.WriteLine(e.Message);
                     return null;
                 }
 
@@ -239,7 +221,7 @@ namespace IgedEncuesta.Controllers
             try
             {
                 List<FuentePersona> coleccionFuente = new List<FuentePersona>();
-                DataSet fichaunica_caracterizacion = new DataSet();
+                DataSet fichaunica_caracterizacion = null;
                 Victima objConsultaVictima = new Victima();
                 IDataReader dataReader = null;
                 FuentePersona objFuente = null;
@@ -252,7 +234,7 @@ namespace IgedEncuesta.Controllers
                 }
                 catch (Exception e)
                 {
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
                 }
 
                 if (fichaunica_caracterizacion.Tables.Count > 0)
@@ -270,17 +252,13 @@ namespace IgedEncuesta.Controllers
                         if (!DBNull.Value.Equals(dataReader["PER_DOCUMENTO"])) objFuente.NUMERO_DOC = dataReader["PER_DOCUMENTO"].ToString();
                         string nombrecompleto = dataReader["PER_NOMBRE1"].ToString(); nombrecompleto += " " + dataReader["PER_NOMBRE2"].ToString();
                         nombrecompleto += " " + dataReader["PER_APELLIDO1"].ToString(); nombrecompleto += " " + dataReader["PER_APELLIDO2"].ToString();
-
                         objFuente.NOMBRES_COMPLETOS = nombrecompleto;
-
                         if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objFuente.GENERO = dataReader["PER_SEXO"].ToString().ToUpper();
                         if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objFuente.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
-
                         if (!DBNull.Value.Equals(dataReader["CODIGO_HOGAR"])) objFuente.CODIGO_HOGAR = dataReader["CODIGO_HOGAR"].ToString().ToUpper();
                         if (!DBNull.Value.Equals(dataReader["FECHA_ENCUESTA"])) objFuente.FECHA_ENCUESTA = dataReader["FECHA_ENCUESTA"].ToString().Substring(0, 10).Replace("12:00:00 AM", "");
                         if (!DBNull.Value.Equals(dataReader["ESTADO_ENCUESTA"])) objFuente.ESTADO_ENCUESTA = dataReader["ESTADO_ENCUESTA"].ToString().ToUpper();
                         if (!DBNull.Value.Equals(dataReader["VIGENCIA_ENCUESTA"])) objFuente.VIGENCIA_ENCUESTA = dataReader["VIGENCIA_ENCUESTA"].ToString().Replace("12:00:00 AM", "");
-
                         coleccionFuente.Add(objFuente);
                     }
 
@@ -297,32 +275,24 @@ namespace IgedEncuesta.Controllers
             }
         }
 
-        public ActionResult cargarFuenteRUV/*cargarFuentePersona*/(string numeroDocumento, string opcionBusqueda)
+        public ActionResult cargarFuenteRUV(string numeroDocumento, string opcionBusqueda)
         {
             try
             {
 
                 FuentePersona objConsultaFuentePersona = new FuentePersona();
-                Encuesta objSesion = new Encuesta();
+                
                 ViewBag.CerrarVentana = false;
                 List<FuentePersona> coleccionFuente = new List<FuentePersona>();
-                DataSet dsSalidaRUV = new DataSet();
+                DataSet dsSalidaRUV = null;
                 IDataReader dataReader = null;
-                Victima objConsultaVictima = new Victima();
+                
                 FuentePersona objFuente = null;
 
                 try
                 {
+
                     dsSalidaRUV = objConsultaFuentePersona.consultarFuentesALL(numeroDocumento, "DOCUMENTO");
-
-                }
-                catch (Exception e)
-                {
-                    e.Message.ToString();
-                }
-
-                try
-                {
 
                     if (dsSalidaRUV.Tables.Count > 0)
                     {
@@ -372,7 +342,7 @@ namespace IgedEncuesta.Controllers
                 }
                 catch (Exception e)
                 {
-                    e.Message.ToString();
+                    Console.WriteLine(e.Message);
                 }
 
 
@@ -428,11 +398,11 @@ namespace IgedEncuesta.Controllers
                 Encuesta objSesion = new Encuesta();
                 if (idVictima != null)
                 {
-                    Victima objConsultaVictima = new Victima();
-                    //  MaestroConsulta objMaestroConsulta = new MaestroConsulta();
+                    
+                    
                     ViewBag.CerrarVentana = false;
                     Victima victima = new Victima();
-                    // TempData["ModeloHogar"] = new List<Victima>();
+                    
                     List<Victima> coleccion = new List<Victima>();
 
 
@@ -441,26 +411,19 @@ namespace IgedEncuesta.Controllers
                         modeloHogar = new List<Victima>();
                     else
                         modeloHogar = JsonConvert.DeserializeObject<List<Victima>>(modeloHogarJson);
-
-                    //nueva lista victimas 
-                    //coleccion = (List<Victima>)TempData["Modelo"];
-                    //var modeloVictimas = objSesion.get_CampoSesion(userIdApp, "MODELO");
                     var modeloVictimas = objSesion.getValorCampoSesion("MODELO", userIdApp);
                     coleccion = JsonConvert.DeserializeObject<List<Victima>>(modeloVictimas);
 
                     victima = coleccion.First(x => x.CONS_PERSONA == idVictima.Substring(0, idVictima.IndexOf('|')));
                     modeloHogar.Insert(0, victima);
-                    // modeloHogar.Add(victima);
-
-                    //TempData["ModeloHogar"] = modeloHogar;
                     var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(modeloHogar);
-                    //objSesion.guardarCampoSesion(2, int.Parse(userIdApp), "MODELOHOGAR", serializedData, "1");
+                    
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELOHOGAR", serializedData);
                     if (modeloHogar.Where(x => x.TIPO_VICTIMA == "NO INCLUIDO").Count() == modeloHogar.Count())
-                        //TempData["VALINCLUIDO"] = "SI";
+                        
                         objSesion.guardarCampoSesion(int.Parse(userIdApp), "VALINCLUIDO", "SI");
                     else
-                        //TempData["VALINCLUIDO"] = "NO";
+                        
                         objSesion.guardarCampoSesion(int.Parse(userIdApp), "VALINCLUIDO", "NO");
 
                 }
@@ -494,9 +457,9 @@ namespace IgedEncuesta.Controllers
             userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
             try
             {
-                Victima objConsultaVictima = new Victima();
+                
                 ViewBag.CerrarVentana = false;
-                DataSet dsSalida = new DataSet();
+                
                 Victima victima = new Victima();
                 Encuesta objSesion = new Encuesta();
                 List<Victima> modeloHogar = new List<Victima>();
@@ -537,27 +500,6 @@ namespace IgedEncuesta.Controllers
 
         }
 
-        //Andrés quintero 14/12/2019 borrarlo se creo para probar
-        /*public List<Victima> intenter(string idVictima, string idPersona) {
-            Encuesta objSesion = new Encuesta();
-            string userIdApp;
-            userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
-            var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
-            List<Victima> coleccion = new List<Victima>();
-            var modeloVictimas = objSesion.getValorCampoSesion("MODELO", userIdApp);
-            coleccion = JsonConvert.DeserializeObject<List<Victima>>(modeloVictimas);
-            Victima victima = new Victima();
-            try {
-                victima = coleccion.First(x => x.CONS_PERSONA == idVictima.Substring(0, idVictima.IndexOf('|')) && (x.ID_TBPERSONA == null ? "" : x.ID_TBPERSONA) == idPersona);
-            }
-            catch (Exception e)
-            {
-                coleccion = null;
-            }
-
-            return coleccion;
-        }*/
-
         //[ExpiraSesionFilter]
         public ActionResult actualizarMaestroHogar(string idVictima, string idPersona, string opcion)
         {
@@ -569,7 +511,7 @@ namespace IgedEncuesta.Controllers
                 List<Victima> modeloHogar = new List<Victima>();
                 if (idVictima != null)
                 {
-                    Victima objConsultaVictima = new Victima();
+                    
                     ViewBag.CerrarVentana = false;
 
                     Victima victima = new Victima();
@@ -607,7 +549,7 @@ namespace IgedEncuesta.Controllers
                                     }
                                     catch (Exception e)
                                     {
-                                        e.Message.ToString();
+                                        Console.WriteLine(e.Message);
                                     }
 
                                 else
@@ -761,7 +703,7 @@ namespace IgedEncuesta.Controllers
 
 
                 DataSet dsSalida = new DataSet();
-                DataSet dsSalida_Caracterizacion = new DataSet();
+                //DataSet dsSalida_Caracterizacion = new DataSet();
 
                 dsSalida = objConsultaVictima.consultarGrupoFamiliar(consPersona);
                 coleccion = objConsultaVictima.modeloVictimas(dsSalida);
@@ -866,14 +808,13 @@ namespace IgedEncuesta.Controllers
                 Victima objConsultaVictima = new Victima();
                 List<Victima> coleccion = new List<Victima>();
                 Persona p = new Persona();
-                DataSet dsSalida = new DataSet();
-                //dsSalida = objConsultaVictima.consultarGrupoFamiliarMI(consPersona);
+                
                 coleccion = objConsultaVictima.consultarGrupoFamiliarMI(consPersona);
                 /************************************************************************************************************************************/
                 Encuesta objSesion = new Encuesta();
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
-                //TempData["GrupoVictima"] = coleccion;
+                
                 var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "GRUPOVICTIMA", serializedData);
                 return PartialView("_GrupoFamiliar", coleccion);
@@ -897,32 +838,19 @@ namespace IgedEncuesta.Controllers
                 List<Victima> modeloHogar = new List<Victima>();
                 if (idVictima != null)
                 {
-                    Victima objConsultaVictima = new Victima();
-                    //  MaestroConsulta objMaestroConsulta = new MaestroConsulta();
-                    //ViewBag.CerrarVentana = false;
-                    //DataSet dsSalida = new DataSet();
-                    //  DataSet dsSalida2 = new DataSet();
-                    //  List<Parametros> param = new List<Parametros>();
+                    
                     Victima victima = new Victima();
-
-                    //if (TempData["ModeloHogar"] == null)
-                    //    TempData["ModeloHogar"] = new List<Victima>();
+                    
                     var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                     if (String.IsNullOrEmpty(modeloHogarJson))
                         modeloHogar = new List<Victima>();
                     else
                         modeloHogar = JsonConvert.DeserializeObject<List<Victima>>(modeloHogarJson);
-
-                    //modeloHogar = (List<Victima>)TempData["ModeloHogar"];
-
-                    // if (opcion == "1")
-                    // {
+                    
                     List<Victima> coleccion = new List<Victima>();
                     var modeloVictimas = objSesion.getValorCampoSesion("GRUPOVICTIMA", userIdApp);
                     coleccion = JsonConvert.DeserializeObject<List<Victima>>(modeloVictimas);
-                    //coleccion = (List<Victima>)TempData["GrupoVictima"];
-                    //JOSE VASQUEZ . 03.NOV.2015
-                    //VALIDACION CUANDO INCLUYE PERSONAS DE CARACTERIZACION QUE NO TIENE CONS_PERSONA
+                    
                     if (idVictima == String.Empty)
                         idVictima = "-1";
                     victima = coleccion.First(x => x.CONS_PERSONA == idVictima);
@@ -930,11 +858,11 @@ namespace IgedEncuesta.Controllers
                     if (validaRepetido == null)
                         modeloHogar.Insert(0, victima);
 
-                    //TempData["ModeloHogar"] = modeloHogar;
+                    
                     var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(modeloHogar);
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELOHOGAR", serializedData);
                 }
-                //  return PartialView("_GrupoVictima", (IEnumerable<Victima>)Session["ModeloHogar"]);
+                
                 return Json("0", JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
@@ -954,9 +882,8 @@ namespace IgedEncuesta.Controllers
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 IEnumerable<Victima> coleccion = new List<Victima>();
-                Victima item = new Victima();
-
-                //coleccion = (IEnumerable<Victima>)TempData["ModeloHogar"];
+                //Victima item = new Victima();
+                
                 var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                 if (String.IsNullOrEmpty(modeloHogarJson))
                     coleccion = new List<Victima>();
@@ -969,7 +896,7 @@ namespace IgedEncuesta.Controllers
                     victima.JEFE_HOGAR = true;
 
 
-                //TempData["ModeloHogar"] = coleccion;
+                
                 var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELOHOGAR", serializedData);
                 return Json('1', JsonRequestBehavior.AllowGet);
@@ -991,7 +918,6 @@ namespace IgedEncuesta.Controllers
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 IEnumerable<Victima> coleccion = new List<Victima>();
-                Victima item = new Victima();
 
                 var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                 if (String.IsNullOrEmpty(modeloHogarJson))
@@ -1038,7 +964,6 @@ namespace IgedEncuesta.Controllers
                 {
                     return Json(0, JsonRequestBehavior.AllowGet);
                 }
-
 
 
             }
@@ -1097,12 +1022,11 @@ namespace IgedEncuesta.Controllers
             Encuesta objSesion = new Encuesta();
             usuario = Request.Cookies["SesionIged"]["USUARIO"].ToString();
             IdUsuario = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
-            //if (Session["USUARIO"] != null)
+            
             if (usuario != null && usuario != "")
             {
                 hogCodigo = objInsNuevo.encuestaActiva(usuario);
                 objSesion.guardarCampoSesion(int.Parse(IdUsuario), "CODHOGAR", hogCodigo);
-                //TempData["CODHOGAR"] = hogCodigo;
 
             }
             TempData.Keep();
@@ -1124,7 +1048,6 @@ namespace IgedEncuesta.Controllers
                 string PERFILES = objSesion.getValorCampoSesion("PERFILES", userIdApp);
 
                 IEnumerable<Victima> modelo = new List<Victima>();
-                Victima objVictima = new Victima();
 
                 var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                 if (String.IsNullOrEmpty(modeloHogarJson))
@@ -1158,17 +1081,12 @@ namespace IgedEncuesta.Controllers
                 }
 
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", idHogar);
-                // Recorre el modelo de conformacion del hogar                
+                         
                 foreach (Victima item in modelo)
                 {
                     // Asigna fecha por defecto en el caso de que la victima no tenga una registrada
                     if (item.F_NACIMIENTO == "" || item.F_NACIMIENTO == null) item.F_NACIMIENTO = "01/01/1920";
-
-                    //prueba jose 06.nov.2015
-                    //objHogar.insertarPrueba(item);
-
-
-                    // Insertar tabla Persona y Miembros del hogar
+                    
                     if (string.IsNullOrEmpty(item.ID_TBPERSONA))
                     {
                         idPersona = objHogar.insertarPersona(item, Usuario);
@@ -1271,7 +1189,7 @@ namespace IgedEncuesta.Controllers
 
         public JsonResult validacionRegistraduria(string id)
         {
-            Victima objConsultaVictima = new Victima();
+            Victima objConsultaVictima = null;
             try
             {
                 objConsultaVictima = new Victima();

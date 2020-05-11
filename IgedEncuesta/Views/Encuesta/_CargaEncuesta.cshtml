@@ -137,13 +137,11 @@
     
     
     $(document).ajaxStop(function () {
-        //console.log('entro a la funcion loadingoverlay stop');
         $("#CargandoDatosMaestro").hide();
         $.LoadingOverlay("hide");
     });
 
     $(document).ajaxStart(function () {
-        //console.log('entro a la funcion loadingoverlay start');
         var ruta_Cargando2 = '@Url.Content("~/Content/Imagenes/Cargando2.gif")';
         $("#CargandoDatosMaestro").show();
         $.LoadingOverlay("show", "image: " + ruta_Cargando2);
@@ -154,18 +152,12 @@
         var ruta_imagen = '@Url.Content("~/Content/Icons/attention.png")';
         $("#img_" + $("#idTem").val()).attr("src", ruta_imagen);
         document.body.style.cursor = "wait";
-        //$("#CargandoDatosEncuesta").show('slow');
         $.ajax({
             type: "POST",
-            // cache: false,
-            //contentType: "application/json; charset=utf-8",
             datatype: "json",
             traditional: true,
             url: '@Url.Action("anterior", "Encuesta")',
-            //data: { respuestas: total, tipo: tipoCampo, idPregunt: idPregunta, tipoPregunt: tipoPregunta },
-            //data: { "idTema": idUsuario[1] },
             success: function (result) {
-                //   console.log(result);
                 $('#CargueDinamico').html(result);
                 document.body.style.cursor = "default";
                 $("#CargandoDatosEncuesta").hide('slow');
@@ -181,14 +173,14 @@
         console.log($("#img_" + $("#idTem").val()).attr("src"));
         
         var ruta = '@System.Web.Configuration.WebConfigurationManager.AppSettings["rutaCheck"]';
-        //console.log("rr__"+ruta);
+        
         //console.log("_ch_"+@System.Web.Configuration.WebConfigurationManager.AppSettings["rutaCheck"]);
         if ($("#img_" + $("#idTem").val()).attr("src") == ruta_img_check) {
                       
             $("#dialog-mensajeCon").dialog('open');
         }        
         if ($('#idOrden').val() == "1") {
-            //console.log('entro a linea 191');
+            
             $('#btnAnterior').hide('slow');
         } else if ($("#coleccionPreguntas").val() == "0") {
             //VALIDA SI SE ESTA CONTESTADNO LA ENCUESTA, PARA CAMBIAR EL ICONO Y LLEGA AL FINAL
@@ -214,19 +206,15 @@
                 });
             }
         } else {
-            //console.log('entro a linea 215');
             $('#btnAnterior').show('slow');
             if ($('#totalCapitulos').val() == "3" || $('#idTem').val() == "1" || $('#idTem').val() == "2" || $('#idTem').val() == "3") {
-                //console.log('entro a linea 218');
                 $('#btnSiguiente').show('slow');
             }
         }
 
         if ($('#totalCapitulos').val() >= "3") {
-            //console.log('entro a linea 224');
             $('#Lbcerrar').show();
         } else {
-            //console.log('entro a linea 227');
             $('#Lbcerrar').hide();
         }
 
@@ -244,10 +232,7 @@
 
 
     $(document).on('submit', '.validateDontSubmit', function (e) {
-        // alert("submit");
-        //prevent the form from doing a submit
         e.preventDefault();
-        // $(window).scrollTop(0);
         return false;
     })
 
@@ -427,8 +412,6 @@
         var idPregunta = $('#idPregunt').val();
         var respuestasConcatenadas = $('#respuestasConcatenadasJs').val();
         var personasConcatenadas = $('#personasConcatenadasJs').val();
-        //console.log('El pimer impreso '+idPregunta);
-        //console.log(respuestasConcatenadas);
         var tipoPregunta = $('#tipoPreguntaJs').val();
         var tipoCampo = $('#tipoCampoJa').val();
         var idPersonaGe = $('#idPersonaGen').val();
@@ -440,8 +423,6 @@
         arrPersonas = convertArray(personas);
         var respuesta = "";
         var total = new Array();
-        // $("#" + tipo + "_" + arrRespuestas[r] + "_per_" + arrPersonas[h])
-        //console.log("coleccionpreguntas_" + tipoCampo);
         if ($("#coleccionPreguntas").val() == "0") {
 
 
@@ -449,8 +430,6 @@
 
 
         if (idPregunta == "28" && tipoCampo == 'CH') {
-            //alert('alerta' + verificarJefe(arrRespuestas, arrPersonas));
-            //alert(verificarJefe(arrRespuestas, arrPersonas));
 
             //VERIFICA QUE SE SELECCIONE AL MENOS UN JEFE DE HOGAR.
             if (verificarJefe(arrRespuestas, arrPersonas) == false) {
@@ -477,7 +456,7 @@
             return;
         }
         //Valida que cumpla todas las validaciones
-        //console.log("TOTAL" + total);
+        
         if ($("form")[0].checkValidity()) {
             $.ajax({
                 type: "POST",
@@ -531,7 +510,6 @@
         var total = new Array();
         if (tipoPregunta == "IN") {
             if (tipo == "chl") {
-                //console.log("tipo:" + tipo);
                 for (i = 0; i < arrPersonas.length; i++) {
                     //chl_2_per_8
                     nombreControl.push("#tbl_" + idPregunta + "_per_" + arrPersonas[i]);
@@ -544,7 +522,7 @@
                         this.setCustomValidity('');
                     });
                     //if (tipoCampo == "LT" || tipoCampo == "CL") {
-                    //console.log("NOMBRE_" + first);
+                    
                     if ($(nombreControl[j]) !== undefined && $(nombreControl[j]) !== null && first !== null && first !== undefined) {
                         //   console.log("entrovalidacion");
                         first.setCustomValidity($(nombreControl[j]).find('input:checked').length === 0 ? 'Seleccione uno' : '');
@@ -553,8 +531,6 @@
                     //}
                 }
             }
-
-            //console.log("respuestassconteo:" + arrRespuestas);
             for (h = 0; h < arrPersonas.length; h++) {
                 respuesta = "";
                 for (r = 0; r < arrRespuestas.length; r++) {
@@ -562,7 +538,7 @@
                     //chl_2_per_8
                     //respuesta = "";
                     tipoInput = $("#" + tipo + "_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
-                    //console.log(tipoInput);
+                    
                     if (tipoInput != null) {
                         // console.log(tipoInput);
                         if (tipoInput.prop('checked')) {
@@ -570,7 +546,7 @@
                             respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r];
                             tipoText = $("#txt_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
                             if (tipoText != null && tipoText.css("visibility") == "visible") {
-                                //console.log("entroTexto" + arrPersonas[h]);
+                                
                                 //idRespuesta = $(this).attr('id').split("_")[1];
                                 if (tipoText.val().trim() != "") {
                                     //    console.log(tipoText.val().trim());
@@ -614,7 +590,7 @@
             for (r = 0; r < arrRespuestas.length; r++) {
                 respuesta = "";
                 tipoInput = $("#" + tipo + "_" + arrRespuestas[r]);
-                //console.log(tipoInput);
+                
                 if (tipoInput != null) {
                     // console.log(tipoInput);
                     if (tipoInput.prop('checked')) {
@@ -622,7 +598,7 @@
                         tipoText = $("#txt_" + arrRespuestas[r]);
                         // console.log("idtexto" + tipoText.attr("id"))
                         if (tipoText != null && tipoText.css("visibility") == "visible") {
-                            //console.log(tipoText);
+                            
                             //idRespuesta = $(this).attr('id').split("_")[1];
                             if (tipoText.val().trim() != "") {
                                 //    console.log(tipoText.val().trim());
@@ -643,7 +619,7 @@
             }
 
         }
-        //console.log("cheks::" + total);
+        
         return total;
     }
 
@@ -657,8 +633,6 @@
         var tipoText;
         var total = new Array();
         if (tipoPregunta == "IN") {
-            // console.log("personeasconteo:" + arrPersonas);
-            // console.log("respuestassconteo:" + arrRespuestas);
             for (h = 0; h < arrPersonas.length; h++) {
                 respuesta = "";
                 for (r = 0; r < arrRespuestas.length; r++) {
@@ -667,17 +641,8 @@
                     //respuesta = "";
                     //txt_19_PER_8
                     tipoInput = $("#txt_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
-                    //console.log(tipoInput);
+                    
                     if (tipoInput != null && tipoInput.css("visibility") == "visible") {
-                        // console.log(tipoInput);
-
-                        //   console.log("cjejaeados" + arrPersonas[h]);
-                        // respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r];
-                        //tipoText = $("#txt_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
-
-                        //console.log("entroTexto" + arrPersonas[h]);
-
-                        //console.log("validatexto"+tipoInput.val().trim());
                         respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r] + "_texto_" + tipoInput.val().trim() + "";
                         //respuesta = respuesta + "_texto_" + tipoText.val().trim() + ")";
                         if (total.indexOf(respuesta) < 0) {
@@ -705,7 +670,7 @@
             }
 
         }
-        //console.log("cheks::" + total);
+        
         return total;
     }
 
@@ -722,9 +687,9 @@
 
             respuesta = "";
             tipoInput = $("#M_" + idPregunta);
-            //console.log(tipoInput);
+            
             if (tipoInput != null && tipoInput.css("visibility") == "visible") {
-                //console.log("respuesta_" + arrRespuestas[0]);
+                
                 respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[0] + "_texto_" + tipoInput.val().trim() + "";
                 //respuesta = respuesta + "_texto_" + tipoInput.val().trim() + ")";
                 if (total.indexOf(respuesta) < 0) {
@@ -733,7 +698,7 @@
             }
 
         }
-        //console.log("cheks::" + total);
+        
         return total;
     }
 
@@ -747,14 +712,14 @@
         var tipoInput;
         var tipoText;
         var total = new Array();
-        //console.log('_CargarEncuesta guadarPreguntasComboDT linea 736' + ' ' + arrRespuestas);
+        
         if (tipoPregunta == "GE") {
 
             respuesta = "";
             tipoInput = $("#PA_" + idPregunta);
-            //console.log(tipoInput);
+            
             if (tipoInput != null && tipoInput.css("visibility") == "visible") {
-                //console.log("respuesta_" + arrRespuestas[0]);
+                
                 respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[0] + "_texto_" + tipoInput.val().trim() + "";
                 //respuesta = respuesta + "_texto_" + tipoInput.val().trim() + ")";
                 if (total.indexOf(respuesta) < 0) {
@@ -763,7 +728,7 @@
             }
 
         }
-        //console.log("cheks::" + total);
+        
         return total;
     }
 

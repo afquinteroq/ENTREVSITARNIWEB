@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Data;
 using ObjetosTipos;
-using System.Configuration;
 using IgedEncuesta.Models.mdlEncuesta;
 using System.Reflection;
-using System.Globalization;
+
 
 namespace IgedEncuesta.Models.Hogar
 {
@@ -21,15 +19,12 @@ namespace IgedEncuesta.Models.Hogar
             dataReader = ds.Tables[0].CreateDataReader();
             List<Victima> maestroHogar = new List<Victima>();
             bool cargarVictima = false;
-
-           // maestroHogar = (List<Victima>)HttpContext.Current.TempData["ModeloHogar"];
+           
             while (dataReader.Read())
             {
                 if (maestroHogar == null) cargarVictima = true;
                 else cargarVictima = !maestroHogar.Any(x => x.CONS_PERSONA == dataReader["CONS_PERSONA"].ToString());
-
-                //if (!DBNull.Value.Equals(dataReader["CONS_PERSONA"]))
-                // {
+                
                 if (cargarVictima)
                 {
                     Victima objVictima = new Victima();
@@ -72,7 +67,7 @@ namespace IgedEncuesta.Models.Hogar
 
                     coleccion.Add(objVictima);
                 }
-                //    }
+                
             }
 
             return (coleccion);
@@ -124,7 +119,6 @@ namespace IgedEncuesta.Models.Hogar
             AccesoDatos.ConsultasParticulares datos = new AccesoDatos.ConsultasParticulares();
             try
             {
-                string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionCaracterizacion"].ConnectionString;
                 datos.Conexion = connStringCar;
                 param = new List<Parametros>();
                 param.Add(asignarParametro("USUA_CREACION", 1, "System.String", usuario));
@@ -230,12 +224,9 @@ namespace IgedEncuesta.Models.Hogar
                 param.Add(asignarParametro("PAPELLIDO", 1, "System.String", (objVictima.APELLIDO1 != null) ? objVictima.APELLIDO1 : ""));
                 param.Add(asignarParametro("SAPELLIDO", 1, "System.String", (objVictima.APELLIDO2 != null) ? objVictima.APELLIDO2 : ""));                
                 param.Add(asignarParametro("FNACIMIENTO", 1, "System.DateTime", objVictima.F_NACIMIENTO));
-                //param.Add(asignarParametro("FNACIMIENTO", 1, "System.DateTime", objVictima.F_NACIMIENTO));
                 param.Add(asignarParametro("TDOC", 1, "System.String", (objVictima.TIPO_DOC != null) ? objVictima.TIPO_DOC : ""));
                 param.Add(asignarParametro("USUARIO", 1, "System.String", usuario));
                 param.Add(asignarParametro("USU_FCREACION", 1, "System.DateTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
-                //param.Add(asignarParametro("USU_FCREACION", 1, "System.DateTime", DateTime.Now.ToString()));
-                //param.Add(asignarParametro("USU_FCREACION", 1, "System.DateTime", "15/10/2015"));
                 param.Add(asignarParametro("NDOCU", 1, "System.String", (objVictima.DOCUMENTO != null) ? objVictima.DOCUMENTO : ""));
                 param.Add(asignarParametro("RELAC", 1, "System.String", ""));
                 param.Add(asignarParametro("ID_DECLAR", 1, "System.Int32", null));
@@ -386,7 +377,6 @@ namespace IgedEncuesta.Models.Hogar
             {
                 //Verifica el numero de hechos
                 Type type = vic.GetType();
-                PropertyInfo[] propHechos = type.GetProperties();
 
 
                 //Recorre los hechos, cuando el hecho esta encendido en 1 se envia este hecho a la BD
@@ -427,7 +417,7 @@ namespace IgedEncuesta.Models.Hogar
                 }
             }
             catch (Exception e) {
-                e.Message.ToString();
+                Console.WriteLine(e.Message);
             }
             finally
             {

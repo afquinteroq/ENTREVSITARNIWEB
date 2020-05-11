@@ -579,9 +579,9 @@ namespace AdministracionInstrumentos
                 datoConsulta = datos.ConsultarConProcedimientoAlmacenado("GIC_CATEGORIZACION.GIC_EXISTE_CONSTANCIAFIRMADA", ref param);
                 conteo = int.Parse(param.Find(x => x.Nombre == "CONTEO").Valor);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ex.Message.ToString();
+                Console.WriteLine(e.Message);
             }
             finally
             {
@@ -610,13 +610,10 @@ namespace AdministracionInstrumentos
                 estado = datos.ActualizarConProcedimientoAlmacenado(funcion, ref param).ToString();
                 return estado;                
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return "";
-            }
-            finally
-            {
-                
             }
         }
 

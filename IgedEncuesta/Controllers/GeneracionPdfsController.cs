@@ -1,8 +1,6 @@
 ﻿using AdministracionInstrumentos;
 using gic_ManipuladorPdf;
 using IgedEncuesta.Models.mdlConstancia;
-using IgedEncuesta.Models.mdlEncuesta;
-using IgedEncuesta.Models.mdlGenerico;
 using log4net;
 using log4net.Config;
 using SelectPdf;
@@ -10,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 
@@ -62,14 +58,14 @@ namespace IgedEncuesta.Controllers
             try
             {
                 Boolean val = false;
-                //string codHogar = string.Empty;
+                
                 string Usuario = string.Empty;
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 Usuario = Request.Cookies["SesionIged"]["USUARIO"].ToString();
                 int IdUsuario = 0;
                 IdUsuario = int.Parse(userIdApp);
-                //gic_Hogar hogar = new gic_Hogar();
+                
                 man_ArchivoPdf pdf = new man_ArchivoPdf();
                 string rutaArchivo = string.Empty;
                 string nombreArchivo = string.Empty;                    

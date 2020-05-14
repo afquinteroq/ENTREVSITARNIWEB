@@ -96,7 +96,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("pHOG_CODIGO", 1, "System.String", codHogar));
@@ -105,8 +105,7 @@ namespace AdministracionInstrumentos
             param.Add(baseDatos.asignarParametro("pID_PREGUNTA", 1, "System.Int32", idPregunta.ToString()));
             param.Add(baseDatos.asignarParametro("cur_OUT", 2, "Cursor", ""));
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
-            // DbConnection conn = dbahe.CreateConnection();
-            //conn.Open();
+            
             List<gic_PreguntasxPersona> preguntas = new List<gic_PreguntasxPersona>();
             try
             {
@@ -116,8 +115,6 @@ namespace AdministracionInstrumentos
                     while (dataReader.Read())
                     {
                         gic_PreguntasxPersona pregunta = new gic_PreguntasxPersona();
-                        //PRE_IDPREGUNTA, PRE_PREGUNTA, PRE_TIPOPREGUNTA, PRE_TIPOCAMPO, HOG_CODIGO, PER_IDPERSONA, PER_PRIMERNOMBRE, 
-                        //PER_SEGUNDONOMBRE, PER_PRIMERAPELLIDO, PER_SEGUNDOAPELLIDO, VALIDACION_PERSONA, ORDENPRIORIDAD, IXP_ORDEN
                         if (!DBNull.Value.Equals(dataReader["PRE_IDPREGUNTA"]))
                         {
                             pregunta.pre_IdPregunta = int.Parse(dataReader["PRE_IDPREGUNTA"].ToString());
@@ -211,7 +208,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("pPRE_IDPREGUNTA", 1, "System.String", idPregunta.ToString()));
@@ -219,25 +216,24 @@ namespace AdministracionInstrumentos
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado("GIC_N_CARACTERIZACION.SP_GET_RESPUESTASXPREGUNTA", ref param);
             try
             {
-                //   using (IDataReader dataReader = dbahe.ExecuteReader("GIC_N_CARACTERIZACION.SP_GET_RESPUESTASXPREGUNTA", new object[] { idPregunta, new object[] { null } }))
+                
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
                     {
-                        //SELECT RI.INS_IDINSTRUMENTO, RI.RES_IDRESPUESTA, RE.RES_RESPUESTA, RI.PRE_VALIDADOR, RI.PRE_LONGCAMPO, 
-                        //RI.PRE_VALIDADOR_MIN, RI.PRE_VALIDADOR_MAX, RI.RES_ORDENRESPUESTA, RI.PRE_CAMPOTEX
+                        
                         gic_RespuestaNuevo respuesta = new gic_RespuestaNuevo();
                         respuesta.ins_IdInstrumento = idInstrumento;
                         if (!DBNull.Value.Equals(dataReader["RES_IDRESPUESTA"]))
                         {
                             respuesta.res_IdRespuesta = int.Parse(dataReader["RES_IDRESPUESTA"].ToString());
-                           // log.Info("gic_Pregunta / getRespuestasxPregunta , RES_IDRESPUESTA: " + respuesta.res_IdRespuesta.ToString());
+                           
                         }
                         if (!DBNull.Value.Equals(dataReader["PRE_IDPREGUNTA"]))
                         {
                             respuesta.pre_IdPregunta = new gic_Pregunta();
                             respuesta.pre_IdPregunta.pre_IdPregunta = int.Parse(dataReader["PRE_IDPREGUNTA"].ToString());
-                            //log.Info("gic_Pregunta / getRespuestasxPregunta , respuesta.pre_IdPregunta.pre_IdPregunta: " + respuesta.pre_IdPregunta.pre_IdPregunta.ToString());
+                            
 
                         }
                         if (!DBNull.Value.Equals(dataReader["RES_RESPUESTA"]))
@@ -247,7 +243,7 @@ namespace AdministracionInstrumentos
                         if (!DBNull.Value.Equals(dataReader["PRE_VALIDADOR"]))
                         {
                             respuesta.pre_Validador = dataReader["PRE_VALIDADOR"].ToString();
-                           // log.Info("gic_Pregunta / getRespuestasxPregunta , PRE_VALIDADOR: " + respuesta.pre_Validador);
+                           
                         }
                         if (!DBNull.Value.Equals(dataReader["PRE_LONGCAMPO"]))
                         {
@@ -299,7 +295,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
         }
 
@@ -315,7 +311,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             gic_ElementosPadre padreYorden = new gic_ElementosPadre();
@@ -326,8 +322,7 @@ namespace AdministracionInstrumentos
 
             try
             {
-
-                //  using (IDataReader dataReader = dbahe.ExecuteReader("GIC_N_CARACTERIZACION.SP_GET_MAXPREGUNTAPADRE", new object[] { codHogar, idTema, new object[] { null } }))
+                
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -395,13 +390,11 @@ namespace AdministracionInstrumentos
                 datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
                 #region DataReader
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
-                //  using (IDataReader dataReader = dbahe.ExecuteReader(stored, new object[] { codHogar, idTema, idInstrumento, idPregunta, new object[] { null } }))
+                
                 {
                     while (dataReader.Read())
                     {
                         gic_PreguntasxPersona pregunta = new gic_PreguntasxPersona();
-                        //PRE_IDPREGUNTA, PRE_PREGUNTA, PRE_TIPOPREGUNTA, PRE_TIPOCAMPO, HOG_CODIGO, PER_IDPERSONA, PER_PRIMERNOMBRE, 
-                        //PER_SEGUNDONOMBRE, PER_PRIMERAPELLIDO, PER_SEGUNDOAPELLIDO, VALIDACION_PERSONA, ORDENPRIORIDAD, IXP_ORDEN
                         if (!DBNull.Value.Equals(dataReader["PRE_IDPREGUNTA"]))
                         {
                             pregunta.pre_IdPregunta = int.Parse(dataReader["PRE_IDPREGUNTA"].ToString());
@@ -477,7 +470,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
         }
 
@@ -487,7 +480,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             try
             {
                 List<Parametros> param = new List<Parametros>();
@@ -499,7 +492,6 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
             }
         }        
 
@@ -526,7 +518,7 @@ namespace AdministracionInstrumentos
             }
             for (int i = 0; i < lista.Rows.Count; i++)
             {
-                //RES_IDRESPUESTA, RES_RESPUESTA
+                
                 SelectListItem item = new SelectListItem();
                 valor = lista.Rows[i][columna].ToString();
                 item.Text = valor;
@@ -541,7 +533,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             try
             {
                 List<Parametros> param = new List<Parametros>();
@@ -553,7 +545,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }          
 
         }
@@ -566,7 +558,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             try
             {
                 List<Parametros> param = new List<Parametros>();
@@ -578,7 +570,6 @@ namespace AdministracionInstrumentos
             finally
             {  
                 datoConsulta.Dispose();
-                ////datos.Dispose();
             }
 
         }
@@ -593,7 +584,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             try
             {
                 List<Parametros> param = new List<Parametros>();
@@ -606,7 +597,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
 
         }
@@ -633,7 +624,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
 
         }
@@ -656,7 +647,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
 
         }
@@ -679,7 +670,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
 
         }
@@ -708,7 +699,7 @@ namespace AdministracionInstrumentos
             try
             {
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
-                //using (IDataReader dataReader = dbahe.ExecuteReader("gic_n_caracterizacion.sp_cargautocompletar", new object[] { idPregunta, filtro, new object[] { null } }))
+                
                 {
                     while (dataReader.Read())
                     {
@@ -726,7 +717,7 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
             return result;
         }

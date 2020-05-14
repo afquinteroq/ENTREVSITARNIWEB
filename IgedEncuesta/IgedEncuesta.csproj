@@ -294,6 +294,7 @@
     <Content Include="Content\Imagenes\textura_encab.jpg" />
     <Content Include="Content\Imagenes\textura_pie.jpg" />
     <Content Include="Content\Imagenes\wood_pattern.png" />
+    <Content Include="Archivos\MODELOHOGAR.txt" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />

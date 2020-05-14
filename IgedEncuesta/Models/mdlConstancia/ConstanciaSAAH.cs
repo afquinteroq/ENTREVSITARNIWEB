@@ -60,7 +60,7 @@ namespace IgedEncuesta.Models.mdlConstancia
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             stored = "GIC_N_CARACTERIZACION.SP_CONSTANCIA";

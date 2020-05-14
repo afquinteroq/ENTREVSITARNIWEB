@@ -130,15 +130,10 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public List<Victima> consultarVictimasMI(string numDoc, string idUsuario, string idAplicacion)
         {
-            DataSet dsSalida;
-            List<Victima> coleccion;
+            DataSet dsSalida = null;
+            List<Victima> coleccion = null;
             HechosPersona hechos = new HechosPersona();
             dsSalida = consultarPersonasModeloINntegrado(numDoc, idUsuario, idAplicacion);
-            ////10/04/2020
-            /*Encuesta objSesion = new Encuesta();
-            var serializeMODELOPERSONA = Newtonsoft.Json.JsonConvert.SerializeObject(dsSalida);
-            objSesion.guardarCampoSesion(int.Parse(idUsuario), "MODELOPERSONA", serializeMODELOPERSONA);*/
-            //
             coleccion = modeloVictimasMI(dsSalida);
 
             StringBuilder vhechos = new StringBuilder("");
@@ -513,10 +508,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public DataSet consultarVictimasRUV(string numDoc, string opcionBusqueda)
         {
-            List<Victima> coleccion = new List<Victima>();
+            
             List<Parametros> param = new List<Parametros>();
-            //Victima usuario = new Victima();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -543,7 +537,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
             dataReader = ds.Tables[0].CreateDataReader();
-            List<Victima> maestroHogar = new List<Victima>();
+            List<Victima> maestroHogar = null;
 
 
             maestroHogar = (List<Victima>)HttpContext.Current.Session["ModeloHogar"];
@@ -612,7 +606,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
             dataReader = ds.Tables[0].CreateDataReader();
-            //List<Victima> maestroHogar = new List<Victima>();
 
             while (dataReader.Read())
             {
@@ -633,14 +626,46 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 if (!DBNull.Value.Equals(dataReader["PER_DISCAPACIDAD"])) objVictima.DISCAP = dataReader["PER_DISCAPACIDAD"].ToString();
                 if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
                 if (!DBNull.Value.Equals(dataReader["PER_SEXO"])) objVictima.GENERO_HOM = dataReader["PER_SEXO"].ToString();
-
-                //objVictima.TIPO_VICTIMA = "INCLUIDO";
-                //------------------------------------------------
-                //MODIFICACION: JOSE VASQUEZ OCT.28.2015
-                // LAS VICTIMAS NO HAN SIDO CARACTERIZADAS HASTA BUSCAR EN CARACTERIZACION
-                //-----------------------------------------------
-                //objVictima.HABILITADO_PARA_CARACTERIZACION = "SI";
-                //FIN JOSE VASQUEZ OCT.28.2015
+                /*
+                if (!DBNull.Value.Equals(dataReader["EDAD"])) objVictima.EDAD = dataReader["EDAD"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HECHOS"])) objVictima.HECHOS = dataReader["HECHOS"].ToString();
+                if (!DBNull.Value.Equals(dataReader["FECHA_HECHO"])) objVictima.FECHA_HECHO = dataReader["FECHA_HECHO"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV1"])) objVictima.HV1 = dataReader["HV1"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV2"])) objVictima.HV2 = dataReader["HV2"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV3"])) objVictima.HV3 = dataReader["HV3"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV4"])) objVictima.HV4 = dataReader["HV4"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV5"])) objVictima.HV5 = dataReader["HV5"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV6"])) objVictima.HV6 = dataReader["HV6"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV7"])) objVictima.HV7 = dataReader["HV7"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV8"])) objVictima.HV8 = dataReader["HV8"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV9"])) objVictima.HV9 = dataReader["HV9"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV10"])) objVictima.HV10 = dataReader["HV10"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV11"])) objVictima.HV11 = dataReader["HV11"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV12"])) objVictima.HV12 = dataReader["HV12"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV13"])) objVictima.HV13 = dataReader["HV13"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV14"])) objVictima.HV14 = dataReader["HV14"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV1_FECHA"])) objVictima.FECHA_HECHO1 = dataReader["HV1_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV2_FECHA"])) objVictima.FECHA_HECHO2 = dataReader["HV2_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV3_FECHA"])) objVictima.FECHA_HECHO3 = dataReader["HV3_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV4_FECHA"])) objVictima.FECHA_HECHO4 = dataReader["HV4_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV5_FECHA"])) objVictima.FECHA_HECHO5 = dataReader["HV5_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV6_FECHA"])) objVictima.FECHA_HECHO6 = dataReader["HV6_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV7_FECHA"])) objVictima.FECHA_HECHO7 = dataReader["HV7_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV8_FECHA"])) objVictima.FECHA_HECHO8 = dataReader["HV8_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV9_FECHA"])) objVictima.FECHA_HECHO9 = dataReader["HV9_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV10_FECHA"])) objVictima.FECHA_HECHO10 = dataReader["HV10_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV11_FECHA"])) objVictima.FECHA_HECHO11 = dataReader["HV11_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV12_FECHA"])) objVictima.FECHA_HECHO12 = dataReader["HV12_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV13_FECHA"])) objVictima.FECHA_HECHO13 = dataReader["HV13_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HV14_FECHA"])) objVictima.FECHA_HECHO14 = dataReader["HV14_FECHA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["ESTADO_VICTIMA"])) objVictima.TIPO_VICTIMA = dataReader["ESTADO_VICTIMA"].ToString().ToUpper();
+                if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_CARACTERIZACION = dataReader["ID_CARACTERIZACION"].ToString();
+                if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_TBPERSONA = dataReader["ID_CARACTERIZACION"].ToString();
+                if (!DBNull.Value.Equals(dataReader["FECHA_ULTI_ENCUESTA"])) objVictima.FECHA_ULT_CARACTERIZACION = dataReader["FECHA_ULTI_ENCUESTA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["COD_HOGAR"])) objVictima.COD_HOGAR = dataReader["COD_HOGAR"].ToString();
+                if (!DBNull.Value.Equals(dataReader["ESTADO_ENCUESTA"])) objVictima.ESTADO_ENCUESTA = dataReader["ESTADO_ENCUESTA"].ToString();
+                if (!DBNull.Value.Equals(dataReader["HABILITADO_CARAC"])) objVictima.HABILITADO_PARA_CARACTERIZACION = dataReader["HABILITADO_CARAC"].ToString();
+                */
 
                 coleccion.Add(objVictima);
 
@@ -651,10 +676,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public DataSet consultarGrupoFamiliar(string cons_persona)
         {
-            //List<Victima> coleccion = new List<Victima>();
+            
             List<Parametros> param = new List<Parametros>();
-            //Victima usuario = new Victima();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -678,7 +702,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public List<string> consultarVictimasPersonas(string consPersona)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             IDataReader dataReader = null;
             List<string> idPersonas = new List<string>();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
@@ -731,6 +755,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw ex;
             }
             finally
@@ -742,9 +767,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public List<Persona> consultarGpo_Familiar_x_Cons_Persona(string consPersona)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             IDataReader dataReader = null;
-            //List<string> idPersonas = new List<string>();
             List<Persona> personas = new List<Persona>();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
@@ -815,7 +839,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public List<string> consultarPersonasRUV(string idPersona)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             IDataReader dataReader = null;
             List<string> idRUVs = new List<string>();
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
@@ -913,7 +937,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarIdPersonasMi(string IdPersona, string idAplicacion, string idUsuario)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -946,7 +970,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarPersonasModeloINntegrado(string documento, string idUsuario, string idAplicacion)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -966,28 +990,6 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MSGERROR", 2, "System.String", ""));
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CONSULTAS.MI_PERSONAS", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_PERSONAS", ref param);
-                /*
-                int totalpersonas = dsSalida.Tables[0].Rows.Count;
-
-
-                if (dsSalida.Tables[0].Rows.Count == 0)
-                {
-                    String vacio =  "VACIO";
-                    Console.WriteLine(vacio);
-
-
-                }
-                else if(dsSalida.Tables[0].Rows.Count > 0)
-                {
-                    String NOMBRE = dsSalida.Tables[0].TableName;
-                    Console.WriteLine(NOMBRE);
-                    String genero = dsSalida.Tables[NOMBRE].Rows[0]["PER_SEXO"].ToString();
-                    Console.WriteLine("Genero "+dsSalida.Tables[NOMBRE].Rows[0]["PER_SEXO"].ToString());
-
-                }*/
-
-
 
                 return dsSalida;
             }
@@ -1002,7 +1004,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarFichaUnicaFichaCaracterizacion(string documento/*, string idUsuario, string idAplicacion*/)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -1034,7 +1036,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
             List<Parametros> param = new List<Parametros>();
 
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -1059,29 +1061,11 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
 
         {
-
-            /*
-            if (ds.Tables[0].Rows.Count == 0)
-            {
-                String vacio = "VACIO";
-                Console.WriteLine(vacio);
-
-
-            }
-            else if (ds.Tables[0].Rows.Count > 0)
-            {
-                String NOMBRE = ds.Tables[0].TableName;
-                Console.WriteLine(NOMBRE);
-                String genero = ds.Tables[NOMBRE].Rows[0]["PER_SEXO"].ToString();
-                Console.WriteLine("Genero " + ds.Tables[NOMBRE].Rows[0]["PER_SEXO"].ToString());
-
-            }
-            */
-
+            
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
             dataReader = ds.Tables[0].CreateDataReader();
-            //List<Victima> maestroHogar = new List<Victima>();
+            
 
             while (dataReader.Read())
             {
@@ -1116,8 +1100,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public List<Victima> consultarGrupoFamiliarMI(string idPersonaModelo)
         {
-            DataSet dsSalida = new DataSet();
-            List<Victima> coleccion = new List<Victima>();
+            DataSet dsSalida = null;
+            List<Victima> coleccion = null;
 
             HechosPersona hechos = new HechosPersona();
             dsSalida = consultarGrupoFamiliarNuevo(idPersonaModelo);
@@ -1177,7 +1161,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarPersonasMiDocumento(string documento, string idAplicacion, string idUsuario)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -1204,9 +1188,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public Victima consultaDatosRUV(string consPersona)
         {
-            //List<Victima> coleccion = new List<Victima>();
+            
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             IDataReader dataReader = null;
             Victima objVictima = new Victima();
 
@@ -1280,7 +1264,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
             List<Persona> personas = new List<Persona>();
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -1337,7 +1321,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
             List<Persona> personas = new List<Persona>();
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {

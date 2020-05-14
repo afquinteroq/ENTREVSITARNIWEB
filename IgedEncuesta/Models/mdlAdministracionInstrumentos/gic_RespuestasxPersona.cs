@@ -63,7 +63,7 @@ namespace AdministracionInstrumentos
             datos.Conexion = baseDatos.connStringCar;
             string stored = string.Empty;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             stored = "GIC_N_CARACTERIZACION.SP_RESPUESTAS_ENCUESTA";
@@ -72,7 +72,7 @@ namespace AdministracionInstrumentos
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
             try
             {
-                //using (IDataReader dataReader = dbahe.ExecuteReader("GIC_N_CARACTERIZACION.SP_RESPUESTAS_ENCUESTA", new object[] { cod_hogar, new object[] { null } }))
+                
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -123,7 +123,6 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////////////datos.Dispose();
             }
         }
     }

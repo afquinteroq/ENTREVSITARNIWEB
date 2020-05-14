@@ -184,14 +184,12 @@ Versión 1.0 - Resolución 1024*768 o superior.</h4>
     setInterval('VerificarFinSesion()', loop);
 
     function VerificarFinSesion() {
-        //console.log("ENTRO");
         $.ajax({
 
             dataType: 'json', //el tipo de dato que nos regresara el servidor en este caso regresa html
             url: '@Url.Action("VerificarFinSesion", "Sesion")',
 
             success: function (result) { // Variable return contains the data we get from serverside
-                //console.log(result);
                 if (result == 'cerrada') {
                     alert('Su sesión ha finalizado, vuelva a ingresar al módulo desde el Portal de Aplicaciones.');
                     window.setInterval('window.close()', 2000);

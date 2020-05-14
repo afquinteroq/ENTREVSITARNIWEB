@@ -37,15 +37,7 @@ namespace AdministracionInstrumentos
         /// <param name="archivo">gic_ArchivoColilla detalle de la colilla a insertar</param>
         public void insertaArchivoColilla(gic_ArchivoColilla archivo)
         {
-            /* DbConnection cnn = dbahe.CreateConnection();
-             cnn.Open();
-             DbTransaction tran = cnn.BeginTransaction();
-
-             dbCommand = dbahe.GetStoredProcCommand("GIC_N_CARACTERIZACION.SP_INSERTA_ARCHIVO");
-             dbahe.DiscoverParameters(dbCommand);
-             dbahe.SetParameterValue(dbCommand, "pHOG_CODIGO", archivo.hog_codigo);
-             dbahe.SetParameterValue(dbCommand, "pARC_URL", archivo.arc_url);
-             dbahe.SetParameterValue(dbCommand, "pUSU_CREACION", archivo.usu_UsuarioCreacion);*/
+            
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             baseDatos = new mdlGenerico();
@@ -91,7 +83,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                //////datos.Dispose();
+               
             }
         }
 
@@ -172,9 +164,7 @@ namespace AdministracionInstrumentos
                 param.Add(baseDatos.asignarParametro("pADMINCFG_NAME", 1, "System.String", Admincfg_name.ToString()));
                 param.Add(baseDatos.asignarParametro("cur_OUT", 2, "Cursor", ""));
                 datoConsulta = datos.ConsultarConProcedimientoAlmacenado("GIC_ADMIN_CRUCES.GIC_SP_GET_ADMINCONFIG", ref param);
-
-
-              //  using (IDataReader dataReader = dbaCconexion.ExecuteReader("GIC_ADMIN_CRUCES.GIC_SP_GET_ADMINCONFIG", new object[] { Admincfg_name, new object[] { null } }))
+              
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -198,12 +188,12 @@ namespace AdministracionInstrumentos
             {
                 Console.WriteLine(e.Message);
                 return null;
-                //   throw new System.ArgumentException(e.Message);
+           
             }
             finally
             {
                 datoConsulta.Dispose();
-                //////datos.Dispose();
+             
             }
         }
 

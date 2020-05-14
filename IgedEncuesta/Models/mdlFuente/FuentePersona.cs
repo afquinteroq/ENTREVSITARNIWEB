@@ -77,7 +77,7 @@ namespace IgedEncuesta.Models.mdlFuente
 
             List<Parametros> param = new List<Parametros>();
 
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -145,7 +145,7 @@ namespace IgedEncuesta.Models.mdlFuente
         public DataSet consultarFuenteSIPOD(string numDocumento, string opcionBusqueda)
         {
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             datos.MotorBasedatos = true;
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionFuenteSIPODSIV"].ConnectionString;
             datos.Conexion = connString;
@@ -243,19 +243,19 @@ namespace IgedEncuesta.Models.mdlFuente
                         " T.TIPO_DOC,  T.NUMERODOCUMENTO, T.F_NACIMIENTO, T.ESTADO, T.NUM_FUD_NUM_CASO, T.ID_DECLARACION,T.RELACION,T.GENERO, T.FECHASINIESTRO FECHA_SINIESTRO, T.HECHO FROM SIRAVNegocio.dbo.CM_FUN_HECHOS_PERSONA_SIRAV_DOC(" + numDocumento + ") T");
                     
 
-                    if (dsSalida.Tables[0].Rows.Count > 0)
-                    {
-                        String vacio = "VACIO";
-                        Console.WriteLine(vacio);
+                    //if (dsSalida.Tables[0].Rows.Count > 0)
+                    //{
+                    //    String vacio = "VACIO";
+                    //    Console.WriteLine(vacio);
 
 
-                    }
-                    else if (dsSalida.Tables[0].Rows.Count > 0)
-                    {
-                        String NOMBRE = dsSalida.Tables[0].TableName;
-                        Console.WriteLine(NOMBRE);
-                        String idPersona = dsSalida.Tables[NOMBRE].Rows[0]["ID_PERSONA"].ToString();                        
-                    }
+                    //}
+                    //else if (dsSalida.Tables[0].Rows.Count > 0)
+                    //{
+                    //    String NOMBRE = dsSalida.Tables[0].TableName;
+                    //    Console.WriteLine(NOMBRE);
+                    //    String idPersona = dsSalida.Tables[NOMBRE].Rows[0]["ID_PERSONA"].ToString();                        
+                    //}
                 
                         
                 else if (opcionBusqueda == "NOMBRES Y APELLIDOS")

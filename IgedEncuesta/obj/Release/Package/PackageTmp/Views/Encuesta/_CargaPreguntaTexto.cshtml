@@ -19,8 +19,6 @@
     var listadDepartamentosDT = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SelectListItem>>(departamentosDTJson);
     var listaPuntosAtecion = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SelectListItem>>(puntosatecionJson);
     var listaMunicipio = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SelectListItem>>(puntosatecionJson);
-    //var listaDepartamentos = (List<SelectListItem>)TempData["LISTADEPARTAMENTOS"];
-    //var listaMunicipios = (List<SelectListItem>)TempData["LISTAMUNICIPIOS"];
     var OpcionRespuestaGen = Model.opcionesRespuesta.FirstOrDefault();
     string nombres = string.Empty;
     string valorCampoTexto = string.Empty;
@@ -74,10 +72,7 @@
                 {
                     if (Model.preguntaXpersonaGen.pre_IdPregunta == Model.respuestaPreguntaGen.res_IdRespuesta.pre_IdPregunta.pre_IdPregunta)
                     {
-                        //txt.Text = coleccionRespuestas.rxp_TextoRespuesta;
-                        //municipios = pregunta.datosMunicipios("0");
-                        //SelectMunicipios = pregunta.CrearLista(municipios, 2);
-
+                        
                         municipio = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
                         if (Model.respuestaPreguntaGen.rxp_TextoRespuesta.Count() == 4)
                         {
@@ -89,7 +84,7 @@
                         }
                         municipios = preguntaT.datosMunicipios(departamento);
                         listaMunicipios = preguntaT.CrearLista(municipios, 2);
-                        //departamento = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
+                        
                     }
                 }
                 <tr>
@@ -132,31 +127,7 @@
                             </tr>
                         </table>
                     </td>
-                    @*                  <td style="width: 30%;">
-                                @Html.Label("Departamento", new { @style = "text-transform:uppercase; font-size:12px; font-weight:normal; width:210px;text-align:center;" })
-
-                            </td>
-                            <td style="width: 70%;">
-                                @Html.DropDownList("D_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString(), listaDepartamentos.Select(u => new SelectListItem
-                           {
-                               Text = u.Text,
-                               Value = u.Value,
-                               Selected = u.Value == departamento
-                           }), new { required = "required", style = "", @class = "dropDownList requerido drop", id = "D_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString() })
-                                </td>
-                        </tr>
-                        <tr>
-                            <td style="width: 30%;">
-                                @Html.Label("Municipio", new { @style = "text-transform:uppercase; font-size:12px; font-weight:normal; width:210px;text-align:center;" })
-                                 </td>
-                           <td style="width: 70%;" >
-                                @Html.DropDownList("M_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString(), listaMunicipios.Select(y => new SelectListItem
-                           {
-                               Text = y.Text,
-                               Value = y.Value,
-                               Selected = y.Value == municipio
-                           }), new { disabled = "", required = "required", style = "", @class = "dropDownList requerido ", id = "M_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString() })
-                            </td>*@
+                    
                 </tr>
             }
         }
@@ -297,7 +268,7 @@
                             {
                                 if (Model.preguntaXpersonaGen.pre_IdPregunta == Model.respuestaPreguntaGen.res_IdRespuesta.pre_IdPregunta.pre_IdPregunta)
                                 {
-                                    //txt.Text = coleccionRespuestas.rxp_TextoRespuesta;
+                                    
                                     valorTexto = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
 
                                 }
@@ -402,15 +373,15 @@
                                     }
                                     if (Model.preguntaXpersonaGen.pre_IdPregunta == 27)
                                     {
-                                        //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... Model.preguntaXpersonaGen.pre_IdPregunta == 27 ", personas.per_fechaNacimiento.ToShortDateString());
+                                        
                                         if (personas.per_fechaNacimiento == null || string.IsNullOrEmpty(personas.per_fechaNacimiento.ToShortDateString()))
                                         {
-                                            //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... Model.preguntaXpersonaGen.pre_IdPregunta == 27 ", "valorCampoTexto = string.Empty");
+                                            
                                             valorCampoTexto = string.Empty;
                                         }
                                         else
                                         {
-                                            //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... Model.preguntaXpersonaGen.pre_IdPregunta == 27 ", "valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString()");
+                                            
                                             valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString();
                                             dtPregunta = personas.per_fechaNacimiento;
                                         }
@@ -427,31 +398,18 @@
                                             valorCampoTexto = personas.per_NumeroDoc.Trim();
                                         }
                                     }
-                                    /*
-                                    if (Model.preguntaXpersonaGen.pre_IdPregunta == 27)
-                                    {
-
-                                        if (personas.per_fechaNacimiento.ToString() == "&nbsp;" || string.IsNullOrEmpty(personas.per_fechaNacimiento.ToString()))
-                                        {
-                                            valorCampoTexto = string.Empty;
-                                        }
-                                        else
-                                        {
-                                            valorCampoTexto = personas.per_fechaNacimiento.ToString();
-                                        }
-                                    }*/
 
                                     if (Model.preguntaXpersonaGen.pre_IdPregunta == 11)
                                     {
-                                        // IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... if (Model.preguntaXpersonaGen.pre_IdPregunta == 11)", personas.per_fechaNacimiento.ToShortDateString());
+                                        
                                         if (personas.per_fechaNacimiento == null || string.IsNullOrEmpty(personas.per_fechaNacimiento.ToShortDateString()))
                                         {
-                                            //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... ", "valorCampoTexto = string.Empty");
+                                            
                                             valorCampoTexto = string.Empty;
                                         }
                                         else
                                         {
-                                            // IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... ", "valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString();");
+                                            
                                             valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString();
                                             dtPregunta = personas.per_fechaNacimiento;
                                         }
@@ -485,7 +443,7 @@
                                         {
                                             if (resEn.per_IdPersona == personas.per_IdPersona)
                                             {
-                                                //cambio para las respuestas por edades, bug al devolverse traia la respuesta que estaba guardada y no la que calculaba la edad.
+                                                
                                                 if (resEn.res_IdRespuesta.res_IdRespuesta != 23)
                                                 {
                                                     valorCampoTexto = HttpUtility.HtmlDecode(resEn.rxp_TextoRespuesta);

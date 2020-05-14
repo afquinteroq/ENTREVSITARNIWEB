@@ -187,12 +187,11 @@
 
         var data = new FormData();
         var files = $("#fileUpload").get(0).files;
-        //alert($("#txtCodigo").val());
         if (files.length > 0) {
             data.append("UploadedImage", files[0]);
 
             data.append("codHogar", $("#txtCodigo").val());
-            // Make Ajax request with the contentType = false, and procesDate = false
+            
             var ajaxRequest = $.ajax({
                 type: "POST",
                 //url: "/api/fileupload/uploadfile",

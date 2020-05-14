@@ -9,8 +9,7 @@ namespace AdministracionInstrumentos
     [Serializable]
     public class gic_RespuestaNuevo : gic_AdministradorDeCambios
     {
-        //SELECT RI.INS_IDINSTRUMENTO, RI.RES_IDRESPUESTA, RE.RES_RESPUESTA, RI.PRE_VALIDADOR, RI.PRE_LONGCAMPO, RE.PRE_IDPREGUNTA, 
-        //RI.PRE_VALIDADOR_MIN, RI.PRE_VALIDADOR_MAX, RI.RES_ORDENRESPUESTA, RI.PRE_CAMPOTEX
+        
         /// <summary>
         /// Identificador unico de la respuesta
         /// </summary>

@@ -103,7 +103,7 @@
 <script type="text/javascript">
 
     function validarOnkey(objeto, valor) {
-        //alert(objeto.id+"__" +valor );
+        
         $('#' + objeto.id).keypress(function () {
             return this.value.length < valor;
         });
@@ -359,10 +359,7 @@
 
     function verificarJefe(arrRespuestas, arrPersonas) {
         for (i = 0; i < arrPersonas.length; i++) {
-            //alert(arrPersonas[i]);
             var conteoChek = 0;
-            //            conteoChek = conteoChek + verificarJefeCheked(arrRespuestas, arrPersonas[i]);
-            //alert(verificarJefeCheked(arrRespuestas, arrPersonas[i]));
             if (verificarJefeCheked(arrRespuestas, arrPersonas[i]) == "1")
                 return true;
 
@@ -378,21 +375,15 @@
         var chekiado = 0;
         var isCheckedInicial = null;
         for (f = 0; f < arrRespuestas.length; f++) {
-
-            //MainContent__chl_5_PER_116
-            //alert('id ' + idPersona);
             if (idPersona != "") {
                 isCheckedInicial = document.getElementById('rdl_' + arrRespuestas[f] + "_per_" + idPersona);
             } else {
                 isCheckedInicial = document.getElementById('rdl_' + arrRespuestas[f]);
             }
-            //   console.log("idpersona_" + isCheckedInicial);
+            
             if (arrRespuestas[f] == "79" && isCheckedInicial != null) {
-                //alert(idPersona + ' - ' + isCheckedInicial.checked);
+                
                 if (isCheckedInicial.checked) {
-                    //   console.log("checked_" + isCheckedInicial.checked);
-                    //chekiado = chekiado + 1;
-                    // alert('entro');
                     return 1;
                 }
             }
@@ -404,7 +395,7 @@
 
 
     function botonSig() {        
-        //alert("entro sig");
+        
         document.body.style.cursor = "wait";
         var ruta_img_attention = '@Url.Content("~/Content/Icons/attention.png")';
         document.body.style.cursor = "wait";
@@ -540,7 +531,6 @@
                     tipoInput = $("#" + tipo + "_" + arrRespuestas[r] + "_per_" + arrPersonas[h]);
                     
                     if (tipoInput != null) {
-                        // console.log(tipoInput);
                         if (tipoInput.prop('checked')) {
                             //   console.log("cjejaeados" + arrPersonas[h]);
                             respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + arrPersonas[h] + "_res_" + arrRespuestas[r];
@@ -570,9 +560,6 @@
             }
 
         } else if (tipoPregunta == "GE") {
-
-            // console.log("ENTROANTES_");
-
             if (tipo == "chl") {
                 nombreControl.push("#tr_" + idPregunta);
                 inputs = $(nombreControl[0]).find('input');
@@ -590,13 +577,10 @@
             for (r = 0; r < arrRespuestas.length; r++) {
                 respuesta = "";
                 tipoInput = $("#" + tipo + "_" + arrRespuestas[r]);
-                
                 if (tipoInput != null) {
-                    // console.log(tipoInput);
                     if (tipoInput.prop('checked')) {
                         respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[r];
                         tipoText = $("#txt_" + arrRespuestas[r]);
-                        // console.log("idtexto" + tipoText.attr("id"))
                         if (tipoText != null && tipoText.css("visibility") == "visible") {
                             
                             //idRespuesta = $(this).attr('id').split("_")[1];
@@ -657,10 +641,7 @@
             for (r = 0; r < arrRespuestas.length; r++) {
                 respuesta = "";
                 tipoInput = $("#txt_" + arrRespuestas[r]);
-                // console.log(tipoInput);
                 if (tipoInput != null && tipoInput.css("visibility") == "visible") {
-                    // console.log(tipoInput);
-                    // console.log(tipoText);
                     respuesta = respuesta + "(pre_" + idPregunta + "_idper_" + idPersonaGe + "_res_" + arrRespuestas[r] + "_texto_" + tipoInput.val().trim() + "";
                     //respuesta = respuesta + "_texto_" + tipoInput.val().trim() + ")";
                     if (total.indexOf(respuesta) < 0) {

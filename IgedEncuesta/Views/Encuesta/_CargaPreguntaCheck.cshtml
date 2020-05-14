@@ -700,12 +700,12 @@ else
         
         var tipoControl = "chl";
         if (habilita == "SI" && obj.checked) {
-            // console.log("entro desha");
+            
             deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl);
             habilitaCampoTextoGeneral(obj, id_obj, idRes, campo, arrRespuestas, tipoControl);
             // document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
         } else {
-            //  console.log("idRes_" + id_obj);
+            
             habilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl);
             habilitaCampoTextoGeneral(obj, id_obj, idRes, campo, arrRespuestas, tipoControl);
         }
@@ -716,8 +716,6 @@ else
         
         if (campo == "AB") {
             if (obj.checked) {
-                /*   console.log("campoTextto_" + idRespuesta);
-                   console.log("objeto_" + obj.id);*/
                 if (campoTexto != "") {
                     $('#' + campoTexto).show('slow');
                     //$('#'+campoTexto).css('visibility', 'visible').fadeIn( 5000 );
@@ -736,11 +734,6 @@ else
                     $('#txt_' + idRespuesta).prop("required", false);
                     $('#txt_' + idRespuesta).removeClass("requerido");
                 }
-                //if (verificarControlCheked(arrRespuestas, "", tipoControl) == false) {
-                //    //      console.log("ELSE VAL FALSE_" + idPregunta + "_PER_" + idPersona);
-                //    //document.getElementById('MainContent_val_' + idPregunta + "_PER_" + idPersona).style.visibility = 'visible';
-                //    //document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'visible';
-                //}
             }
         } else {
         }
@@ -813,11 +806,11 @@ else
 
 
         for (i = 0; i < arrRespuestas.length; i++) {
-            //  console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
+            
             if (arrRespuestas[i] != idRespuesta) {
                 var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
                 var controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
-                //  console.log("CONTRODES_" + controlDes);
+                
                 if (controlDes != null) {
                     document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).disabled = true;
                     document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).checked = false;

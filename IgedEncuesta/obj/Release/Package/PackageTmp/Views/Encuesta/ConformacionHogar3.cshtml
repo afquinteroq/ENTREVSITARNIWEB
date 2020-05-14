@@ -29,8 +29,6 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        //$("#formulario").validate();
-        //$("#formulario").removeAttr("novalidate");
     });
 
     var rbClick = false;
@@ -38,13 +36,8 @@
     var opcionDialogo = 0;
     var opcionAjax = 0;
     var $myForm = $('#formulario');
-
-
-       //  $("#formulario").submit(function (event) {
+       
              $(document).on('submit', '.validateDontSubmit', function (e) {
-
-             //prevent the form from doing a submit
-             //    alert('entro1');
 
                event.preventDefault();
                return false;
@@ -52,21 +45,10 @@
          });
 
          $('#btnBuscarVictima').click(function () {
-             // alert($("form")[0].id);
-
-             //   alert($("form")[0].checkValidity().toString());
              if ($('#txtNumDoc')[0].checkValidity()) {
 
                  }
-             else {
-              // alert('no valido');
-            //   $myForm.find(':submit').click();
-            // $("#formulario").submit();
-            //   $('#formulario .submit').click();
-            //  $('#formulario').submit();
-            //      return false;
-            //  return;
-             }
+             
    });
-         // });
+         
 </script>

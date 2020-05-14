@@ -14,7 +14,7 @@ using log4net.Config;
 using AdministracionInstrumentos;
 using IgedEncuesta.Models.mdlFuente;
 using System.Diagnostics;
-
+using IgedEncuesta.Util;
 
 namespace IgedEncuesta.Controllers
 {
@@ -69,7 +69,7 @@ namespace IgedEncuesta.Controllers
                 coleccionNivelAcceso = JsonConvert.DeserializeObject<List<Autenticacion.NivelAcceso>>(na);
                 var cookie = new HttpCookie("nivelAcceso", serializedData);
                 HttpContext.Response.Cookies.Add(cookie);
-                          
+                
 
                 // ESTOS SON DE ADMINSUAURIOSPRUEBAS
                 /*
@@ -90,7 +90,7 @@ namespace IgedEncuesta.Controllers
                 coleccionNivelAcceso = JsonConvert.DeserializeObject<List<Autenticacion.NivelAcceso>>(na);
                 var cookie = new HttpCookie("nivelAcceso", serializedData);
                 HttpContext.Response.Cookies.Add(cookie);
-                /*
+                */
                 //hasta acá
 
                 /****************************************************************************************
@@ -931,6 +931,8 @@ namespace IgedEncuesta.Controllers
 
                 var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELOHOGAR", serializedData);
+
+
                 return Json('1', JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
@@ -1047,7 +1049,7 @@ namespace IgedEncuesta.Controllers
                 string sys = objSesion.getValorCampoSesion("SYSGUID", userIdApp);
                 string PERFILES = objSesion.getValorCampoSesion("PERFILES", userIdApp);
 
-                IEnumerable<Victima> modelo = new List<Victima>();
+                IEnumerable<Victima> modelo = null;
 
                 var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                 if (String.IsNullOrEmpty(modeloHogarJson))
@@ -1126,15 +1128,7 @@ namespace IgedEncuesta.Controllers
 
                     // Insertar Validador Estado Victima
                     objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "1");
-
-                    // Insertar Validador Por Parentesco
-                    //andrés quintero
-                    /*
-                    string tipoPersona = item.TIPO_PERSONA;
-                    if (!tipoPersona.Equals("") && (tipoPersona.Equals("1") || tipoPersona.Equals("2") || tipoPersona.Equals("3"))) {
-                        item.JEFE_HOGAR = true;
-                    }
-                    */
+                    
 
                     //JOSE VASQUEZ FECHA: NOV.05.2015
                     //Insertar hechos victimizantes

@@ -45,7 +45,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("pCOD_HOGAR", 1, "System.String", codHogar.ToString()));
@@ -71,7 +71,7 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                Console.WriteLine(ex.Message);
             }
             finally
             {
@@ -92,7 +92,6 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            //DataSet datoConsulta = new DataSet();
             List<Parametros> param = new List<Parametros>();
             param.Add(baseDatos.asignarParametro("pcod_hogar", 1, "System.String",codHogar));
             param.Add(baseDatos.asignarParametro("pidTema", 1, "System.String", idTema.ToString()));
@@ -126,13 +125,7 @@ namespace AdministracionInstrumentos
             param.Add(baseDatos.asignarParametro("pcodHogar", 1, "System.String", codHogar));
             param.Add(baseDatos.asignarParametro("pidTema", 1, "System.String", idTema.ToString()));
             param.Add(baseDatos.asignarParametro("pusuario", 1, "System.String", usuario));
-
-           /* dbCommand = dbahe.GetStoredProcCommand("GIC_N_CARACTERIZACION.SP_FINALIZARCAPITULO");
-            dbahe.DiscoverParameters(dbCommand);
-            dbahe.SetParameterValue(dbCommand, "pcodHogar", codHogar);
-            dbahe.SetParameterValue(dbCommand, "pidTema", idTema);
-            dbahe.SetParameterValue(dbCommand, "pusuario", usuario);
-            dbahe.ExecuteNonQuery(dbCommand);*/
+           
             try
             {
                 datos.InsertarConProcedimientoAlmacenado("GIC_N_CARACTERIZACION.SP_FINALIZARCAPITULO", ref param);
@@ -159,7 +152,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("pCOD_HOGAR", 1, "System.String", codHogar.ToString()));
@@ -207,7 +200,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             List<gic_Tema> temas = new List<gic_Tema>();
@@ -217,7 +210,7 @@ namespace AdministracionInstrumentos
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
             try
             {
-               // using (IDataReader dataReader = dbahe.ExecuteReader(stored, new object[] { idInstr, new object[] { null } }))
+               
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -274,7 +267,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             List<gic_Tema> temas = new List<gic_Tema>();
@@ -284,7 +277,7 @@ namespace AdministracionInstrumentos
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
             try
             {
-               // using (IDataReader dataReader = dbahe.ExecuteReader(stored, new object[] { codHogar, new object[] { null } }))
+               
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -310,7 +303,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
         }

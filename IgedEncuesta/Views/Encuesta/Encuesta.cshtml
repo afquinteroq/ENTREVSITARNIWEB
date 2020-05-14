@@ -40,15 +40,6 @@
 
         $(function () {
             $("#tabs-left").tabs({
-                /* collapsible: true,
-                 active: false,
-                 disabled: false,
-
-                 beforeLoad: function (event, ui) {
-
-                     //$("a").removeAttr('href');
-
-                 }*/
 
             });
         });
@@ -412,7 +403,7 @@
                         var opcionabandonar = result.split("_")[0];
                         var p_hogcodigo = $("#codigoHogar").val();
                         $("#dialog-abandonar").dialog('close');
-                        generarConstancia();
+                        //generarConstancia();
                         setTimeout(redireccionar, 1000);
                     }
                 });
@@ -556,7 +547,7 @@
                     $("#CargandoDatosEncuesta").hide('slow');
                 }
             });
-            //}
+            
             return false;
 
         });

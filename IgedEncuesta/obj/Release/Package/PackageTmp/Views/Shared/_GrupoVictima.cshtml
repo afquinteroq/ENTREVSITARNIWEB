@@ -57,18 +57,13 @@
                         columns: grid.Columns(
                         grid.Column("TIPO_DOC", "TIPO DOC"),
                         grid.Column("DOCUMENTO", "DOCUMENTO"),
-                        //grid.Column("DOCUMENTO_CARACTERIZACION" , "DOCUMENTO CARACTERIZACION"),
                         grid.Column("NOMBRES_COMPLETOS", "NOMBRES"),
                         grid.Column("F_NACIMIENTO", "FECHA NACIMIENTO"),
                         grid.Column(header: "", format: @<text><input type="hidden" class="clasefecha" value="@item.F_NACIMIENTO" id="idpersonafechanacimiento_@item.CONS_PERSONA" style="width:150px"></text>),
                         grid.Column("TIPO_VICTIMA", "ESTADO"),
                         grid.Column(header: "", format: @<text><input type="hidden" class="claseestado" value="@item.TIPO_VICTIMA" id="idpersonaestado_@item.CONS_PERSONA" width="48"></text>),
-                        //grid.Column("FECHA_ULT_CARACTERIZACION" , "FECHA ULTIMA ENCUESTA"),
                         grid.Column("GENERO_HOM", "GENERO"),
-
-                        
                         grid.Column(header: "TIPO PERSONA", format: @item => Html.DropDownList  ("idTipoPersona", ViewBag.Opciones as List<SelectListItem>, new { @class = "classTipoPersona", onchange = "tipoPersona(this)", id = "combotipopersona_" + @item.CONS_PERSONA + "_" + @item.F_NACIMIENTO + "_" + @item.TIPO_VICTIMA + "_" + @item.DOCUMENTO, style = "width:150px" })),
-                        
 
                         grid.Column(header: "GRUPO",
                         format: (item =>
@@ -183,7 +178,6 @@
     $("#dialog-cargueSoporteTutorICBF").dialog({
         autoOpen: false,
         resizable: false,
-        //height: 400,
         width: 550,
         show: { effect: 'drop', direction: "up" },
         modal: true,
@@ -615,8 +609,7 @@
                  }
              });
          }
-
-         //$(document).ready(function () {
+         
          $('.grupoFamiliar').click(function () {
              $('html, body').animate({ scrollTop: 0 }, 0);
              document.body.style.cursor = "wait";
@@ -627,12 +620,12 @@
 
              $('#gvGrupoVictima tbody tr').on('click', function (e) {
                  nombres = $(this).find('td:nth-child(3)').text();
-                 //alert(id);
+                 
              });
 
              $.ajax(
                   {
-                      //type: 'POST',
+                      
                       data: { consPersona: consPers },
                       dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html  grupoFamiliarModeloIntegrado
                       //url: '@Url.Action("grupoFamiliar", "ConformacionHogar")',
@@ -668,7 +661,7 @@
                           );
                       },
                       error: function (error) {
-                          // si hay un error lanzara el mensaje de error
+                          
                           alert('linea 85 grupovictima Se presento un error para la persona con consecutivo ' + consPersona);
                       }
                   });
@@ -677,18 +670,18 @@
               function actualizarMaestroHogarVGF() {
 
                   id = id.substring(8);
-                  //          alert(id + " " + this.id);
+                  
                   rbClick = true;
                   var div = $('#maestroHogar');
 
-                  //        alert('xxxxx');
+                  
                   $.ajax(
                        {
-                           //type: 'POST',
+                           
                            data: { idVictima: "", opcion: '3' },
                            dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
                            url: '@Url.Action("actualizarMaestroHogar", "ConformacionHogar")',
-                           //URL del action result que cargara la vista parcial
+                           
                            success: function (result) {
                                //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
                                document.getElementById("maestroHogar").innerHTML = "";
@@ -697,7 +690,7 @@
 
                            },
                            error: function (error) {
-                               // si hay un error lanzara el mensaje de error
+                               
                                alert('Se presento un error al actualizar la estructura del hogar.');
                            }
                        });
@@ -879,7 +872,6 @@
 
                   }
                         //Comentado andres quintero el 21/10/2019, esta validación es para verificar el check de jefe de hogar
-                       /*if ($("input[name='jefeHogar']:checked").length > 0) {*/
                            $('input:radio[name="codigoHogar"]').filter('[value="No"]').prop('checked', true);
                            $('#divCodHogar').hide();
                            $("#dialog3").dialog(
@@ -925,11 +917,6 @@
 
                                                    }
                            );
-                       /*}
-                       // comentado andres quintero el 21/10/2019
-                       else {
-                           alert('Por favor seleccione a una persona como Responsable del Hogar.')
-                       }*/
 
               });
 
@@ -946,8 +933,6 @@
                                                    height: opcionDialogoGrupo == 1 ? 130 : 160,
                                                    width: 450,
                                                    dialogClass: 'dialog butonAlert',
-                                                   // html :mensaje,
-                                                   // shadow: true,
                                                    show: { effect: 'drop', direction: "up" },
                                                    modal: true,
                                                    draggable: false,
@@ -956,7 +941,6 @@
                                                        "Si": function () {
                                                            $(this).dialog("close");
                                                            enrutarOpcionDialogo();
-                                                           //actualizarMaestroHogarVGF();
                                                        },
                                                        "No": function () {
                                                            $(this).dialog("close");

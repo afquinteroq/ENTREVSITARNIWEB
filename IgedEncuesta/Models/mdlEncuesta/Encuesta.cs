@@ -24,7 +24,7 @@ namespace AdministracionInstrumentos
             baseDatos = new mdlGenerico();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("p_IdUsuario", 1, "System.Int32", idUsuario));
@@ -48,13 +48,13 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                Console.WriteLine(ex.Message);
 
             }
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
+                
             }
             return campoDevuelto;
 
@@ -72,7 +72,7 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                Console.WriteLine(ex.Message);
 
             }
             finally
@@ -113,8 +113,9 @@ namespace AdministracionInstrumentos
                 datos.InsertarConProcedimientoAlmacenado(funcion, ref param);
                  codigo = param.Find(x => x.Nombre == "p_Salida").Valor;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
             finally
@@ -144,8 +145,9 @@ namespace AdministracionInstrumentos
             {
              respuesta = datos.actualizarSesion("GIC_VARIABLE_SESION", campo, idUsuario.ToString(), valor);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
             finally
@@ -169,8 +171,9 @@ namespace AdministracionInstrumentos
                 datos.MotorBasedatos = true;
                 datos.eliminarSesion("GIC_VARIABLE_SESION",idUsuario);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
             finally
@@ -189,8 +192,9 @@ namespace AdministracionInstrumentos
                 datos.MotorBasedatos = true;
                 datos.insertarSesion("GIC_VARIABLE_SESION", idUsuario, variables);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
             finally
@@ -217,6 +221,7 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return fecha;
             }
             finally

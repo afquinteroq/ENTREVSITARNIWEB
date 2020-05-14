@@ -48,7 +48,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarPersonasModeloINntegrado(string IdPersona)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -117,12 +117,12 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public HechosPersona hechosVictimizantes(string IdPersona)
         {
-            
-            DataSet dsHechos = new DataSet(); 
+
+            DataSet dsHechos = null;
             DataSet dsUltimaFecha = new DataSet();
             dsHechos = consultarPersonasModeloINntegrado(IdPersona);
             HechosPersona hechos = new HechosPersona();
-            HechosPersona hechosUltima = new HechosPersona();
+            HechosPersona hechosUltima = null;
             IDataReader dataReader = null;
            
             if (dsHechos.Tables.Count > 0)

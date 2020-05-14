@@ -125,7 +125,6 @@
                 click: function () {
                     cargarArchivo();
                     $(this).dialog("close");
-                    // alert("clicked");
                 }
             }, {
                 text: "Cancelar",
@@ -138,7 +137,6 @@
                 id: "btnVerSopo",
                 click: function () {
                     generacionInforme();
-                    // $(this).dialog("close");
                 }
             }]
         });
@@ -152,7 +150,6 @@
         $.ajax({
             type: "GET",
             datatype: "json",
-            // traditional: true,
             contentType: "application/json; charset=utf-8",
             url: '@Url.Action("idEncuesta", "CargueSoporte")',
             data: { "codHogar": $("#txtCodigo").val() },
@@ -163,7 +160,7 @@
             }
 
         });
-        //alert($('#idEncuesta').val());
+        
         return codigo;
     }
 
@@ -173,7 +170,6 @@
         $.ajax({
             type: "GET",
             datatype: "json",
-            //traditional: true,
             contentType: "application/json; charset=utf-8",
             url: '@Url.Action("conteoSoporte", "CargueSoporte")',
             data: { "codHogar": $("#txtCodigo").val() },
@@ -191,16 +187,12 @@
 
         var data = new FormData();
         var files = $("#fileUpload").get(0).files;
-        //alert($("#txtCodigo").val());
         if (files.length > 0) {
             data.append("UploadedImage", files[0]);
 
             data.append("codHogar", $("#txtCodigo").val());
-            // Make Ajax request with the contentType = false, and procesDate = false
             var ajaxRequest = $.ajax({
                 type: "POST",
-                //url: "/api/fileupload/uploadfile",
-                //data: { "codHogar": $("#txtCodigo").val() },
                 url: '@Url.Action("cargarSoporte", "Encuesta")',
                 contentType: false,
                 processData: false,
@@ -208,13 +200,11 @@
             });
 
             ajaxRequest.done(function (xhr, textStatus) {
-                // Do other operation
                 $("#dialog-cargarSoporte").dialog('close');                
                 alert("Cargue exitoso de soporte.");
             });
 
             ajaxRequest.error(function (xhr, textStatus) {
-                // Do other operation
                 alert("Error en el cargue. Verifique la ruta, donde se almacena el archivo");
             });
 
@@ -224,7 +214,6 @@
     }
 
     function generacionInforme() {
-        // alert("entro ge" + $('#codigoHog').val());
         window.location = 'CargueSoporte/DescargarSoporte?codigoHogar=' + $("#txtCodigo").val();
 
     }

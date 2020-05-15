@@ -438,7 +438,6 @@ namespace IgedEncuesta.Controllers
                 lst.Add(new SelectListItem() { Text = "MIEMBRO HOGAR", Value = "4" });
 
                 ViewBag.Opciones = lst;
-                ////
 
                 return PartialView("_GrupoVictima", modeloHogar);
             }
@@ -488,7 +487,6 @@ namespace IgedEncuesta.Controllers
                 lst.Add(new SelectListItem() { Text = "MIEMBRO HOGAR", Value = "4" });
 
                 ViewBag.Opciones = lst;
-                ////
 
                 return PartialView("_GrupoVictima", modeloHogar);
             }
@@ -611,9 +609,9 @@ namespace IgedEncuesta.Controllers
             try
             {
                 ViewBag.CerrarVentana = false;
-                DataSet dsSalida = new DataSet();
+                //DataSet dsSalida = new DataSet();
                 Victima victima = new Victima();
-                List<Victima> coleccion = new List<Victima>();
+                //List<Victima> coleccion = new List<Victima>();
                 List<Victima> modeloHogar = new List<Victima>();
                 var modeloHogarJson = objSesion.getValorCampoSesion("MODELOHOGAR", userIdApp);
                 if (String.IsNullOrEmpty(modeloHogarJson))
@@ -1096,13 +1094,7 @@ namespace IgedEncuesta.Controllers
                     }
                     else
                         idPersona = item.ID_TBPERSONA;
-
-                    //JOSE VASQUEZ FECHA: NOV.11.2015
-                    //Insertar Relación tabla intermedia RUV y Personas (Caracterizacion)
-                    //item.Insertar_TIntermedia_RUV_y_Personas();
-                    //FIN CAMBIO JOSE VASQUEZ FECHA: NOV.11.2015
-                    // log.Error("MIEMBORA HOGAR IDPERSONA " + idPersona);
-                    //log.Error("MIEMBORA HOGAR HOGAR " + idHogar);
+                    
                     if (item.TIPO_PERSONA.Equals(""))
                     {
                         item.JEFE_HOGAR = false;
@@ -1145,7 +1137,7 @@ namespace IgedEncuesta.Controllers
                     }
                     
                     objHogar.insertarHechosVictima(idPersona, item, idHogar);
-                    //objHogar.insertarValidadorTiPerfil(idPersona, idHogar, PERFILES, "1");
+                    
 
 
                 }

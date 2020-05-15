@@ -1135,7 +1135,7 @@ namespace IgedEncuesta.Controllers
                     var guid = datosSol.insertaArchivoSoportes(datosSol, sguid);
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "SYSGUID", guid);
 
-                    string sys = objSesion.getValorCampoSesion("SYSGUID", userIdApp);
+                    //string sys = objSesion.getValorCampoSesion("SYSGUID", userIdApp);
 
                     httpPostedFile.SaveAs(fileSavePath);
                 }

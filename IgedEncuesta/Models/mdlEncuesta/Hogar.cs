@@ -271,7 +271,7 @@ namespace IgedEncuesta.Models.Hogar
 
         }
 
-        public void insertarValidadorPorEstado(string idPersona, string idHogar, string estado, string idInstrumento)
+        public void insertarValidadorPorEstado(string idPersona, string idHogar, string estado, string tipopersona, string idInstrumento)
         {
             List<Parametros> param = new List<Parametros>();
             AccesoDatos.ConsultasParticulares datos = new AccesoDatos.ConsultasParticulares();
@@ -282,6 +282,7 @@ namespace IgedEncuesta.Models.Hogar
                 param.Add(asignarParametro("IDPERSONA", 1, "System.Int32", idPersona));
                 param.Add(asignarParametro("CODHOGAR", 1, "System.String", idHogar));
                 param.Add(asignarParametro("VALIDADOR", 1, "System.String", estado));
+                param.Add(asignarParametro("VALIDADOR_TIPOPERSONA", 1, "System.String", tipopersona));
                 param.Add(asignarParametro("IDINSTRUMENTO", 1, "System.Int32", idInstrumento));
                 datos.ConsultarConProcedimientoAlmacenadoValores("GIC_CATEGORIZACION.GIC_INSERT_VALIDADOR_HOGAR", ref param);
             }

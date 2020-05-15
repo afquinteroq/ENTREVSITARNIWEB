@@ -1126,34 +1126,25 @@ namespace IgedEncuesta.Controllers
 
                     objHogar.insertarMiembrosPorHogar(idHogar, idPersona, item.JEFE_HOGAR ? "SI" : "", Usuario, userIdApp);
 
-                    // Insertar Validador Estado Victima
-                    objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "1");
-                    
-
-                    //JOSE VASQUEZ FECHA: NOV.05.2015
-                    //Insertar hechos victimizantes
-                    objHogar.insertarHechosVictima(idPersona, item, idHogar);
-                    //FIN CAMBIO JOSE VASQUEZ FECHA: NOV.05.2015
-
-                    //Andrés Quintero 21/10/2019
-                    //Inserta tipo persona
+                    // Insertar Validador Estado Victima y validador tipopersona
                     if (item.TIPO_PERSONA.Equals("1"))
                     {
-                        objHogar.insertarValidadorTipoPersona(idPersona, idHogar, "5001", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5001", "1");
                     }
                     if (item.TIPO_PERSONA.Equals("2"))
                     {
-                        objHogar.insertarValidadorTipoPersona(idPersona, idHogar, "5002", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5002", "1");
                     }
                     if (item.TIPO_PERSONA.Equals("3"))
                     {
-                        objHogar.insertarValidadorTipoPersona(idPersona, idHogar, "5003", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5003", "1");
                     }
                     if (item.TIPO_PERSONA.Equals("4"))
                     {
-                        objHogar.insertarValidadorTipoPersona(idPersona, idHogar, "5004", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5004", "1");
                     }
-
+                    
+                    objHogar.insertarHechosVictima(idPersona, item, idHogar);
                     objHogar.insertarValidadorTiPerfil(idPersona, idHogar, PERFILES, "1");
 
 

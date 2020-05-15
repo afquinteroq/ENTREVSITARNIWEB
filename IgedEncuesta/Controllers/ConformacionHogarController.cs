@@ -1129,23 +1129,23 @@ namespace IgedEncuesta.Controllers
                     // Insertar Validador Estado Victima y validador tipopersona
                     if (item.TIPO_PERSONA.Equals("1"))
                     {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5001", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5001", PERFILES, "1");
                     }
                     if (item.TIPO_PERSONA.Equals("2"))
                     {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5002", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5002", PERFILES, "1");
                     }
                     if (item.TIPO_PERSONA.Equals("3"))
                     {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5003", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5003", PERFILES, "1");
                     }
                     if (item.TIPO_PERSONA.Equals("4"))
                     {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5004", "1");
+                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5004", PERFILES, "1");
                     }
                     
                     objHogar.insertarHechosVictima(idPersona, item, idHogar);
-                    objHogar.insertarValidadorTiPerfil(idPersona, idHogar, PERFILES, "1");
+                    //objHogar.insertarValidadorTiPerfil(idPersona, idHogar, PERFILES, "1");
 
 
                 }

@@ -1,6 +1,5 @@
 ﻿using ObjetosTipos;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using IgedEncuesta.Models.mdlGenerico;
@@ -45,7 +44,7 @@ namespace AdministracionInstrumentos
             baseDatos = new mdlGenerico();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("pCOD_HOGAR", 1, "System.String", codHogar.ToString()));
@@ -55,7 +54,6 @@ namespace AdministracionInstrumentos
             try
             {
                
-               // using (IDataReader dataReader = dbahe.ExecuteReader("GIC_CARACTERIZACION.GIC_SP_GET_PERSONAENCUESTADA", new object[] { codHogar, new object[] { null } }))
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -70,13 +68,11 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
-
+                Console.WriteLine(ex.Message);
             }
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
             }
             return idPersona;
 
@@ -95,7 +91,7 @@ namespace AdministracionInstrumentos
             datos.Conexion = baseDatos.connStringCar;
             baseDatos = new mdlGenerico();
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             param.Add(baseDatos.asignarParametro("HOGCODIGO", 1, "System.String", hogCodigo));
@@ -123,9 +119,8 @@ namespace AdministracionInstrumentos
                     }
                 }
                 catch (Exception ex)
-                {
-                    ex.Message.ToString();
-
+                {   
+                    Console.WriteLine(ex.Message);
                 }
             }
             catch (Exception ex)
@@ -134,7 +129,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                
+                Console.WriteLine("");
             }
             return totalCT;
         }
@@ -166,7 +161,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
@@ -188,11 +183,11 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                Console.WriteLine(ex.Message);
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
 
             return total;
@@ -224,7 +219,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
@@ -240,7 +235,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             stored = "GIC_CATEGORIZACION.GIC_MIEMBROS_HOGAR";
@@ -249,7 +244,7 @@ namespace AdministracionInstrumentos
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
             try
             {
-                //using (IDataReader dataReader = dbahe.ExecuteReader("GIC_CATEGORIZACION.GIC_MIEMBROS_HOGAR", new object[] { cod_hogar, new object[] { null } }))
+                
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -288,7 +283,6 @@ namespace AdministracionInstrumentos
             finally
             {
                 datoConsulta.Dispose();
-                ////datos.Dispose();
             }
         }
 
@@ -314,15 +308,6 @@ namespace AdministracionInstrumentos
                 estado = datos.EjecutarFunciones(funcion, ref param);
                 return estado;
                 
-                /*string estado = "";
-                string funcion = "GIC_N_CARACTERIZACION.FN_ESTADO_ENCUESTA";
-                dbCommand = dbahe.GetStoredProcCommand(funcion);
-                dbahe.AddInParameter(dbCommand, "HOGCODIGO", DbType.String, hogCodigo);
-                dbahe.AddParameter(dbCommand, "RESULT", DbType.String, 1024, ParameterDirection.ReturnValue, false, 0, 0, null, DataRowVersion.Default, null);
-                dbahe.ExecuteNonQuery(dbCommand);
-                estado = dbCommand.Parameters[1].Value.ToString();
-                conn.Close();
-                return estado;*/
             }
             catch (Exception)
             {
@@ -330,13 +315,13 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
         public string generarCodigoFormularioNuevo(string usuario, int idUsuario)
         {
-            // DbConnection cnn = dbahe.CreateConnection();
+            
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -352,13 +337,14 @@ namespace AdministracionInstrumentos
                 codigo = datos.EjecutarFunciones(funcion, ref param);
                 return codigo;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
@@ -377,7 +363,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
         
             List<gic_ReporteMiembros> coleccion = new List<gic_ReporteMiembros>();
@@ -389,7 +375,7 @@ namespace AdministracionInstrumentos
 
                 try
                 {
-                    //using (IDataReader dataReader = dbahe.ExecuteReader("GIC_CATEGORIZACION.GIC_MIEMBROS_HOGAR", new object[] { cod_hogar, new object[] { null } }))
+                    
                     using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                     {
                         while (dataReader.Read())
@@ -424,12 +410,12 @@ namespace AdministracionInstrumentos
                 }
                 catch (Exception)
                 {
-
+                    Console.WriteLine("");
                     throw;
-            }
+                }
             finally
             {
-                ////datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
             
@@ -462,7 +448,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
@@ -487,15 +473,6 @@ namespace AdministracionInstrumentos
                 param.Add(baseDatos.asignarParametro("HOGCODIGO", 1, "System.String", hogCodigo.ToString()));
                 estado = datos.EjecutarFunciones(funcion, ref param);
                 return estado;
-                //string estado = "";
-                //string funcion = "GIC_N_CARACTERIZACION.FN_ID_ENCUESTA";
-                //dbCommand = dbahe.GetStoredProcCommand(funcion);
-                //dbahe.AddInParameter(dbCommand, "HOGCODIGO", DbType.String, hogCodigo);
-                //dbahe.AddParameter(dbCommand, "RESULT", DbType.String, 1024, ParameterDirection.ReturnValue, false, 0, 0, null, DataRowVersion.Default, null);
-                //dbahe.ExecuteNonQuery(dbCommand);
-                //estado = dbCommand.Parameters[1].Value.ToString();
-                //conn.Close();
-                //return estado;
             }
             catch (Exception)
             {
@@ -503,7 +480,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
@@ -532,7 +509,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                ////datos.Dispose();
+                Console.WriteLine("");
             }
         }
 
@@ -542,7 +519,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             param.Add(baseDatos.asignarParametro("CODHOGAR", 1, "System.String", codHogar.ToString()));
             param.Add(baseDatos.asignarParametro("CONTEO", 2, "System.Int32", ""));
@@ -553,11 +530,10 @@ namespace AdministracionInstrumentos
             }
             catch (Exception ex)
             {
-                ex.Message.ToString();
+                Console.WriteLine(ex.Message);
             }
             finally
             {
-                ////datos.Dispose();
                 datoConsulta.Dispose();
             }
 
@@ -570,7 +546,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             param.Add(baseDatos.asignarParametro("CODHOGAR", 1, "System.String", codHogar.ToString()));
             param.Add(baseDatos.asignarParametro("CONTEO", 2, "System.Int32", ""));
@@ -579,13 +555,12 @@ namespace AdministracionInstrumentos
                 datoConsulta = datos.ConsultarConProcedimientoAlmacenado("GIC_CATEGORIZACION.GIC_EXISTE_CONSTANCIAFIRMADA", ref param);
                 conteo = int.Parse(param.Find(x => x.Nombre == "CONTEO").Valor);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ex.Message.ToString();
+                Console.WriteLine(e.Message);
             }
             finally
             {
-                ////datos.Dispose();
                 datoConsulta.Dispose();
             }
 
@@ -610,13 +585,10 @@ namespace AdministracionInstrumentos
                 estado = datos.ActualizarConProcedimientoAlmacenado(funcion, ref param).ToString();
                 return estado;                
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return "";
-            }
-            finally
-            {
-                
             }
         }
 

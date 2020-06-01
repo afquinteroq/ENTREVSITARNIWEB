@@ -558,15 +558,10 @@ else
         var arrRespuestas = [];
         var separated = respuestas.split(",");
         arrRespuestas = convertArray(separated);
-        //console.log("id_" + idRespuesta);
         for (h = 0; h < arrRespuestas.length; h++) {
             if (document.getElementById('txt_' + arrRespuestas[h]) != null) {
-
-                //console.log("entro FOR_" + arrRespuestas[h]);
                 $('#txt_' + arrRespuestas[h]).hide('slow');
-                //document.getElementById('txt_' + arrRespuestas[h]).style.visibility = 'hidden';
                 $('#txt_' + arrRespuestas[h]).prop("required", false);
-                //desRequerido(arrRespuestas[h]);
             }
         }
 
@@ -589,17 +584,13 @@ else
 
 
         var id = obj.id.split("_");
-        //console.log("id_" + obj.id.split("_")[0]);
         var arrRespuestas = [];
         var arrPersonas = [];
         var separated = idRespuestas.split(",");
         var personas = idPersonas.split(",");
         arrRespuestas = convertArray(separated);
         arrPersonas = convertArray(personas);
-        // var idCampoTexto = id_obj.substring(16);
         var tipoControl = obj.id.split("_")[0];
-        //console.log("ID::" + campo);
-        //console.log("IDRESPUESTA::" + obj.checked);
         var idPer = id[3];
         var idRes = id[1];
         if (habilita == "SI" && obj.checked) {
@@ -609,17 +600,14 @@ else
                 habilitarCampoTextoRadio(arrPersonas, arrRespuestas, id_obj, obj, id, campo);
             }
         } else {
-            // console.log("entro");
             habilitarCampoTextoRadio(arrPersonas, arrRespuestas, id_obj, obj, id, campo);
         }
     }
 
     function deseleccionarOtrasPersonas(arrPersonas, idPersona, idRespuesta, tipoControl) {
         for (i = 0; i < arrPersonas.length; i++) {
-            // document.getElementById('MainContent__' + tipoControl + '_' + arrRespuestas[h] + "_PER_" + idPersona).disabled = true;
             if (arrPersonas[i] != idPersona) {
                 if ($("#" + tipoControl + '_' + idRespuesta + "_per_" + arrPersonas[i] + "").is(":checked")) {
-                    //console.log("tipocontrol_" + tipoControl + "_idrespuesta_" + idRespuesta + "_personaId_" + arrPersonas[i]);
                     document.getElementById(tipoControl + '_' + idRespuesta + "_per_" + arrPersonas[i]).checked = false;
                 }
                  $('#txt_' + +idRespuesta + "_per_" + arrPersonas[i]).hide('slow');
@@ -638,7 +626,6 @@ else
         for (i = 0; i < arrPersonas.length; i++) {
             for (h = 0; h < arrRespuestas.length; h++) {
                 if (document.getElementById('txt_' + arrRespuestas[h] + "_per_" + arrPersonas[i]) != null) {
-                    //console.log(arrRespuestas[h]);
                     if (id[3] == arrPersonas[i]) {
 
                         $('#txt_' + +arrRespuestas[h] + "_per_" + arrPersonas[i]).hide('slow');
@@ -659,11 +646,8 @@ else
                     } else {
                         $('#' + id_obj).hide('slow');
                     }
-                    // console.log(id_obj);
                     $('#' + id_obj).prop("required", true);
-                    // habilitarRequerido(idCampoTexto);
                 }
-                //document.getElementById('MainContent_val_' + idPregunta + "_PER_" + arrPersonas[i]).style.visibility = 'hidden';
             }
         }
 

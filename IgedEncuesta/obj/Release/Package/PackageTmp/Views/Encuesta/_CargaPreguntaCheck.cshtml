@@ -697,15 +697,15 @@ else
         var arrRespuestas = [];
         var repuestas = idRespuestas.split(",");
         arrRespuestas = convertArray(repuestas);
-        //console.log("idRes_" + idRes);
+        
         var tipoControl = "chl";
         if (habilita == "SI" && obj.checked) {
-            // console.log("entro desha");
+            
             deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl);
             habilitaCampoTextoGeneral(obj, id_obj, idRes, campo, arrRespuestas, tipoControl);
             // document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
         } else {
-            //  console.log("idRes_" + id_obj);
+            
             habilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl);
             habilitaCampoTextoGeneral(obj, id_obj, idRes, campo, arrRespuestas, tipoControl);
         }
@@ -713,11 +713,9 @@ else
     }
 
     function habilitaCampoTextoGeneral(obj, campoTexto, idRespuesta, campo, arrRespuestas, tipoControl) {
-        //console.log("campo_" + campo);
+        
         if (campo == "AB") {
             if (obj.checked) {
-                /*   console.log("campoTextto_" + idRespuesta);
-                   console.log("objeto_" + obj.id);*/
                 if (campoTexto != "") {
                     $('#' + campoTexto).show('slow');
                     //$('#'+campoTexto).css('visibility', 'visible').fadeIn( 5000 );
@@ -736,23 +734,14 @@ else
                     $('#txt_' + idRespuesta).prop("required", false);
                     $('#txt_' + idRespuesta).removeClass("requerido");
                 }
-                //if (verificarControlCheked(arrRespuestas, "", tipoControl) == false) {
-                //    //      console.log("ELSE VAL FALSE_" + idPregunta + "_PER_" + idPersona);
-                //    //document.getElementById('MainContent_val_' + idPregunta + "_PER_" + idPersona).style.visibility = 'visible';
-                //    //document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'visible';
-                //}
             }
         } else {
-            //console.log("ELSE VAL FALSE_" + idPregunta);
-            //document.getElementById('MainContent_val_' + idPregunta).style.visibility = 'hidden';
-            // deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl)
         }
     }
 
     function habilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl) {
         var controlDes;
         for (i = 0; i < arrRespuestas.length; i++) {
-            //   console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
             var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
             controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
             if (controlDes != null) {
@@ -764,12 +753,12 @@ else
     function deshabilitarControlesGeneral(arrRespuestas, idRespuesta, tipoControl) {
         var controlDes;
         for (i = 0; i < arrRespuestas.length; i++) {
-            //console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
+            
             if (arrRespuestas[i] != idRespuesta) {
                 var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
                 controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i]);
                 if (controlDes != null) {
-                    //   console.log("entro");
+                    
                     document.getElementById(tipoControl + '_' + arrRespuestas[i]).disabled = true;
                     document.getElementById(tipoControl + '_' + arrRespuestas[i]).checked = false;
                 }
@@ -792,24 +781,22 @@ else
 
         var arrPersonas = [];
         var id = obj.id.split("_");
-        // var objetoTexto = id_obj;
-        //console.log("objetoTexto_" + id_obj);
         var personas = idPersonas.split(",");
         arrPersonas = convertArray(personas);
         var idCampoTexto = id_obj.substring(16);
-        // var idRespuesta = id_obj.substring(16, 17);
+        
         var tipoControl = "chl";
         var idPersona = id[3];
-        //console.log("ID::" + idRespuesta + "idRespuesta[1]" + idRespuestas + "_HABILITA_" + habilita);
+        
         var arrRespuestas = [];
         var repuestas = idRespuestas.split(",");
         arrRespuestas = convertArray(repuestas);
         if (habilita == "SI" && obj.checked) {
             deshabilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl);
-            //console.log("objetoTextoENTRO_" + objetoTexto);
+            
             habilitaCampoTextoIndividual(obj, arrPersonas, idPersona, id_obj, idCampoTexto, arrRespuestas, campo, idRespuesta, tipoControl);
         } else {
-            //console.log("entroHabilitar");
+            
             habilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl);
             habilitaCampoTextoIndividual(obj, arrPersonas, idPersona, id_obj, idCampoTexto, arrRespuestas, campo, idRespuesta, tipoControl);
         }
@@ -819,11 +806,11 @@ else
 
 
         for (i = 0; i < arrRespuestas.length; i++) {
-            //  console.log("IDRESPUESTA" + idRespuesta + "RESPUESTAS_" + arrRespuestas[i]);
+            
             if (arrRespuestas[i] != idRespuesta) {
                 var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
                 var controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
-                //  console.log("CONTRODES_" + controlDes);
+                
                 if (controlDes != null) {
                     document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).disabled = true;
                     document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).checked = false;
@@ -849,23 +836,19 @@ else
             if (idPersona == arrPersonas[i]) {
                 if (obj.checked) {
                     if (campo == "AB") {
-                        //console.log("OBJETO_TEXTOSS_" + objetoTexto + "_habilitarRequerido_" + idCampoTexto);
+                        
                         if (objetoTexto != "") {
                             $('#' + objetoTexto).show('slow');
-                            //document.getElementById(objetoTexto).style.visibility = 'visible';
                         }
                     }
-                    // console.log("habilitar::" + objetoTexto);
                     $('#' + objetoTexto).prop("required", true);
                     $('#' + objetoTexto).addClass("requerido");
 
                     ;
                 } else {
                     if (campo == "AB") {
-                        //   console.log("OBJETO_TEXTO_ELSE_" + objetoTexto);
                         if (objetoTexto != "") {
                             $('#' + objetoTexto).hide('slow');
-                            //document.getElementById(objetoTexto).style.visibility = 'hidden';
                         }
                     }
                     $('#' + objetoTexto).prop("required", false);
@@ -877,16 +860,16 @@ else
 
     function habilitarControles(idPersona, arrRespuestas, idRespuesta, tipoControl) {
         var controlDes;
-        // console.log("respuestas_" + idRespuestas + "_persona_" + idHab);
+        
         for (i = 0; i < arrRespuestas.length; i++) {
-            // 
+            
             var isCheckedInicial = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
             controlDes = document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona);
-            // console.log("CONTROL" + controlDes);
+            
             if (controlDes != null) {
                 document.getElementById(tipoControl + '_' + arrRespuestas[i] + "_per_" + idPersona).disabled = false;
             }
-            //$("#MainContent__chl_" + arrRespuestas[i] + "_PER_" + idHab + " input:checkbox").attr("disabled", "disabled");
+            
         }
 
     }

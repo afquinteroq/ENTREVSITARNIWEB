@@ -19,8 +19,6 @@
     var listadDepartamentosDT = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SelectListItem>>(departamentosDTJson);
     var listaPuntosAtecion = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SelectListItem>>(puntosatecionJson);
     var listaMunicipio = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SelectListItem>>(puntosatecionJson);
-    //var listaDepartamentos = (List<SelectListItem>)TempData["LISTADEPARTAMENTOS"];
-    //var listaMunicipios = (List<SelectListItem>)TempData["LISTAMUNICIPIOS"];
     var OpcionRespuestaGen = Model.opcionesRespuesta.FirstOrDefault();
     string nombres = string.Empty;
     string valorCampoTexto = string.Empty;
@@ -74,10 +72,7 @@
                 {
                     if (Model.preguntaXpersonaGen.pre_IdPregunta == Model.respuestaPreguntaGen.res_IdRespuesta.pre_IdPregunta.pre_IdPregunta)
                     {
-                        //txt.Text = coleccionRespuestas.rxp_TextoRespuesta;
-                        //municipios = pregunta.datosMunicipios("0");
-                        //SelectMunicipios = pregunta.CrearLista(municipios, 2);
-
+                        
                         municipio = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
                         if (Model.respuestaPreguntaGen.rxp_TextoRespuesta.Count() == 4)
                         {
@@ -89,7 +84,7 @@
                         }
                         municipios = preguntaT.datosMunicipios(departamento);
                         listaMunicipios = preguntaT.CrearLista(municipios, 2);
-                        //departamento = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
+                        
                     }
                 }
                 <tr>
@@ -132,31 +127,7 @@
                             </tr>
                         </table>
                     </td>
-                    @*                  <td style="width: 30%;">
-                                @Html.Label("Departamento", new { @style = "text-transform:uppercase; font-size:12px; font-weight:normal; width:210px;text-align:center;" })
-
-                            </td>
-                            <td style="width: 70%;">
-                                @Html.DropDownList("D_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString(), listaDepartamentos.Select(u => new SelectListItem
-                           {
-                               Text = u.Text,
-                               Value = u.Value,
-                               Selected = u.Value == departamento
-                           }), new { required = "required", style = "", @class = "dropDownList requerido drop", id = "D_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString() })
-                                </td>
-                        </tr>
-                        <tr>
-                            <td style="width: 30%;">
-                                @Html.Label("Municipio", new { @style = "text-transform:uppercase; font-size:12px; font-weight:normal; width:210px;text-align:center;" })
-                                 </td>
-                           <td style="width: 70%;" >
-                                @Html.DropDownList("M_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString(), listaMunicipios.Select(y => new SelectListItem
-                           {
-                               Text = y.Text,
-                               Value = y.Value,
-                               Selected = y.Value == municipio
-                           }), new { disabled = "", required = "required", style = "", @class = "dropDownList requerido ", id = "M_" + Model.preguntaXpersonaGen.pre_IdPregunta.ToString() })
-                            </td>*@
+                    
                 </tr>
             }
         }
@@ -297,7 +268,7 @@
                             {
                                 if (Model.preguntaXpersonaGen.pre_IdPregunta == Model.respuestaPreguntaGen.res_IdRespuesta.pre_IdPregunta.pre_IdPregunta)
                                 {
-                                    //txt.Text = coleccionRespuestas.rxp_TextoRespuesta;
+                                    
                                     valorTexto = Model.respuestaPreguntaGen.rxp_TextoRespuesta;
 
                                 }
@@ -402,15 +373,15 @@
                                     }
                                     if (Model.preguntaXpersonaGen.pre_IdPregunta == 27)
                                     {
-                                        //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... Model.preguntaXpersonaGen.pre_IdPregunta == 27 ", personas.per_fechaNacimiento.ToShortDateString());
+                                        
                                         if (personas.per_fechaNacimiento == null || string.IsNullOrEmpty(personas.per_fechaNacimiento.ToShortDateString()))
                                         {
-                                            //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... Model.preguntaXpersonaGen.pre_IdPregunta == 27 ", "valorCampoTexto = string.Empty");
+                                            
                                             valorCampoTexto = string.Empty;
                                         }
                                         else
                                         {
-                                            //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... Model.preguntaXpersonaGen.pre_IdPregunta == 27 ", "valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString()");
+                                            
                                             valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString();
                                             dtPregunta = personas.per_fechaNacimiento;
                                         }
@@ -427,31 +398,18 @@
                                             valorCampoTexto = personas.per_NumeroDoc.Trim();
                                         }
                                     }
-                                    /*
-                                    if (Model.preguntaXpersonaGen.pre_IdPregunta == 27)
-                                    {
-
-                                        if (personas.per_fechaNacimiento.ToString() == "&nbsp;" || string.IsNullOrEmpty(personas.per_fechaNacimiento.ToString()))
-                                        {
-                                            valorCampoTexto = string.Empty;
-                                        }
-                                        else
-                                        {
-                                            valorCampoTexto = personas.per_fechaNacimiento.ToString();
-                                        }
-                                    }*/
 
                                     if (Model.preguntaXpersonaGen.pre_IdPregunta == 11)
                                     {
-                                        // IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... if (Model.preguntaXpersonaGen.pre_IdPregunta == 11)", personas.per_fechaNacimiento.ToShortDateString());
+                                        
                                         if (personas.per_fechaNacimiento == null || string.IsNullOrEmpty(personas.per_fechaNacimiento.ToShortDateString()))
                                         {
-                                            //IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... ", "valorCampoTexto = string.Empty");
+                                            
                                             valorCampoTexto = string.Empty;
                                         }
                                         else
                                         {
-                                            // IgedEncuesta.Models.mdlGenerico.Tool.EscribeLog("from _CargarPreguntaTexto .... ", "valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString();");
+                                            
                                             valorCampoTexto = personas.per_fechaNacimiento.ToShortDateString();
                                             dtPregunta = personas.per_fechaNacimiento;
                                         }
@@ -485,7 +443,7 @@
                                         {
                                             if (resEn.per_IdPersona == personas.per_IdPersona)
                                             {
-                                                //cambio para las respuestas por edades, bug al devolverse traia la respuesta que estaba guardada y no la que calculaba la edad.
+                                                
                                                 if (resEn.res_IdRespuesta.res_IdRespuesta != 23)
                                                 {
                                                     valorCampoTexto = HttpUtility.HtmlDecode(resEn.rxp_TextoRespuesta);
@@ -918,41 +876,19 @@ if (validarControl == true)
 
             }
 
-
-
         </div>
 }
 }
 
 <script type="text/javascript">
 
-
-
-
-    //onkeypress ="prueba(this,"+10+");",
-
-
     window.confirm = function (message) {
-
         $(document.createElement('div'))
             .attr({ 'class': 'dialog' })
             .html(message)
-        //.dialog({
-        //    close: function () { $(this).remove(); },
-        //    resizable: false,
-        //    height: 150,
-        //    width: 300,
-        //    show: { effect: 'drop', direction: "up" },
-        //    modal: true,
-        //    draggable: false,
-        //    dialogClass: 'dialog butonAlert',
-        //    hide: 'explode'
-        //});
     };
 
-
     function validarEdadPersona(edad, objeto) {
-        //console.log("valor:" + $(objeto).val());
         if ($(objeto).val() > edad) {
             alert("El valor registrado no debe ser mayor a " + edad + " que corresponde a la edad de la persona.");
             $(objeto).val("");
@@ -970,7 +906,6 @@ if (validarControl == true)
     }
 
     function validarAñosEstadia(edad, objeto) {
-        //console.log("valor:" + $(objeto).val());
         var anios = parseInt($(objeto).val());
         if (anios > edad) {
             alert("El valor registrado no debe ser mayor a " + edad + " que corresponde a la edad de la persona.");
@@ -979,16 +914,13 @@ if (validarControl == true)
     }
 
     function validarMiembrosHogar(miembros, objeto) {
-        //console.log("valor:" + $(objeto).val());
         if ($(objeto).val() > miembros) {
-            //alert("El valor registrado no debe ser mayor a " + edad + " que corresponde a la edad de la persona.");
             alert("El valor registrado debe ser mayor o igual a " + miembros + " que corresponde al número de miembros del hogar registrados.");
             $(objeto).val("");
         }
     }
 
     function confirmacionCambioCedula(cedula, objeto) {
-        //console.log("valor:" + $(objeto).val());
         if ($(objeto).val() != cedula) {
             alert("La cedula que viene del registro es " + cedula + " Desea modificarla? recuerde que cambiara la cedula del registro original ");
 
@@ -996,7 +928,6 @@ if (validarControl == true)
     }
 
     function confirmacionFechaNacimiento(fechanacimiento, objeto) {
-        //console.log("valor:" + $(objeto).val());
         if ($(objeto).val() != fechanacimiento) {
             alert("La cedula que viene del registro es " + cedula + " Desea modificarla? recuerde que cambiara la cedula del registro original ");
 
@@ -1006,27 +937,21 @@ if (validarControl == true)
     $(".drop").change(function () {
 
         var id = $(this).attr('id').split('_');
-        //console.log(id[1]);
-        console.log($(this).val());
         fillComboMunicipios("M_" + id[1], $(this).val());
     });
 
     function fillComboMunicipios(updateId, value) {
-        //alert(updateId);
         $.getJSON("@Url.Action("MunicipiosPorDepartamento")" + "/" + value,
                   function (data) {
                       $("#" + updateId).empty();
                       $.each(data, function (i, item) {
-                          //  console.log("value" + item.Value);
                           $("#" + updateId).append("<option value='" + item.Value + "'>" + item.Text + "</option>");
                       });
 
                       $("#" + updateId).prop("disabled", false);
                   });
     }
-
-
-    //27/02/2020
+    
     $(".guardaultimodatoseleccionado").change(function () {
         
         var id = $(this).attr('id').split('_');
@@ -1051,14 +976,10 @@ if (validarControl == true)
     });
 
     function fillDepartamento(updateId, value) {
-        
-        
-        console.log(value);
         $.getJSON("@Url.Action("dtsDepartamentoPorDT")" + "/" + value,
                   function (data) {
                       $("#" + updateId).empty();
                       $.each(data, function (i, item) {
-                          //  console.log("value" + item.Value);
                           $("#" + updateId).append("<option value='" + item.Value + "'>" + item.Text + "</option>");
                       });
 
@@ -1067,42 +988,16 @@ if (validarControl == true)
 
     }
 
-
-    @*$(".dropterritorial").change(function () {
-
-        var id = $(this).attr('id').split('_');
-        console.log('Entro a dropterritorial id TERRITORIAL => ' + "DI_" + id[1] +' '+ $(this).val());
-        fillTerritorial("DI_" + id[1], $(this).val());
-    });
-
-    function fillTerritorial(updateId, value) {
-        $.getJSON("@Url.Action("dtsPorDepartamento")" + "/" + value,
-                  function (data) {
-                      $("#" + updateId).empty();
-                      $.each(data, function (i, item) {
-                          $("#" + updateId).append("<option value='" + item.Value + "'>" + item.Text + "</option>");
-                      });
-
-                      $("#" + updateId).prop("disabled", false);
-                  });
-
-    }*@
-
-
     $(".droppuntoatencion").change(function () {
-
         var id = $(this).attr('id').split('_');
-        //console.log("Entro a droppuntoatencion " + 'ID PUENTO ATENCIÓN => '+' '+"PA_" + id[1] +' '+ $(this).val());
         fillPuntoAtencion("PA_" + id[1], $(this).val());
     });
 
     function fillPuntoAtencion(updateId, value) {
-        //alert(updateId);
         $.getJSON("@Url.Action("puntoatencionpordt")" + "/" + value,
                   function (data) {
                       $("#" + updateId).empty();
                       $.each(data, function (i, item) {
-                          //  console.log("value" + item.Value);
                           $("#" + updateId).append("<option value='" + item.Value + "'>" + item.Text + "</option>");
                       });
 
@@ -1119,12 +1014,10 @@ if (validarControl == true)
     });
 
     function fillMunicipio(updateId, value) {
-        //alert(updateId);
         $.getJSON("@Url.Action("municipioporpuntoatencion")" + "/" + value,
                   function (data) {
                       $("#" + updateId).empty();
                       $.each(data, function (i, item) {
-                           console.log("value" + item.Value);
                           $("#" + updateId).append("<option value='" + item.Value + "'>" + item.Text + "</option>");
                       });
 
@@ -1138,10 +1031,8 @@ if (validarControl == true)
     $(function () {
 
         $(".autocompletar").autocomplete({
-
             source: '@Url.Action("AutoCompletarTexto", "Encuesta")',
             minLength: 3,
-
         });
     });
 

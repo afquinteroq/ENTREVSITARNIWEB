@@ -68,7 +68,6 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-           // DataSet datoConsulta = new DataSet();
             List<Parametros> param;
             try
             {
@@ -85,19 +84,14 @@ namespace AdministracionInstrumentos
                 param.Add(baseDatos.asignarParametro("pper_idPreguntaPadre", 1, "System.Int32", idPregunta.ToString()));
                 param.Add(baseDatos.asignarParametro("pbandera", 1, "System.Int32", m.bandera.ToString()));                
                 datos.InsertarConProcedimientoAlmacenado("GIC_N_CARACTERIZACION.SP_SET_RESPUESTAS_DE_ENCUESTA", ref param);                
-
-               // dbCommand = dbahe.GetStoredProcCommand("GIC_N_CARACTERIZACION.SP_SET_RESPUESTAS_DE_ENCUESTA");
-
-                    //cnn.Close();
+               
                 }
             
-                //tran.Commit();
-                //cnn.Close();
+                
             }
             catch (Exception ex)
             {
-                //tran.Rollback();
-                //cnn.Close();
+                
                 throw new System.ArgumentException("ERROR AL ALMACENAR INFORMACION." + ex.Message);
             }
             finally
@@ -120,7 +114,7 @@ namespace AdministracionInstrumentos
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             datos.Conexion = baseDatos.connStringCar;
             datos.MotorBasedatos = true;
-            DataSet datoConsulta = new DataSet();
+            DataSet datoConsulta = null;
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;
             stored = "GIC_N_CARACTERIZACION.SP_GET_RESPUESTAXPREGUNTA";
@@ -130,7 +124,7 @@ namespace AdministracionInstrumentos
             datoConsulta = datos.ConsultarConProcedimientoAlmacenado(stored, ref param);
             try
             {
-                //using (IDataReader dataReader = dbahe.ExecuteReader("GIC_N_CARACTERIZACION.SP_GET_RESPUESTAXPREGUNTA", new object[] { cod_hogar, idTema, new object[] { null } }))
+                
                 using (dataReader = datoConsulta.Tables[0].CreateDataReader())
                 {
                     while (dataReader.Read())
@@ -182,7 +176,7 @@ namespace AdministracionInstrumentos
             }
             finally
             {
-                //datos.Dispose();
+                
                 datoConsulta.Dispose();
             }
         }

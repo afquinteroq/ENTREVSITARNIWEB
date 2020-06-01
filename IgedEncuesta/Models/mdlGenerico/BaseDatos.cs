@@ -1,7 +1,5 @@
 ﻿using ObjetosTipos;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Web;
 
@@ -15,7 +13,6 @@ namespace IgedEncuesta.Models.mdlGenerico
         public string connStringCar = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionCaracterizacion"].ConnectionString;
         public string connStringMi = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
 
-        //public string connStringCarac = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionCar"].ConnectionString;
 
         public Parametros asignarParametro(string nombre, int direccion, string tipo, string valor)
         {

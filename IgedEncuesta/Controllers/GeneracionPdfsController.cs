@@ -1,8 +1,6 @@
 ﻿using AdministracionInstrumentos;
 using gic_ManipuladorPdf;
 using IgedEncuesta.Models.mdlConstancia;
-using IgedEncuesta.Models.mdlEncuesta;
-using IgedEncuesta.Models.mdlGenerico;
 using log4net;
 using log4net.Config;
 using SelectPdf;
@@ -10,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 
@@ -62,25 +58,25 @@ namespace IgedEncuesta.Controllers
             try
             {
                 Boolean val = false;
-                string codHogar = string.Empty;
+                
                 string Usuario = string.Empty;
                 string userIdApp;
                 userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 Usuario = Request.Cookies["SesionIged"]["USUARIO"].ToString();
                 int IdUsuario = 0;
                 IdUsuario = int.Parse(userIdApp);
-                gic_Hogar hogar = new gic_Hogar();
+                
                 man_ArchivoPdf pdf = new man_ArchivoPdf();
                 string rutaArchivo = string.Empty;
                 string nombreArchivo = string.Empty;                    
                 
                     val = pdf.descargarConstanciaSAAHSinFirmar("1", hogcodigo, out rutaArchivo);
-                    if (val == true) {
+                    if (val) {
                         pathsArchivos.Add(rutaArchivo);
                         nombreArchivo = "constancia_"+ hogcodigo + ".pdf";
                     }
 
-                if (val == true) {
+                if (val) {
                     Response.ContentType = "application/pdf";
                     Response.AppendHeader(
                       "Content-Disposition",
@@ -383,14 +379,18 @@ namespace IgedEncuesta.Controllers
             {
                 webPageWidth = System.Convert.ToInt32(webPageWidth);
             }
-            catch { }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
 
             int webPageHeight = 0;
             try
             {
                 webPageHeight = System.Convert.ToInt32(webPageHeight);
             }
-            catch { }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
 
             //         try { 
             // instantiate a html to pdf converter object
@@ -457,7 +457,7 @@ namespace IgedEncuesta.Controllers
 
                 Session["NombrePDF"] = fileName;
             } catch (Exception e) {
-                e.Message.ToString();
+                Console.WriteLine(e.Message);
             }            
 
             return RedirectToAction("Inicio", "ConformacionHogar");

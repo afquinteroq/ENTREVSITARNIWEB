@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-
-using iTextSharp;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Text.RegularExpressions;

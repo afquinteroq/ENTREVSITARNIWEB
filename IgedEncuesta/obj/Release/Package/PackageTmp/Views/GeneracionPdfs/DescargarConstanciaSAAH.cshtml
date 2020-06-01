@@ -46,10 +46,6 @@
                             <tr>                                
                                 <td>
                                     <br />
-                                    @*<div id="CargandoDatosMaestro" style="display: none;">                                        
-                                        <h5>Procesando por favor espere...</h5>
-                                        <img alt="" src="@Url.Content("~/Content/Imagenes/Cargando3.gif")" />
-                                    </div>*@
                                     <input type="button" name="btnDescargarConstanciaSinfirmar" value="Descargar Constancia Sin Firmar" id="btnDescargarConstanciaSinfirmar" style="margin: auto;width:250px" />
                                 </td>                                
                             </tr>
@@ -66,15 +62,6 @@
 
 
 <script type="text/javascript">
-
-
-    //$('#btnGenerarCostanciaSinFirmar').click(function (e) {
-    //    if ($("#formGeneracion")[0].checkValidity()) {
-    //        $('#formGeneracion').submit();
-    //        alert("Generación de cuestionario(s) exitosa.");
-    //    }
-
-    //});
 
     //andrés quintero 07/01/2020
     $(document).ajaxStop(function () {
@@ -95,29 +82,7 @@
         
         $("#mensajeError").html('');
         var p_hogcodigo = $("#hogcodigo").val();
-        //window.location.href = "/GeneracionPdfs/DescargarArchivoConstanciaSinFirmar" + "?hogcodigo=" + p_hogcodigo;
-        //window.location.href = "/GeneracionPdfs/DescargarArchivoConstanciaSinFirmar" + "?hogcodigo=" + p_hogcodigo;
         location.href = '@Url.Action("DescargarArchivoConstanciaSinFirmar", "GeneracionPdfs")?hogcodigo=' + p_hogcodigo;
-
-        @*$.ajax({
-            type: "GET",
-            //cache: false,
-            contentType: false,
-            datatype: "json",
-            //traditional: true,
-            data: { hogcodigo: p_hogcodigo},
-            url: '@Url.Action("DescargarArchivoConstanciSinFirmar", "GeneracionPdfs")',
-            success: function (result) {
-                window.location = "/GeneracionPdfs/DescargarArchivoConstanciSinFirmar" + "?p_hogcodigo=" + resultData.fName;
-                alert("Descarga constancia exitosa.");
-            }, error: function (result) {
-                alert("Código no existe.");
-            }
-
-        });*@
-
-
-
 
     });
 </script>

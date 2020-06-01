@@ -1,9 +1,6 @@
-﻿using AdministracionInstrumentos;
-using IgedEncuesta.Models.mdlGenerico;
-using System;
+﻿using IgedEncuesta.Models.mdlGenerico;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+
 using System.Web.Mvc;
 
 namespace IgedEncuesta.Controllers

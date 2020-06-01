@@ -1,9 +1,7 @@
 ﻿using AdministracionInstrumentos;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace IgedEncuesta.Controllers
@@ -40,7 +38,7 @@ namespace IgedEncuesta.Controllers
             int codigo = 0;
             gic_Hogar hogar = new gic_Hogar();
             codigo = hogar.existeColilla(codHogar);
-            //return codigo;
+            
             return Json(codigo, JsonRequestBehavior.AllowGet);
         }
 

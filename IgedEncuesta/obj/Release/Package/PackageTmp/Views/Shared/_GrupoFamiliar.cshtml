@@ -95,8 +95,6 @@ else
 
 
 <script type="text/javascript">
-    // alert(@Model.Count());
-    //   alert(@totalVictimas);
     var total = Number(@totalVictimas);
     var id = "";
     var idRef = '';
@@ -114,21 +112,12 @@ else
     }
 
     $('.incluir').click(function () {
-        // Valida que se hayan diligenciado los campos requeridos
-        // var camposValidos = true;
-
         idRef = $(this).attr("id");
-
         id = idRef.substring(8, idRef.indexOf('-'));
-        //alert('1');
-        //alert('id:' + id);
-
         var existe = false;
-
-        //alert('idRef:' + idRef);
         if (idRef != '')
         {
-            //alert('integranteGRupo:' + idRef.substring(idRef.indexOf('-') + 1));
+            
             if (idRef.substring(idRef.indexOf('-') + 1) != "") {
                 integranteGrupo = $("." + idRef.substring(idRef.indexOf('-') + 1));
                 if (integranteGrupo.length) existe = true;
@@ -136,60 +125,40 @@ else
             else existe = false;
         }
 
-        //alert('2');
-
         if (existe) {
-            // alert('El número de documento <b>' + id.substring(id.indexOf('|') + 1) + '</b> ya existe en la conformación del hogar.');
+            
             opcionDialogo = 4;
             ventanaConfirmacion('El número de documento <b>' + idRef.substring(idRef.indexOf('-') + 1) + '</b> ya existe en la conformación del hogar. ¿Esta seguro de incluir esta persona?');
-            // $('#txtNumDoc').val('');
-            //  $('#filaGridMaestro').hide('slow');
+            
             return;
 
         }
         else agregarVictimaIGF(id, idRef);
-
-        //agregarVictimaIGF(id) 
-        //   alert($(this).attr("id") + ' ' + $(this).attr("id").substring(8));
-        //$('#imgIncluir_' + id).hide(0);
-        //$('imgIncluir_' + id).attr("src", "xxx.png");
-
-        //$('#Incluir_' + id).bind('click', false);
-        // $('#imgIncluir_' + id).show(0);
-        //alert('paso');
-        //alert();
     });
 
     function agregarVictimaIGF(id, idRef) {
-        //if (idChequeados != '') {
-        //    document.getElementById("maestroHogar").innerHTML = "";
-        //    var div = $('#maestroHogar');
-
-        //     alert(consPersona);
-        //alert('3');
+        
         idPersona = $("#" + idRef).prop("name");
-      //  alert(id + ' * ' + idPersona);
-        //alert("IDTOTAL__"+idRef.substring(8));
         $.ajax(
              {
                  type: 'POST',
                  data: { idVictima: id, idPersona: idPersona },
                  dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
                  url: '@Url.Action("agregarMaestroHogarGF", "ConformacionHogar")',
-                 //URL del action result que cargara la vista parcial
+                 
                  success: function (result) {
                      //cuando se ejecuta bien la funcion agregara al div ajaxDiv el contenido que recibio del servidor
 
-                     //    $('#imgIncluir_' + id).hide(0);
+                     
                      $('#imgIncluir_' + id).attr("src", "@Url.Content("~/Content/Icons/check-3.png")");
-                     //    $('#imgIncluir_' + id).show(0);
+                     
                      $('#Incluir_' + idRef.substring(8)).off();
                      $('#Incluir_' + idRef.substring(8)).css('cursor', 'default');
                      
-                     //    alert(result);
+                     
                  },
                  error: function (error) {
-                     // si hay un error lanzara el mensaje de error
+                     
                      alert('Se presento un error al agregar la persona con Id ' + id);
                  }
              });
@@ -204,7 +173,7 @@ else
                      buttons: {
                          OK: { id: 'Ok', text: 'Aceptar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); agregarVictimaIGF(id); } },
                          Cancel: { id: 'Cancel', text: 'Cancelar', 'class': 'butonAlert', click: function () { $(this).dialog("close"); } },
-                         //OK: function () { $(this).dialog('close'); }, 'class': 'butonAlert'
+                         
                      },
                      close: function () { $(this).remove(); },
                      resizable: false,
@@ -217,8 +186,6 @@ else
                      hide: 'explode'
                  });
          };
-         //else
-         //    alert('Seleccione al menos una persona para agregarla al hogar.');
-         //}
+         
 
 </script>

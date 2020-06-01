@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AccesoDatos;
 using ObjetosTipos;
 using Autenticacion;
-using System.Data;
-using Newtonsoft.Json;
+
 using System.IO;
 using IgedEncuesta.Filters;
-using System.Configuration;
+
 using IgedEncuesta.Models.mdlGenerico;
-using IgedEncuesta.Models.mdlEncuesta;
+
 using AdministracionInstrumentos;
 using log4net;
 using log4net.Config;
+using IgedEncuesta.Util;
 
 namespace IgedEncuesta.Controllers
 {
@@ -56,11 +55,6 @@ namespace IgedEncuesta.Controllers
            //
 
             ViewBag.CerrarVentana = false;
-           // Session["VerAyudas"] = false;
-          //  ViewBag.VerAyudas = false;
-
-        
-            //Session["TiposDoc"] = new SelectList(objTipoDoc.tiposDocumento(), "ID", "TIPO_DOC");
 
             //-------------------------
             try
@@ -348,6 +342,7 @@ namespace IgedEncuesta.Controllers
                 return File(returnBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "GuiaIGEDEncuesta.pdf");
             }
         }
+       
 
         public ActionResult FinSesion()
         {

@@ -24,12 +24,7 @@
         width: 1100px;
     }
 </style>
-<!--
-<table width="80%">
-<tr>
-<td class="fondo">
-    <div style="padding: 10px; /*border: 1px solid #ccc; border-radius: 5px; */" align="center" class="bordesDiv2">
-    -->
+
  <div class="centrarDiv"> 
     <table class="marcoFormulario  efecto2 efecto1" style="width: 1010px;margin-top:20px;">
         <tr>
@@ -46,10 +41,8 @@
                         tableStyle: "grid-view",
                         headerStyle: "grid-view-header",
                         rowStyle: "grid-view-tr-normal",
-                        //selectedRowStyle: "select",
                         alternatingRowStyle: "grid-view-tr-alternate",
                         footerStyle: "grid-view-pgr",
-                        //caption:"Listado de Productos",
                         columns: grid.Columns(
                         grid.Column("Codigo", "CODIGO" , format: (item =>
                         {
@@ -59,10 +52,10 @@
                             }
                             else if (item.estado == "CERRADA")
                             {
-                                //return Html.Raw(@Html.ActionLink((string)item.codigo, "DescargarEncuesta", "ReporteEncuesta", new { codigoHogar = item.codigo }, null));
+                                
                                 return Html.Raw("<a id='lnC_" + item.Codigo.ToString() + "'  onclick='encuestaCerrada(this)'   href='#'>" + item.Codigo.ToString() + "</a> ");
                             }
-                            //if ((hogCodigo != "" && estado != "ACTIVA") || (hogCodigo != "" && hogCodigo != lblCodigoHogar.Text))
+                            
                             else if ((item.estado != "ACTIVA" || item.estado != "APLAZADA") && (item.Codigo != encuestaActiva && encuestaActiva!=""))
                             {
                                 return Html.Raw("<a id='lnA_" + item.Codigo.ToString() + "' onclick='encuestaAbierta(this)'    href='#'>" + item.Codigo.ToString() + "</a> ");
@@ -73,7 +66,6 @@
                             }
 
                         }), canSort: false),
-                        //grid.Column("CODIGO", "CODIGO", canSort: false),
                         grid.Column("miembrosHogar", "MIEMBROS", canSort: false),
                         grid.Column("fechaCreacion", "FCH. CREACION", canSort: false),
                         grid.Column("estado", "ESTADO", canSort: false),
@@ -100,11 +92,6 @@
         </tr>
     </table>
 </div>
-<!-- 
-</td>
-</tr>
-</table>
-    -->
 
 <div id="generacionInforme" style="display: none">
 </div>
@@ -147,23 +134,22 @@
  <iframe id="iframe" style="display:none;"></iframe>
 <script type="text/javascript">
     function encuestaCerrada(objeto) {
-         //alert("entro");
+         
          $("#encuestaCerrada").dialog('open');
          var idObjeto = $(objeto).attr('id').split('_');
          var cod = idObjeto[1];
-         //console.log(cod);
+         
         $("#codigoHog").val(cod);
-        //alert($("#codigoHog").val());
+        
     }
 
     function encuestaAbierta(objeto) {
-        // alert("entro");
+        
         $("#encuestaAbierta").dialog('open');
         var idObjeto = $(objeto).attr('id').split('_');
         var cod = idObjeto[1];
         $("#codigoHog").val(cod);
         var spanCodigo = "#lblCodHogar";
-        //var ingreso = "" + data;
         $(spanCodigo).html($("#codigoHog").val());
     }
 
@@ -172,27 +158,22 @@
         //alert(@encuestaActiva);
         var codHot = "";
         $('.linkCerrada').on('click', function () {
-            //alert("entro");
+            
             $("#encuestaCerrada").dialog('open');
             var idObjeto = $(this).attr('id').split('_');
             var cod = idObjeto[1];
             codHot = cod;
             $("#codigoHog").val(cod);
-            // alert($("#codigoHog").val());
-
-
         });
 
 
 
         $('.linkActiva').on('click', function () {
-            //alert("entro");
             $("#encuestaAbierta").dialog('open');
             var idObjeto = $(this).attr('id').split('_');
             var cod = idObjeto[1];
             $("#codigoHog").val(cod);
             var spanCodigo = "#lblCodHogar";
-            //var ingreso = "" + data;
             $(spanCodigo).html($("#codigoHog").val());
 
         });
@@ -201,7 +182,6 @@
         $("#encuestaAbierta").dialog({
             autoOpen: false,
             resizable: false,
-            //height: 400,
             width: 550,
             show: { effect: 'drop', direction: "up" },
             modal: true,
@@ -220,7 +200,7 @@
         $("#encuestaCerrada").dialog({
             autoOpen: false,
             resizable: false,
-            //height: 400,
+            
             width: 550,
             show: { effect: 'drop', direction: "up" },
             modal: true,
@@ -233,7 +213,6 @@
                 },
                 "Generar": function () {
                     $(this).dialog().find('form').submit();
-                    //generacionInforme(codHot);
                     $(this).dialog("close");
                 }
 
@@ -244,41 +223,11 @@
     });
 
     function generacionInforme(pcodHOT) {
-
-        // alert("entro ge" + $('#codigoHog').val());
-        //MODIFICACION JOSE VASQUEZ FECHA: 2015.NOV.27
-        //SE CAMBIA LA CONSTANTE POR LA FUNCION DE .NET
-        //window.location = 'Encuesta/informePdf?hogCodigo=' + $('#codigoHog').val(); aaa
-        //var codigoHOT = $('#codigoHogActivo').val();
-        //window.location = 'url.Action("informePdf", "Encuesta", new { "hogCodigo=' + codigoHOT });
+        
         //        window.location ='@Url.Action("informePdf", "Encuesta")?hogCodigo=' + pcodHOT;
 
         //window.location = '@Url.Action("informePdf", "Encuesta")?hogCodigo=' + pcodHOT;
-       @* $.ajax({
-            url: '@Url.Action("informePdf", "Encuesta")',
-            success: function (data) {
-                var blob = new Blob([data]);
-                console.log(blob);
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = "Dossier_" + new Date() + ".pdf";
-                link.click();
-            }
-        });*@
-     @*   $.ajax({
-            type: "POST",
-            cache: false,
-            contentType: "application/json; charset=utf-8",
-            url: '@Url.Action("informePdf", "Encuesta")',
-            data: "{ hogCodigo: " + pcodHOT + " }",
-            //data: { "idTema": idUsuario[1] },
-                success: function (result) {
-                    //   console.log(result);
-                  //  $('#CargueDinamico').html(result);
-
-
-                }
-        });*@
+       
 
     };
 

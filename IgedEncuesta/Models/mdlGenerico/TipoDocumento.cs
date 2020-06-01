@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data;
 using ObjetosTipos;
-using System.Configuration;
+
 
 namespace IgedEncuesta.Models.mdlGenerico
 {
@@ -32,7 +30,6 @@ namespace IgedEncuesta.Models.mdlGenerico
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
             }
 
         }
@@ -104,7 +101,6 @@ namespace IgedEncuesta.Models.mdlGenerico
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
             }
 
         }
@@ -116,7 +112,6 @@ namespace IgedEncuesta.Models.mdlGenerico
             try
             {
                 ds = objPerfiles.consultarPerfiles(idUsuario, idAplicacion);
-                //ds = objMaestraPersona.consultarPersonas(documento, nombre1, nombre2, apellido1, apellido2, idUsuario);
                 IDataReader dataReader = null;
                 dataReader = ds.Tables[0].CreateDataReader();
                 while (dataReader.Read())
@@ -124,7 +119,6 @@ namespace IgedEncuesta.Models.mdlGenerico
                     objPerfiles = new Perfiles();
                     if (!DBNull.Value.Equals(dataReader["ID_PERFIL"])) objPerfiles.IDPERFIL = dataReader["ID_PERFIL"].ToString();
                     if (!DBNull.Value.Equals(dataReader["PERFIL"])) objPerfiles.PERFIL = dataReader["PERFIL"].ToString();
-                    //coleccion.Add(objNovedades);
                 }
                 return objPerfiles;
             }

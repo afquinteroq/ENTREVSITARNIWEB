@@ -3,16 +3,13 @@ using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
 namespace AdministracionInstrumentos
 {
     [Serializable]
     public class gic_RespuestaNuevo : gic_AdministradorDeCambios
     {
-        //SELECT RI.INS_IDINSTRUMENTO, RI.RES_IDRESPUESTA, RE.RES_RESPUESTA, RI.PRE_VALIDADOR, RI.PRE_LONGCAMPO, RE.PRE_IDPREGUNTA, 
-        //RI.PRE_VALIDADOR_MIN, RI.PRE_VALIDADOR_MAX, RI.RES_ORDENRESPUESTA, RI.PRE_CAMPOTEX
+        
         /// <summary>
         /// Identificador unico de la respuesta
         /// </summary>
@@ -249,7 +246,6 @@ namespace AdministracionInstrumentos
             DataSet datoConsulta = new DataSet();
             List<Parametros> param = new List<Parametros>();
             IDataReader dataReader = null;//pPRE_IDPREGUNTA, pHOG_CODIGO
-//            param.Add(baseDatos.asignarParametro("pINS_IDINSTRUMENTO", 1, "System.Int32", idInstrumento.ToString()));
             param.Add(baseDatos.asignarParametro("pPRE_IDPREGUNTA", 1, "System.Int32", idPregunta.ToString()));
             param.Add(baseDatos.asignarParametro("pINS_IDINSTRUMENTO", 1, "System.Int32", idInstrumento.ToString()));
             param.Add(baseDatos.asignarParametro("pHOG_CODIGO", 1, "System.String", codHogar.ToString()));

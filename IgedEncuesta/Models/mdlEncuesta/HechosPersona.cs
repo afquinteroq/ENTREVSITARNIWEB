@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
 
 namespace IgedEncuesta.Models.mdlEncuesta
 {
@@ -50,7 +48,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public DataSet consultarPersonasModeloINntegrado(string IdPersona)
         {
             List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
+            DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
             try
             {
@@ -58,44 +56,11 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
                 datos.Conexion = connString;
-                //string idAplicacion = WebConfigurationManager.AppSettings["IdAplicacion"];
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", IdPersona));
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CARACTERIZACION.MI_ESTADO_RUV", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_ESTADO_RUV", ref param);
-                /*
-                foreach (DataTable table in dsSalida.Tables)
-                {
-                    foreach (DataColumn column in table.Columns)
-                    {
-                        string columna = column.ColumnName;
-                        Console.WriteLine(column.ColumnName);
-                    }
-                }
-                */
-               
-                /*
-                if (dsSalida.Tables[0].Rows.Count == 0)
-                {
-                    String vacio =  "VACIO";
-                    Console.WriteLine(vacio);
-
-
-                }                
-                
-                else if(dsSalida.Tables[0].Rows.Count > 0)
-                {
-                    String NOMBRE = dsSalida.Tables[0].TableName;
-                    Console.WriteLine(NOMBRE);
-                    String HECHO = dsSalida.Tables[NOMBRE].Rows[0]["HV5"].ToString();
-                    String FECHA = dsSalida.Tables[NOMBRE].Rows[0]["HV5_FECHA"].ToString();
-                    String ID_CARACTERIZACION = dsSalida.Tables[NOMBRE].Rows[0]["ID_CARACTERIZACION"].ToString();
-
-                }*/
-                
-                
 
 
                 return dsSalida;
@@ -103,38 +68,35 @@ namespace IgedEncuesta.Models.mdlEncuesta
             finally
             {
                 dsSalida.Dispose();
-                //datos.Dispose();
             }
            
         }
 
         
-
-        public DataSet consultarFechaUltimaEncuesta(string IdPersona)
-        {
-            List<Parametros> param = new List<Parametros>();
-            DataSet dsSalida = new DataSet();
-            AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
-            try
-            {
-                datos.MotorBasedatos = true;
-                string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
-                datos.Conexion = connString;
-                param = new List<Parametros>();
-                param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", IdPersona));
-                param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
-                param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
-                dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CARACTERIZACION.MI_ULTIMA_ENCUESTA", ref param);
-                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("PKG_CARACTERIZACION.MI_ULTIMA_ENCUESTA", ref param);
-                return dsSalida;
-            }
-            finally
-            {
-                dsSalida.Dispose();
-                //datos.Dispose();
-            }
+        //08/05/2020 Se comento para probar, se debe verificar este metodo
+        //public DataSet consultarFechaUltimaEncuesta(string IdPersona)
+        //{
+        //    List<Parametros> param = new List<Parametros>();
+        //    DataSet dsSalida = new DataSet();
+        //    AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
+        //    try
+        //    {
+        //        datos.MotorBasedatos = true;
+        //        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionModeloIntegrado"].ConnectionString;
+        //        datos.Conexion = connString;
+        //        param = new List<Parametros>();
+        //        param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", IdPersona));
+        //        param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
+        //        param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
+        //        dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CARACTERIZACION.MI_ULTIMA_ENCUESTA", ref param);
+        //        return dsSalida;
+        //    }
+        //    finally
+        //    {
+        //        dsSalida.Dispose();
+        //    }
           
-        }
+        //}
 
         public HechosPersona ultimaEncuesta(DataSet ds) { 
          HechosPersona hechos = new HechosPersona();
@@ -155,13 +117,12 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public HechosPersona hechosVictimizantes(string IdPersona)
         {
-            //DataSet dsHechos, DataSet dsUltimaFecha
-            DataSet dsHechos = new DataSet(); 
+
+            DataSet dsHechos = null;
             DataSet dsUltimaFecha = new DataSet();
             dsHechos = consultarPersonasModeloINntegrado(IdPersona);
-            dsUltimaFecha = consultarFechaUltimaEncuesta(IdPersona);
             HechosPersona hechos = new HechosPersona();
-            HechosPersona hechosUltima = new HechosPersona();
+            HechosPersona hechosUltima = null;
             IDataReader dataReader = null;
            
             if (dsHechos.Tables.Count > 0)
@@ -190,11 +151,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     {
                         if (!DBNull.Value.Equals(dataReader["HV5"]))
                         {
-                            //if (!DBNull.Value.Equals(dataReader["HV5_FECHA"])) hechos.MAX_FECHA_HECHO = dataReader["HV5_FECHA"].ToString();
                             if (!DBNull.Value.Equals(dataReader["HV5_FECHA"])) hechos.Fecha_HV5 = dataReader["HV5_FECHA"].ToString();
-                            
                         }
-                        //else {
+                        
                             if (!DBNull.Value.Equals(dataReader["HV1"]))
                             {
                                 
@@ -261,16 +220,16 @@ namespace IgedEncuesta.Models.mdlEncuesta
                                 
                                 if (!DBNull.Value.Equals(dataReader["HV14_FECHA"])) hechos.Fecha_HV14 = dataReader["HV14_FECHA"].ToString();
                             }
-                        //}
 
                     }
                     catch (Exception e)
                     {
-                        string error = e.Message;
+                        Console.WriteLine(e.Message);
                     }
 
                 }
             }
+            //Pendiente validar estas reglas, para validar si se puedo borrar
             if (dsUltimaFecha.Tables.Count > 0) {
                 dataReader = dsUltimaFecha.Tables[0].CreateDataReader();
                 while (dataReader.Read())

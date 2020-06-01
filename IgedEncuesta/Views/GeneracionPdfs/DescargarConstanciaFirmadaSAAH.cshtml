@@ -43,10 +43,6 @@
                         <tr>
                             <td>
                                 <br />
-                                @*<div id="CargandoDatosMaestro" style="display: none;">
-                                    <h5>Procesando por favor espere...</h5>                                    
-                                    <img alt="" src="@Url.Content("~/Content/Imagenes/Cargando3.gif")" />
-                                </div>*@
                                 <input type="button"  name="btnDescargarConstanciafirmada" value="Descargar Constancia firmada" id="btnDescargarConstanciafirmada" style="margin: auto;width:250px" />
                             </td>
                         </tr>
@@ -95,8 +91,6 @@
 
         if ($("#hogcodigo").val() != "") {
             var p_hogcodigo = $("#hogcodigo").val();
-            //window.location.href = "/GeneracionPdfs/DescargarArchivoConstanciaFirmada" + "?hogcodigo=" + p_hogcodigo;
-            @*@Url.Action("DescargarArchivoConstanciaFirmada", "GeneracionPdfs", new { hogcodigo = "8HI49" });*@
             location.href = '@Url.Action("DescargarArchivoConstanciaFirmada", "GeneracionPdfs")?hogcodigo=' + p_hogcodigo;
             $('input[type="text"]').val('');
             $("#mensajeError").html('Archivo descargado exitosamente');

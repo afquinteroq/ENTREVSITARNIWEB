@@ -1,8 +1,10 @@
-﻿using ObjetosTipos;
+﻿using AdministracionInstrumentos;
+using ObjetosTipos;
 using System;
 using System.Collections.Generic;
 
 using System.Data;
+using System.Diagnostics;
 using System.Text;
 
 namespace IgedEncuesta.Models.mdlConstancia
@@ -512,9 +514,10 @@ namespace IgedEncuesta.Models.mdlConstancia
         public int FN_GET_HOGAR_CERRAD_CONSTANCIA(string codHogar)
         {
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
+            int totalHogar = 0;
             try
             {
-                int totalHogar = 0;
+                
                 string funcion = "GIC_N_CARACTERIZACION.FN_GET_HOGAR_CERRAD_CONSTANCIA";
                 datos.Conexion = baseDatos.connStringCar;
                 datos.MotorBasedatos = true;
@@ -524,9 +527,15 @@ namespace IgedEncuesta.Models.mdlConstancia
                 totalHogar = int.Parse(datos.EjecutarFunciones(funcion, ref param));
                 return totalHogar;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return 0;
+                totalHogar = 99999;
+                MI_LOG_ERRORES_INTEGRACION obj = new MI_LOG_ERRORES_INTEGRACION();
+                var st = new StackTrace(e, true);
+                var frame = st.GetFrame(0);
+                var line = frame.GetFileLineNumber();
+                obj.insertaConstanciaFirmada(e.StackTrace.ToString() + ": " + e.Message.ToString() + ": linea: " + line, "FN_GET_HOGAR_CERRAD_CONSTANCIA(string codHogar)");
+                return totalHogar;
             }
         }
 

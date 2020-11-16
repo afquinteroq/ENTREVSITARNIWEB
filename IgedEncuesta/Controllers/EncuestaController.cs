@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -1313,7 +1314,9 @@ namespace IgedEncuesta.Controllers
                 tblAnidada.SetWidths(new float[] { 10, 15 });
 
                 pdfDoc.Open();
+                //string rutaBanner = System.Configuration.ConfigurationManager.AppSettings["RutaArchivoEncabezadoBanner03"].ToString();
                 string imagepath = Server.MapPath("/Content/Imagenes");
+                //string imagepath = Server.MapPath(rutaBanner);
 
                 using (FileStream fs = new FileStream(imagepath + "/Encabezado_Banner-03.png", FileMode.Open))
                 {
@@ -1559,6 +1562,15 @@ namespace IgedEncuesta.Controllers
             catch (Exception e)
             {
                 log.Error("EncuestaController / informePdf , Error: " + e.Message.ToString());
+                gic_Hogar hogar = new gic_Hogar();
+                HttpCookie reqCookies = Request.Cookies["SesionIged"];
+                string usuario = reqCookies["USUARIO"].ToString();
+                log.Error("ConformacionHogarController / iniciarEntrevista , Error: " + e.Message.ToString());
+                var st = new StackTrace(e, true);
+                var frame = st.GetFrame(0);
+                var line = frame.GetFileLineNumber();
+                MI_LOG_ERRORES_INTEGRACION obj = new MI_LOG_ERRORES_INTEGRACION();
+                obj.insertaConstanciaFirmada(e.StackTrace.ToString() + ": " + e.Message.ToString() + ": linea: " + line, "informePdf(string codHogar)");
                 // return null;
             }
             //return View();

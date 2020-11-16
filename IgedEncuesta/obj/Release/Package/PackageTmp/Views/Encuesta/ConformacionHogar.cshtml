@@ -174,6 +174,9 @@
                                                         @Html.TextBox("txt.SegundoApellido", "", new { maxlength = 20, style = "width:115px;border:2px solid #B0B5AA;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "Segundo Apellido", @class = "" })
                                                                             </div>
                                                                         </td>
+                                                                        <td>
+                                                                            @Html.DropDownList("ddlrutaencuesta", TempData["Opcionesruta"] as List<SelectListItem>, new { id = "ddlrutaencuesta", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;", maxlength = "30" })
+                                                                        </td>
                                                                         <td style="width: 10%; text-align: left;">
 
                                                                             <input type="submit" value="Buscar Víctima" name="btnBuscarVictima" id="btnBuscarVictima" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />
@@ -246,14 +249,24 @@
                                         <td>
                                             @Html.TextBox("txtSegundoApellido2", "", new { maxlength = 20, style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "soloLetras", pattern = @"^[^\s][a-zA-ZñÑ ]+", id = "txtSegundoApellido2" })
                                         </td>                                        
-                                    </tr>
+                                    </tr>                                    
                                     <tr>
                                         <td>
                                             <label class="etiqueta" style="font-size: 11px">Fecha Nacimiento:</label>
                                         </td>
                                         <td>
-                                            @Html.TextBox("txtFechaNacimiento2", "", new {Type = "date",   style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "requerido", pattern = @"^[\d{1,2}/\d{1,2}/\d{4}\s]*$", id = "txtFechaNacimiento2" })</td>
-                                    </tr>
+                                            @Html.TextBox("txtFechaNacimiento2", "", new {Type = "date",   style = "width:195px;font-size:12px;text-transform:uppercase;font-family:Roboto;", placeholder = "", @class = "requerido", pattern = @"^[\d{1,2}/\d{1,2}/\d{4}\s]*$", id = "txtFechaNacimiento2" })
+                                        </td>
+                                        <td>
+                                            <label class="etiqueta" style="font-size: 11px">RUTA ENTREVISTA:</label>
+                                        </td>
+                                        <td>
+                                            <div class="select">
+                                                <span class="caret"></span>
+                                                @Html.DropDownList("lstRutas", ViewBag.Rutas as List<SelectListItem>, new { id = "ddlTipoRuta", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;width: 194px;", maxlength = "30" })
+                                            </div>
+                                        </td>
+                                    </tr>                                    
                                     <tr>
                                         <td colspan="4" style="text-align: center">
                                             <br />
@@ -509,7 +522,7 @@
 
     })
 
-    $('#txtNumDoc').keypress(function (e) {
+    $('#txtNumDoc').keypress(function (e) {        
         var key = e.which;
         if (key == 13)  // the enter key code
         {
@@ -637,6 +650,12 @@
 
 
     $('#btnBuscarVictima').click(function () {
+        var rutaselecionada = $('#ddlrutaencuesta  option:selected').val();
+        console.log("rutaencuesta::", rutaselecionada )
+        if (rutaselecionada == '0') {
+            alert('Debe seleccionar la ruta de encuesta');
+            return;
+        }
         $('#iddivregistraduria').hide();
         $('#iddientrevistaficha').hide();
         $('#iddfuentesruv').hide();
@@ -677,7 +696,7 @@
                 idChequeados = '';
                 $.ajax(
                      {
-                         data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                        data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion, rutacaracterizacion: rutaselecionada },
                          dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
                          url: '@Url.Action("cargarMaestroVictima", "ConformacionHogar")',
                          //URL del action result que cargara la vista parcial
@@ -812,7 +831,13 @@
 
              var DocumentoSeleccionado = $('#ddlTipoDocumento  option:selected').val();
              var fechanacimiento = $('#txtFechaNacimiento2').val();
+             var RutaSeleccionada = $('#ddlTipoRuta  option:selected').val();
 
+             if (RutaSeleccionada == '0') {
+                 alert('Debe seleccionar la Ruta');
+                 return;
+             }
+             
                  var hoy = new Date();
                  var diaActual = hoy.getDate();
                  var mesActual = hoy.getMonth() + 1;
@@ -831,6 +856,15 @@
                  }
                  else {
                      edad = yearActual - yearVF;
+                     if (edad == 18) {
+                         if (mesActual <= mesVF) {
+                             if (mesActual < mesVF) {
+                                 edad = 17;
+                             } else if (mesActual == mesVF && diaActual < diaVF) {
+                                 edad = 17;
+                             }
+                         }
+                     }
                  }
                  if (DocumentoSeleccionado == '1' && edad < 18) {
                      alert('No puede asignar tipo de documento cedula a menor de edad');
@@ -896,7 +930,7 @@
          function agregarVictimaNIHogar() {
              //JOSE VASQUEZ  FECHA:03.11.2015
              //MODIFICACION: CARGA TIPO DE DOCUMENTO NOMBRE CORTO.
-             var datos = $('#ddlTipoDocumento  option:selected').text().toString().trim().toUpperCase() + '|' + $('#txtNumDoc2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtFechaNacimiento2').val().toString().trim().toUpperCase();
+             var datos = $('#ddlTipoDocumento  option:selected').text().toString().trim().toUpperCase() + '|' + $('#txtNumDoc2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoNombre2').val().toString().trim().toUpperCase() + '|' + $('#txtPrimerApellido2').val().toString().trim().toUpperCase() + '|' + $('#txtSegundoApellido2').val().toString().trim().toUpperCase() + '|' + $('#ddlTipoRuta  option:selected').text().toString().trim().toUpperCase() + '|' + $('#txtFechaNacimiento2').val().toString().trim().toUpperCase();
              document.getElementById("maestroHogar").innerHTML = "";
              var div = $('#maestroHogar');
              $('#txtPrimerApellido2').prop("required", false);

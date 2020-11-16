@@ -47,14 +47,15 @@
   <ItemGroup>
     <Reference Include="AccesoDatos, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Documents\UV\ComponenteDatos_UltimaVersion\AccesoDatos\bin\x86\Release\AccesoDatos.dll</HintPath>
+      <HintPath>..\libs\AccesoDatos.dll</HintPath>
     </Reference>
-    <Reference Include="AdmonSesion">
-      <HintPath>..\..\..\..\AdmonSesion\bin\Release\AdmonSesion.dll</HintPath>
+    <Reference Include="AdmonSesion, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\AdmonSesion.dll</HintPath>
     </Reference>
     <Reference Include="Autenticacion, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\DLLS ULTIMA VERSION COMPONENTE SEGURIDAD\Autenticacion.dll</HintPath>
+      <HintPath>..\libs\Autenticacion.dll</HintPath>
     </Reference>
     <Reference Include="itextsharp, Version=5.5.1.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -71,7 +72,10 @@
     </Reference>
     <Reference Include="ObjetosTipos, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\ComponenteDatos_UltimaVersion\AccesoDatos\bin\x86\Release\ObjetosTipos.dll</HintPath>
+      <HintPath>..\libs\ObjetosTipos.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.19.3.1\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="Select.Pdf">
       <HintPath>..\..\..\..\Acreditacion 16042018 1526\Consulta Individual RNI\Libs\libreriaPDF\SelectPdf-v18.4.0\SelectPdf-v18.4.0\Assemblies\net40\Select.Pdf.dll</HintPath>
@@ -360,6 +364,7 @@
     <Content Include="Archivos\GuiaIGEDEncuesta.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\PRUEBAS_CARACTERIZACION_2.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\General.js" />
@@ -386,9 +391,11 @@
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />

@@ -73,6 +73,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
 
         public string FECHA_HECHO { get; set; }
 
+        public string RUTA_CARACTERIZACION { get; set; }
+
 
         public DataSet consultarRegistraduria(string documento)
         {
@@ -91,6 +93,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
                 dsSalida = datos.ConsultarTablasConComando("SELECT * FROM  TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_CONSULTA_RENEC(" + documento + "))");
+                //dsSalida = datos.ConsultarTablasConComando("SELECT * FROM  TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_TBL_RENEC_ANI2(" + documento + "))");
                 return dsSalida;
             }
             finally
@@ -128,12 +131,12 @@ namespace IgedEncuesta.Models.mdlEncuesta
         }
 
 
-        public List<Victima> consultarVictimasMI(string numDoc, string idUsuario, string idAplicacion)
+        public List<Victima> consultarVictimasMI(string numDoc, string idUsuario, string idAplicacion, string rutacaracterizacion)
         {
             DataSet dsSalida = null;
             List<Victima> coleccion = null;
             HechosPersona hechos = new HechosPersona();
-            dsSalida = consultarPersonasModeloINntegrado(numDoc, idUsuario, idAplicacion);
+            dsSalida = consultarPersonasModeloINntegrado(numDoc, idUsuario, idAplicacion, rutacaracterizacion);
             coleccion = modeloVictimasMI(dsSalida);
 
             StringBuilder vhechos = new StringBuilder("");
@@ -145,10 +148,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
             {
                 foreach (Victima item in coleccion)
                 {
-
+                    DateTime parsedDate = DateTime.Parse(item.F_NACIMIENTO.ToString());
                     try
-                    {
-                        DateTime parsedDate = DateTime.Parse(item.F_NACIMIENTO.ToString());
+                    {   
                         string fechaN = parsedDate.ToString("dd/MM/yyyy");
                         var array_fecha = fechaN.Split('/');
 
@@ -563,6 +565,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 //FIN MODIFICACION OCT.27.2015
 
                 objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
+                objVictima.RUTA_CARACTERIZACION = "5";
 
                 if (!DBNull.Value.Equals(dataReader["GENERO_HOM"])) objVictima.GENERO_HOM = dataReader["GENERO_HOM"].ToString();
                 if (!DBNull.Value.Equals(dataReader["PERT_ETNICA"])) objVictima.PERT_ETNICA = dataReader["PERT_ETNICA"].ToString();
@@ -605,7 +608,9 @@ namespace IgedEncuesta.Models.mdlEncuesta
         {
             List<Victima> coleccion = new List<Victima>();
             IDataReader dataReader = null;
+            IDataReader dataReader1 = null;
             dataReader = ds.Tables[0].CreateDataReader();
+            
 
             while (dataReader.Read())
             {
@@ -620,7 +625,25 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 if (!DBNull.Value.Equals(dataReader["PER_APELLIDO1"])) objVictima.APELLIDO1 = dataReader["PER_APELLIDO1"].ToString();
                 if (!DBNull.Value.Equals(dataReader["PER_APELLIDO2"])) objVictima.APELLIDO2 = dataReader["PER_APELLIDO2"].ToString();
                 objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
+                if (!DBNull.Value.Equals(dataReader["RUTA_CARACTERIZACION"])) {
+                    String ruta = dataReader["RUTA_CARACTERIZACION"].ToString();
+                    if (ruta.Equals("1")) {
+                        objVictima.RUTA_CARACTERIZACION = "Ruta General";
+                    }
+                    if (ruta.Equals("2"))
+                    {
+                        objVictima.RUTA_CARACTERIZACION = "Ruta Acciones Constitucionales";
+                    }
+                    if (ruta.Equals("3"))
+                    {
+                        objVictima.RUTA_CARACTERIZACION = "Ruta modificacion nucleo familiar";
+                    }
+                    if (ruta.Equals("4"))
+                    {
+                        objVictima.RUTA_CARACTERIZACION = "Ruta especial";
+                    }
 
+                }                   
                 if (!DBNull.Value.Equals(dataReader["PER_IDENTIDAD_GENERO"])) objVictima.GENERO_HOM = dataReader["PER_IDENTIDAD_GENERO"].ToString();
                 if (!DBNull.Value.Equals(dataReader["PER_ETNIA"])) objVictima.PERT_ETNICA = dataReader["PER_ETNIA"].ToString();
                 if (!DBNull.Value.Equals(dataReader["PER_DISCAPACIDAD"])) objVictima.DISCAP = dataReader["PER_DISCAPACIDAD"].ToString();
@@ -905,6 +928,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 p.SEGUNDO_APELLIDO = param.Find(x => x.Nombre == "p_segundoApellido").Valor;
                 p.FECHA_NACIMIENTO = param.Find(x => x.Nombre == "p_fechaNacimiento").Valor;
                 p.NOMBRES_COMPLETOS = p.PRIMER_NOMBRE + ' ' + p.SEGUNDO_NOMBRE + ' ' + p.PRIMER_APELLIDO + ' ' + p.SEGUNDO_APELLIDO;
+                p.RUTA_CARACTERIZACION = "8";
                 //------------------------------------------------
                 // MODIFICACION: JOSE VASQUEZ OCT.27.2015
                 // ADICION CAMPO DOCUMENTO RUV
@@ -967,7 +991,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         /***************************************************************************************************************************************
          * JAIME ANDRES LOBATON
          * *************************************************************************************************************************************/
-        public DataSet consultarPersonasModeloINntegrado(string documento, string idUsuario, string idAplicacion)
+        public DataSet consultarPersonasModeloINntegrado(string documento, string idUsuario, string idAplicacion, string rutacaracterizacion)
         {
             List<Parametros> param = new List<Parametros>();
             DataSet dsSalida = null;
@@ -989,8 +1013,13 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param.Add(asignarParametro("P_IPADDRESS", 1, "System.String", ObtenerIP_Usuario()));
                 param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
                 param.Add(asignarParametro("S_MSGERROR", 2, "System.String", ""));
+                param.Add(asignarParametro("RUTA_CARACTERIZACION", 1, "System.String", rutacaracterizacion));
+                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CONSULTAS.MI_PERSONAS_PRUEBA", ref param);
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("MI_PKG_CONSULTAS.MI_PERSONAS", ref param);
-
+                return dsSalida;
+            }
+            catch (Exception e) {
+                Console.WriteLine(e.Message);
                 return dsSalida;
             }
             finally
@@ -1080,6 +1109,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 if (!DBNull.Value.Equals(dataReader["PER_APELLIDO1"])) objVictima.APELLIDO1 = dataReader["PER_APELLIDO1"].ToString();
                 if (!DBNull.Value.Equals(dataReader["PER_APELLIDO2"])) objVictima.APELLIDO2 = dataReader["PER_APELLIDO2"].ToString();
                 objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
+                objVictima.RUTA_CARACTERIZACION = "3";
                 if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) objVictima.F_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString().ToUpper().Replace("12:00:00 AM", "");
                 if (!DBNull.Value.Equals(dataReader["ID_CARACTERIZACION"])) objVictima.ID_CARACTERIZACION = dataReader["ID_CARACTERIZACION"].ToString();
                 try
@@ -1222,6 +1252,8 @@ namespace IgedEncuesta.Models.mdlEncuesta
                     if (!DBNull.Value.Equals(dataReader["APELLIDO2"])) objVictima.APELLIDO2 = dataReader["APELLIDO2"].ToString();
 
                     objVictima.NOMBRES_COMPLETOS = objVictima.NOMBRE1 + ' ' + objVictima.NOMBRE2 + ' ' + objVictima.APELLIDO1 + ' ' + objVictima.APELLIDO2;
+                    objVictima.RUTA_CARACTERIZACION = "2";
+
                     //------------------------------------------------
                     //MODIFICACION: JOSE VASQUEZ OCT.27.2015
                     // ADICION CAMPO DOCUMENTO RUV
@@ -1292,6 +1324,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                         if (!DBNull.Value.Equals(dataReader["PER_NUMERODOC"])) p.NUMERO_DOC = dataReader["PER_NUMERODOC"].ToString();
                         if (!DBNull.Value.Equals(dataReader["PER_FECHANACIMIENTO"])) p.FECHA_NACIMIENTO = dataReader["PER_FECHANACIMIENTO"].ToString();
                         p.NOMBRES_COMPLETOS = p.PRIMER_NOMBRE + ' ' + p.SEGUNDO_NOMBRE + ' ' + p.PRIMER_APELLIDO + ' ' + p.PRIMER_APELLIDO;
+                        p.RUTA_CARACTERIZACION = "4";
                         //------------------------------------------------
                         //MODIFICACION: JOSE VASQUEZ OCT.27.2015
                         // ADICION CAMPO FECHA DE CARACTERIZACION
@@ -1316,7 +1349,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         }
 
         //07/11/2019 andrés quintero
-        public List<Persona> gic_validar_persona_encuestada(string numeroDoc, string idPerfilUsuario)
+        public List<Persona> gic_validar_persona_encuestada(string numeroDoc, string idPerfilUsuario, String rutacaracterizacion)
         {
 
             List<Persona> personas = new List<Persona>();
@@ -1331,8 +1364,10 @@ namespace IgedEncuesta.Models.mdlEncuesta
                 param = new List<Parametros>();
                 param.Add(asignarParametro("P_IDPERSONA", 1, "System.String", numeroDoc));
                 param.Add(asignarParametro("idPerfilUsuario", 1, "System.String", idPerfilUsuario));
+                param.Add(asignarParametro("RUTACARACTERIZACION", 1, "System.String", rutacaracterizacion));
                 param.Add(asignarParametro("cur_OUT ", 2, "Cursor", ""));
-                dsSalida = datos.ConsultarConProcedimientoAlmacenado("GIC_CATEGORIZACION.GIC_VALIDAR_PERSONA_ENCUESTADA", ref param);
+                //dsSalida = datos.ConsultarConProcedimientoAlmacenado("GIC_CATEGORIZACION.GIC_VALIDAR_PERSONA_ENCUESTADA", ref param);
+                dsSalida = datos.ConsultarConProcedimientoAlmacenado("GIC_CATEGORIZACION.GIC_VALIDAR_PERSONA_ENCUESTAD1", ref param);
 
                 if (dsSalida.Tables.Count > 0)
                 {
@@ -1410,6 +1445,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
                         item.APELLIDO1 = per.PRIMER_APELLIDO;
                         item.APELLIDO2 = per.SEGUNDO_APELLIDO;
                         item.NOMBRES_COMPLETOS = per.PRIMER_NOMBRE + ' ' + per.SEGUNDO_NOMBRE + ' ' + per.PRIMER_APELLIDO + ' ' + per.SEGUNDO_APELLIDO;
+                        item.RUTA_CARACTERIZACION = "4";
                         item.F_NACIMIENTO = per.FECHA_NACIMIENTO;
                         item.ID_TBPERSONA = per.ID_PERSONA;
                         item.TIPO_VICTIMA = per.ESTADO;

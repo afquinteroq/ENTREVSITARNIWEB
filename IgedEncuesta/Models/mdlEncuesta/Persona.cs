@@ -13,6 +13,7 @@ namespace IgedEncuesta.Models.mdlEncuesta
         public string PRIMER_APELLIDO { get; set; }
         public string SEGUNDO_APELLIDO { get; set; }
         public string NOMBRES_COMPLETOS { get; set; }
+        public string RUTA_CARACTERIZACION { get; set; }
         public string FECHA_NACIMIENTO { get; set; }
         public string ESTADO { get; set; }
         public string ID_PERSONA { get; set; }

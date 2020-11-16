@@ -113,8 +113,9 @@ namespace IgedEncuesta.Models.Hogar
 
         }
 
-        public void insertarHogar(string usuario, string idUsuario)
+        public string insertarHogar(string usuario, string idUsuario)
         {
+            string marcador = "0";
             List<Parametros> param = new List<Parametros>();
             AccesoDatos.ConsultasParticulares datos = new AccesoDatos.ConsultasParticulares();
             try
@@ -124,13 +125,17 @@ namespace IgedEncuesta.Models.Hogar
                 param.Add(asignarParametro("USUA_CREACION", 1, "System.String", usuario));
                 param.Add(asignarParametro("ID_USUARIO", 1, "System.Int32", idUsuario));
                 param.Add(asignarParametro("ID_TIPO_CARACTERIZACION", 1, "System.Int32", "2"));
-                datos.ConsultarConProcedimientoAlmacenadoValores("GIC_CATEGORIZACION.GIC_INSERT_HOGAR", ref param);
+                param.Add(asignarParametro("MARCADOR", 2, "System.String", ""));
+                datos.ConsultarConProcedimientoAlmacenadoValores("GIC_CATEGORIZACION.GIC_INSERT_HOGAR1", ref param);
+                marcador = param.Find(x => x.Nombre == "MARCADOR").Valor;
+                
             }
             finally
             {
                 //datos.Dispose();
             }
 
+            return marcador;
 
         }
 

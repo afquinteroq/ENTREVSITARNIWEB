@@ -49,9 +49,20 @@ namespace IgedEncuesta.Controllers
 
                 Session["VerAyudas"] = false;
                 ViewBag.VerAyudas = false;
+
+                /////andres quintero 16/10/2019
+                List<SelectListItem> lstRutas = new List<SelectListItem>();
+                lstRutas.Add(new SelectListItem { Text = "SELECCIONE RUTA", Value = "0" });
+                lstRutas.Add(new SelectListItem { Text = "Ruta General", Value = "1" });
+                lstRutas.Add(new SelectListItem { Text = "Ruta Acciones Constitucionales", Value = "2" });
+                lstRutas.Add(new SelectListItem { Text = "Ruta Modificación Nucleo Familiar", Value = "3" });
+                lstRutas.Add(new SelectListItem { Text = "Ruta Especial", Value = "4" });
+
+                ViewBag.Rutas = lstRutas;
+
                 //comentar desde acá para publicar
                 // ESTOS SON DE ADMINSUAURIOS
-                
+                /*
                 List<NivelAcceso> coleccionNivelAcceso = new List<NivelAcceso>();
                 NivelAcceso nivelAcceso = new NivelAcceso();
                 var SesionIged = new HttpCookie("SesionIged");
@@ -65,11 +76,11 @@ namespace IgedEncuesta.Controllers
                 SesionIged["NIVELACCESO"] = serializedData;
                 SesionIged.Expires = DateTime.Now.AddHours(8);
                 Response.Cookies.Add(SesionIged);
-                string na = Request.Cookies["SesionIged"]["NIVELACCESO"].ToString(); ;
+                string na = Request.Cookies["SesionIged"]["NIVELACCESO"].ToString(); 
                 coleccionNivelAcceso = JsonConvert.DeserializeObject<List<Autenticacion.NivelAcceso>>(na);
                 var cookie = new HttpCookie("nivelAcceso", serializedData);
                 HttpContext.Response.Cookies.Add(cookie);
-                
+                */
 
                 // ESTOS SON DE ADMINSUAURIOSPRUEBAS
                 /*
@@ -143,6 +154,15 @@ namespace IgedEncuesta.Controllers
                 List<SelectListItem> li = new List<SelectListItem>();
                 li.Add(new SelectListItem { Text = "DOCUMENTO", Value = "0" });
                 TempData["Opciones"] = li;
+
+                List<SelectListItem> lr = new List<SelectListItem>();
+                lr.Add(new SelectListItem { Text = "SELECCIONE RUTA", Value = "0" });
+                lr.Add(new SelectListItem { Text = "Ruta General", Value = "1" });
+                lr.Add(new SelectListItem { Text = "Ruta Acciones Constitucionales", Value = "2" });
+                lr.Add(new SelectListItem { Text = "Ruta Modificación Nucleo Familiar", Value = "3" });
+                lr.Add(new SelectListItem { Text = "Ruta Especial", Value = "4" });
+                TempData["Opcionesruta"] = lr;
+
             }
             catch (Exception e)
             {
@@ -159,7 +179,7 @@ namespace IgedEncuesta.Controllers
         }
 
         //[ExpiraSesionFilter]
-        public ActionResult cargarMaestroVictima(string numeroDocumento, string opcionBusqueda)
+        public ActionResult cargarMaestroVictima(string numeroDocumento, string opcionBusqueda, string rutacaracterizacion)
         {
             try
             {
@@ -171,10 +191,21 @@ namespace IgedEncuesta.Controllers
                 app = Request.Cookies["SesionIged"]["App"].ToString();
                 ViewBag.CerrarVentana = false;
                 List<Victima> coleccion = null;
-                coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app);
+                coleccion = objConsultaVictima.consultarVictimasMI(numeroDocumento, userIdApp, app, rutacaracterizacion);
                 ViewBag.Lista = coleccion;
                 var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(coleccion);
                 objSesion.guardarCampoSesion(int.Parse(userIdApp), "MODELO", serializedData);
+
+
+                /////andres quintero 16/10/2019
+                List<SelectListItem> lst = new List<SelectListItem>();
+
+                lst.Add(new SelectListItem() { Text = "Seleccione tipo persona", Value = "0" });
+                lst.Add(new SelectListItem() { Text = "Ruta 1", Value = "1" });
+                lst.Add(new SelectListItem() { Text = "Ruta 2", Value = "2" });
+                lst.Add(new SelectListItem() { Text = "Ruta 3", Value = "3" });                
+
+                ViewBag.Opciones = lst;
                 return PartialView("_MaestroVictima", coleccion);
             }
             catch (Exception e)
@@ -314,6 +345,7 @@ namespace IgedEncuesta.Controllers
                                 nombrecompleto += " " + dataReader["APELLIDO1"].ToString(); nombrecompleto += " " + dataReader["APELLIDO2"].ToString();
 
                                 objFuente.NOMBRES_COMPLETOS = nombrecompleto;
+
 
                                 if (!DBNull.Value.Equals(dataReader["RELACION"])) objFuente.PARENTESCO = dataReader["RELACION"].ToString().ToUpper();
                                 if (!DBNull.Value.Equals(dataReader["GENERO"])) objFuente.GENERO = dataReader["GENERO"].ToString().ToUpper();
@@ -632,6 +664,8 @@ namespace IgedEncuesta.Controllers
                 victima.APELLIDO1 = datosVictima.Substring(0, datosVictima.IndexOf('|'));
                 datosVictima = datosVictima.Substring(datosVictima.IndexOf('|') + 1);
                 victima.APELLIDO2 = datosVictima.Substring(0, datosVictima.IndexOf('|'));
+                datosVictima = datosVictima.Substring(datosVictima.IndexOf('|') + 1);
+                victima.RUTA_CARACTERIZACION = datosVictima.Substring(0, datosVictima.IndexOf('|'));
                 //victima.F_NACIMIENTO = datosVictima.Substring(datosVictima.IndexOf('|') + 1);
                 datosVictima = datosVictima.Substring(datosVictima.IndexOf('|') + 1);
                 DateTime date = Convert.ToDateTime(datosVictima);
@@ -944,17 +978,17 @@ namespace IgedEncuesta.Controllers
 
         //creado por andrés quintero el 07/11/2019
 
-        public ActionResult consultarPersona(String consPersona, String documento, String tipopersona)
+        public ActionResult consultarPersona(String consPersona, String documento, String tipopersona, String rutacaracterizacion)
         {
+            
             try
-            {
-
+            {  
                 Victima victima = new Victima();
                 Encuesta objSesion = new Encuesta();
                 List<Persona> lpersona = new List<Persona>();
                 String userIdApp = Request.Cookies["SesionIged"]["UserIdApp"].ToString();
                 String perfilusuario = objSesion.getValorCampoSesion("PERFILES", userIdApp);
-                lpersona = victima.gic_validar_persona_encuestada(documento, perfilusuario);
+                lpersona = victima.gic_validar_persona_encuestada(documento, perfilusuario, rutacaracterizacion);
                 int total = lpersona.Count();
                 if (total > 0)
                 {
@@ -1037,6 +1071,7 @@ namespace IgedEncuesta.Controllers
         public ActionResult iniciarEntrevista(string codHogar)
         {
             string mensaje = "", idHogar = "", idPersona = "";
+            string marcador = "0";
             try
             {
                 Encuesta objSesion = new Encuesta();
@@ -1058,7 +1093,7 @@ namespace IgedEncuesta.Controllers
                 if (codHogar == "")
                 {
                     // Inserta un Código de Hogar nuevo si no se suministro
-                    objHogar.insertarHogar(Usuario, userIdApp);
+                    marcador = objHogar.insertarHogar(Usuario, userIdApp);
                 }
                 else
                 {
@@ -1066,82 +1101,87 @@ namespace IgedEncuesta.Controllers
                     objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", codHogar);
                     objHogar.actualizarEstadoEncuesta(codHogar, "5", Usuario);
                 }
-
-                //Obtiene el Codigo del Hogar
-                if (codHogar == "")
+                if (marcador.Equals("1"))
                 {
-                    idHogar = objHogar.obtenerIdHogar(userIdApp);
-                    //ACA ACTUALIZAR EL CODIGO DE HOGAr
-                    objHogar.updateArchivosSoportes(sys, idHogar);
-                }
-                else
-                {
-                    idHogar = codHogar;
-                    objHogar.updateArchivosSoportes(sys, idHogar);
-                }
-
-                objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", idHogar);
-                         
-                foreach (Victima item in modelo)
-                {
-                    // Asigna fecha por defecto en el caso de que la victima no tenga una registrada
-                    if (item.F_NACIMIENTO == "" || item.F_NACIMIENTO == null) item.F_NACIMIENTO = "01/01/1920";
-                    
-                    if (string.IsNullOrEmpty(item.ID_TBPERSONA))
+                    //Obtiene el Codigo del Hogar
+                    if (codHogar == "")
                     {
-                        idPersona = objHogar.insertarPersona(item, Usuario);
-                        item.ID_TBPERSONA = idPersona;
+                        idHogar = objHogar.obtenerIdHogar(userIdApp);
+                        //ACA ACTUALIZAR EL CODIGO DE HOGAr
+                        objHogar.updateArchivosSoportes(sys, idHogar);
                     }
                     else
-                        idPersona = item.ID_TBPERSONA;
-                    
-                    if (item.TIPO_PERSONA.Equals(""))
                     {
-                        item.JEFE_HOGAR = false;
-                    }
-                    if (item.TIPO_PERSONA.Equals("1"))
-                    {
-                        item.JEFE_HOGAR = true;
-                    }
-                    if (item.TIPO_PERSONA.Equals("2"))
-                    {
-                        item.JEFE_HOGAR = true;
-                    }
-                    if (item.TIPO_PERSONA.Equals("3"))
-                    {
-                        item.JEFE_HOGAR = true;
-                    }
-                    if (item.TIPO_PERSONA.Equals("4"))
-                    {
-                        item.JEFE_HOGAR = false;
+                        idHogar = codHogar;
+                        objHogar.updateArchivosSoportes(sys, idHogar);
                     }
 
-                    objHogar.insertarMiembrosPorHogar(idHogar, idPersona, item.JEFE_HOGAR ? "SI" : "", Usuario, userIdApp);
+                    objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", idHogar);
 
-                    // Insertar Validador Estado Victima y validador tipopersona
-                    if (item.TIPO_PERSONA.Equals("1"))
+                    foreach (Victima item in modelo)
                     {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5001", PERFILES, "1");
-                    }
-                    if (item.TIPO_PERSONA.Equals("2"))
-                    {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5002", PERFILES, "1");
-                    }
-                    if (item.TIPO_PERSONA.Equals("3"))
-                    {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5003", PERFILES, "1");
-                    }
-                    if (item.TIPO_PERSONA.Equals("4"))
-                    {
-                        objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5004", PERFILES, "1");
-                    }
-                    
-                    objHogar.insertarHechosVictima(idPersona, item, idHogar);
-                    
+                        // Asigna fecha por defecto en el caso de que la victima no tenga una registrada
+                        if (item.F_NACIMIENTO == "" || item.F_NACIMIENTO == null) item.F_NACIMIENTO = "01/01/1920";
 
+                        if (string.IsNullOrEmpty(item.ID_TBPERSONA))
+                        {
+                            idPersona = objHogar.insertarPersona(item, Usuario);
+                            item.ID_TBPERSONA = idPersona;
+                        }
+                        else
+                            idPersona = item.ID_TBPERSONA;
 
+                        if (item.TIPO_PERSONA.Equals(""))
+                        {
+                            item.JEFE_HOGAR = false;
+                        }
+                        if (item.TIPO_PERSONA.Equals("1"))
+                        {
+                            item.JEFE_HOGAR = true;
+                        }
+                        if (item.TIPO_PERSONA.Equals("2"))
+                        {
+                            item.JEFE_HOGAR = true;
+                        }
+                        if (item.TIPO_PERSONA.Equals("3"))
+                        {
+                            item.JEFE_HOGAR = true;
+                        }
+                        if (item.TIPO_PERSONA.Equals("4"))
+                        {
+                            item.JEFE_HOGAR = false;
+                        }
+
+                        objHogar.insertarMiembrosPorHogar(idHogar, idPersona, item.JEFE_HOGAR ? "SI" : "", Usuario, userIdApp);
+
+                        // Insertar Validador Estado Victima y validador tipopersona
+                        if (item.TIPO_PERSONA.Equals("1"))
+                        {
+                            objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5001", PERFILES, "1");
+                        }
+                        if (item.TIPO_PERSONA.Equals("2"))
+                        {
+                            objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5002", PERFILES, "1");
+                        }
+                        if (item.TIPO_PERSONA.Equals("3"))
+                        {
+                            objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5003", PERFILES, "1");
+                        }
+                        if (item.TIPO_PERSONA.Equals("4"))
+                        {
+                            objHogar.insertarValidadorPorEstado(idPersona, idHogar, item.TIPO_VICTIMA, "5004", PERFILES, "1");
+                        }
+
+                        objHogar.insertarHechosVictima(idPersona, item, idHogar);
+                        mensaje = "1";
+                    }
                 }
-                mensaje = "1";
+                else {
+                    objSesion.guardarCampoSesion(int.Parse(userIdApp), "CODHOGAR", marcador);
+                    mensaje = "1";
+                }
+                
+                
                 return Json(mensaje, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

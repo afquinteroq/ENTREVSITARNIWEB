@@ -79,16 +79,44 @@ namespace IgedEncuesta.Models.mdlFuente
 
             DataSet dsSalida = null;
             AccesoDatos.AccesoDatos datos = new AccesoDatos.AccesoDatos();
+            String consultarenec = "SELECT REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.NOM1_RENEC,'SERVICIORNECAPLICACIONENTREVISTA') ||' '||" +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.NOM2_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') || ' ' || " +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.APE1_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') || ' ' || " +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.APE2_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') NOMBRES," +
+       " NUIP," +
+       " COD_ERR," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.NOM1_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') NOM1_RENEC," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.NOM2_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') NOM2_RENEC," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.APE1_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') APE1_RENEC," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.APE2_RENEC, 'SERVICIORNECAPLICACIONENTREVISTA') APE2_RENEC," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.DEPTO_EXP, 'SERVICIORNECAPLICACIONENTREVISTA') DEPTO_EXP," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.MUN_EXP, 'SERVICIORNECAPLICACIONENTREVISTA') MUN_EXP," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.F_EXP, 'SERVICIORNECAPLICACIONENTREVISTA') F_EXP," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.COD_EST_CEDULA, 'SERVICIORNECAPLICACIONENTREVISTA') COD_EST_CEDULA," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.ESTADO_CEDULA, 'SERVICIORNECAPLICACIONENTREVISTA') ESTADO_CEDULA," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.NUM_RESOL, 'SERVICIORNECAPLICACIONENTREVISTA') NUM_RESOL," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.ANO_RESOL, 'SERVICIORNECAPLICACIONENTREVISTA') ANO_RESOL," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.GENERO, 'SERVICIORNECAPLICACIONENTREVISTA') GENERO," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.FECHANACIMIENTO, 'SERVICIORNECAPLICACIONENTREVISTA') FECHANACIMIENTO," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.INFORMANTE, 'SERVICIORNECAPLICACIONENTREVISTA') INFORMANTE," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.SERIAL, 'SERVICIORNECAPLICACIONENTREVISTA') SERIAL," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.FECHADEFUNCION, 'SERVICIORNECAPLICACIONENTREVISTA') FECHADEFUNCION," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.FECHAREFERENCIA, 'SERVICIORNECAPLICACIONENTREVISTA') FECHAREFERENCIA," +
+       " REGISTRADURIA.PKG_LOGI_PWD_REG.decrypt_valor(T.FECHAAFECTACION, 'SERVICIORNECAPLICACIONENTREVISTA') FECHAAFECTACION," +
+       " F_CONSULTA" +
+       " FROM TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_CONSULTA_RENEC(" + documento + ", 'SERVICIORNECAPLICACIONENTREVISTA')) T ";
             try
             {
                 datos.MotorBasedatos = true;
                 string connString = System.Configuration.ConfigurationManager.ConnectionStrings["ConexionRegistraduriaNUBE"].ConnectionString;
                 datos.Conexion = connString;
-                param = new List<Parametros>();
-                param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", documento));
-                param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
-                param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
-                dsSalida = datos.ConsultarTablasConComando("SELECT T.NOM1_RENEC ||' '|| T.NOM2_RENEC ||' '|| T.APE1_RENEC ||' '|| T.APE2_RENEC NOMBRES, T.* FROM  TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_CONSULTA_RENEC(" + documento + ")) T");
+                //param = new List<Parametros>();
+                //param.Add(asignarParametro("P_ID_PERSONA", 1, "System.Int32", documento));
+                //param.Add(asignarParametro("S_CURSOR", 2, "Cursor", ""));
+                //param.Add(asignarParametro("S_MENSAJE", 2, "System.String", ""));
+                dsSalida = datos.ConsultarTablasConComando(consultarenec);
+                //dsSalida = datos.ConsultarTablasConComando("SELECT T.NOM1_RENEC ||' '|| T.NOM2_RENEC ||' '|| T.APE1_RENEC ||' '|| T.APE2_RENEC NOMBRES, T.* FROM  TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_CONSULTA_RENEC(" + documento + ")) T");
+                //dsSalida = datos.ConsultarTablasConComando("SELECT T.NOM1_RENEC ||' '|| T.NOM2_RENEC ||' '|| T.APE1_RENEC ||' '|| T.APE2_RENEC NOMBRES, T.* FROM  TABLE(REGISTRADURIA.PKG_WS_RENEC.FUN_TBL_RENEC_ANI2(" + documento + ")) T");
                 return dsSalida;
             }            
             finally

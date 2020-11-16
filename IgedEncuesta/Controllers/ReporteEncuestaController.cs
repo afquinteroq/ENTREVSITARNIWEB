@@ -19,13 +19,20 @@ namespace IgedEncuesta.Controllers
 
         public ActionResult ReporteEncuesta()
         {
-            string Usuario = string.Empty;
-            Usuario = Request.Cookies["SesionIged"]["USUARIO"].ToString();
-            gic_Hogar hogar = new gic_Hogar();
-            List<gic_ReporteMiembros> lista = new List<gic_ReporteMiembros>();
-            lista = hogar.get_reporteMiembrosXcodigo(Usuario);
-            ViewBag.EncuestaActiva = encuestaActiva();
-            return View(lista);
+            try {
+                string Usuario = string.Empty;
+                Usuario = Request.Cookies["SesionIged"]["USUARIO"].ToString();
+                gic_Hogar hogar = new gic_Hogar();
+                List<gic_ReporteMiembros> lista = new List<gic_ReporteMiembros>();
+                lista = hogar.get_reporteMiembrosXcodigo(Usuario);
+                ViewBag.EncuestaActiva = encuestaActiva();
+                return View(lista);
+            }
+            catch (Exception e) {
+                return null;
+            }
+            
+
         }
        
 

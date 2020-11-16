@@ -139,6 +139,9 @@
                                                                     </div>
 
                                                                 </td>
+                                                                <td>
+                                                                    @Html.DropDownList("ddlrutaencuesta", TempData["Opcionesruta"] as List<SelectListItem>, new { id = "ddlrutaencuesta", required = "required", style = "width:230px;font-size:12px;text-transform:uppercase;font-family:Roboto;", maxlength = "30" })
+                                                                </td>
                                                                 <td style="width: 10%; text-align: left;">
 
                                                                     <input type="submit" value="Buscar Víctima" id="btnBuscarVictima" style="margin: auto; height: 30px; padding: 3px; width: 150px; font-family: Roboto;" />
@@ -373,7 +376,13 @@
     });
 
     $('#btnBuscarVictima').click(function () {
-        
+
+            var rutaselecionada = $('#ddlrutaencuesta  option:selected').val();
+            console.log("rutaencuesta::", rutaselecionada)
+            if (rutaselecionada == '0') {
+                alert('Debe seleccionar la ruta de encuesta');
+                return;
+            }
 
             if ($("form")[0].checkValidity()) {
             
@@ -414,7 +423,7 @@
                 
                 $.ajax(
                      {
-                         data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion },
+                        data: { numeroDocumento: valBusqueda, opcionBusqueda: varOpcion, rutacaracterizacion: rutaselecionada },
                          dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
                          url: '@Url.Action("cargarMaestroVictima", "ConformacionHogar")',
                              //URL del action result que cargara la vista parcial

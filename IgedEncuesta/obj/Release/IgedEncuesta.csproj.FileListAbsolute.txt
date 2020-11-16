@@ -555,3 +555,8 @@ D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED En
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Release\IgedEncuesta.csprojResolveAssemblyReference.cache
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Release\IgedEncuesta.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Release\IgedEncuesta.pdb
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\AccesoDatos.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\AdmonSesion.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Autenticacion.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\ObjetosTipos.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Oracle.ManagedDataAccess.dll

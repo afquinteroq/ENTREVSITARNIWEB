@@ -469,7 +469,7 @@ if (respuesta.pre_Validador == "TE")
 {
     string tipopersona = respuesta.obtenerTipoPersona(Model.codigoHogar, idPersona);
     string idRespuesta = respuesta.res_IdRespuesta.ToString();
-    if (idRespuesta.Equals("101"))
+    if (idRespuesta.Equals(/*"101"*/"0"))
     {
         if (tipopersona.Equals("SI"))
         {
@@ -576,7 +576,7 @@ else if (respuesta.pre_Validador == "NU")
     string tipopersona = respuesta.obtenerTipoPersona(Model.codigoHogar, idPersona);
     string idRespuesta = respuesta.res_IdRespuesta.ToString();
 
-    if (idRespuesta.Equals("101"))
+    if (idRespuesta.Equals(/*"101"*/"0"))
     {
         if (tipopersona.Equals("SI"))
         {

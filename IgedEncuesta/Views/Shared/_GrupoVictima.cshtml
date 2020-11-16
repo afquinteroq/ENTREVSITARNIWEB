@@ -63,7 +63,8 @@
                         grid.Column("TIPO_VICTIMA", "ESTADO"),
                         grid.Column(header: "", format: @<text><input type="hidden" class="claseestado" value="@item.TIPO_VICTIMA" id="idpersonaestado_@item.CONS_PERSONA" width="48"></text>),
                         grid.Column("GENERO_HOM", "GENERO"),
-                        grid.Column(header: "TIPO PERSONA", format: @item => Html.DropDownList  ("idTipoPersona", ViewBag.Opciones as List<SelectListItem>, new { @class = "classTipoPersona", onchange = "tipoPersona(this)", id = "combotipopersona_" + @item.CONS_PERSONA + "_" + @item.F_NACIMIENTO + "_" + @item.TIPO_VICTIMA + "_" + @item.DOCUMENTO, style = "width:150px" })),
+                        grid.Column("RUTA_CARACTERIZACION", "RUTA"),
+                        grid.Column(header: "TIPO PERSONA", format: @item => Html.DropDownList  ("idTipoPersona", ViewBag.Opciones as List<SelectListItem>, new { @class = "classTipoPersona", onchange = "tipoPersona(this)", id = "combotipopersona_" + @item.CONS_PERSONA + "_" + @item.F_NACIMIENTO + "_" + @item.TIPO_VICTIMA + "_" + @item.DOCUMENTO + "_" + @item.RUTA_CARACTERIZACION, style = "width:150px" })),
 
                         grid.Column(header: "GRUPO",
                         format: (item =>
@@ -248,12 +249,12 @@
     }
 
     function tipoPersona(objeto) {
-        
         $("#CargandoDatosMaestro").show();
          var idTipoPersona = objeto.value;
          var iddropdowlist = objeto.id;
          var idPersona = objeto.id.split("_")[1];
-         var documento = objeto.id.split("_")[4];         
+         var documento = objeto.id.split("_")[4];
+         var rutaselecionada = objeto.id.split("_")[5];
          //descomentar para activar la imagen en la tabla
          //var idcargueSoporteTutorICBF = 'cargueSoporteTutorICBF_' + documento;
          var idpersonafechanacimiento = 'idpersonafechanacimiento_' + idPersona;
@@ -396,7 +397,7 @@
          });
 
          //Valida que la fecha de nacimiento no sea mayor a la fecha actual
-         if (year >= yearActual) {
+         if (year > yearActual) {
              $("#CargandoDatosMaestro").hide();
              return;
          } else if ((mes >= mesActual) && (dia > diaActual)) {
@@ -464,7 +465,7 @@
 
 
                 $.ajax( {//type: 'POST',
-                    data: { consPersona: idPersona, documento: documento, tipopersona: idTipoPersona},
+                    data: { consPersona: idPersona, documento: documento, tipopersona: idTipoPersona, rutacaracterizacion: rutaselecionada},
                         dataType: 'json',
                         url: '@Url.Action("consultarPersona", "ConformacionHogar")',
                         success: function (result) {
@@ -1026,8 +1027,7 @@
                                              }
                                              else
                                                  alert(result);
-
-                                         },
+                                            },
                                          error: function (error) {
                                              alert('Se presentó una desconexión temporal en las bases, favor intentr de nuevo.');
                                          }

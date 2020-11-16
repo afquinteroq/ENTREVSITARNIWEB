@@ -756,11 +756,19 @@ D:\desarrollo\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MV
 D:\desarrollo\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Debug\IgedEncuesta.csprojResolveAssemblyReference.cache
 D:\desarrollo\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Debug\IgedEncuesta.dll
 D:\desarrollo\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Debug\IgedEncuesta.pdb
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\IgedEncuesta.dll.config
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\IgedEncuesta.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\IgedEncuesta.pdb
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\AccesoDatos.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\AdmonSesion.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Antlr3.Runtime.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Autenticacion.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\EntityFramework.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\log4net.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Microsoft.Web.Infrastructure.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\ObjetosTipos.dll
+D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\Oracle.ManagedDataAccess.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\System.Net.Http.Formatting.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\System.Web.Helpers.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\System.Web.Http.dll
@@ -798,6 +806,3 @@ D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED En
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Debug\IgedEncuesta.csprojResolveAssemblyReference.cache
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Debug\IgedEncuesta.dll
 D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\obj\Debug\IgedEncuesta.pdb
-D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\IgedEncuesta.dll.config
-D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\IgedEncuesta.dll
-D:\desarrollo\version1\VersionIged28_11_2017Modificada\IGED Encuesta Mvc\IGED Encuesta MVC\IgedEncuesta\bin\IgedEncuesta.pdb

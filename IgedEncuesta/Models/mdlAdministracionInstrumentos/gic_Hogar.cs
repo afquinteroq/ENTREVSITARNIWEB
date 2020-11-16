@@ -553,7 +553,7 @@ namespace AdministracionInstrumentos
             try
             {
                 datoConsulta = datos.ConsultarConProcedimientoAlmacenado("GIC_CATEGORIZACION.GIC_EXISTE_CONSTANCIAFIRMADA", ref param);
-                conteo = int.Parse(param.Find(x => x.Nombre == "CONTEO").Valor);
+                conteo = int.Parse(param.Find(x => x.Nombre == "MARCADOR").Valor);
             }
             catch (Exception e)
             {

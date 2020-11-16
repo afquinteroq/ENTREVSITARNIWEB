@@ -7,6 +7,7 @@ using SelectPdf;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Web.Mvc;
 
@@ -116,19 +117,31 @@ namespace IgedEncuesta.Controllers
                     {                        
                         ConstanciaSAAH objconstanciasaah = new ConstanciaSAAH();
                         int hogarexiste = objconstanciasaah.FN_GET_HOGAR_CERRAD_CONSTANCIA(hogcodigo);
-                        if (hogarexiste > 0)
+                        if (hogarexiste > 0 && hogarexiste < 99999)
                         {
                             ConstanciaSAAHE(hogcodigo);
                             DescargarArchivoConstanciaSinFirmar(hogcodigo);
                         }
-                        else {
-                            ViewBag.Mensaje = "El archivo no existe.";
+                        if (hogarexiste == 99999)
+                        {
+                            ViewBag.Mensaje = "Error: " +hogarexiste;
                             return View("DescargarConstanciaSAAH");
-                        }                       
+                        }
+                        if (hogarexiste == 0)
+                        {
+                            ViewBag.Mensaje = "El archivo no existe, o la encuesta no ha sido cerrada ";
+                            return View("DescargarConstanciaSAAH");
+                        }
+                                               
                     }
                     catch (Exception e)
                     {
-                        ViewBag.Mensaje = "El archivo no existe.";
+                        ViewBag.Mensaje = e.Message.ToString();
+                        MI_LOG_ERRORES_INTEGRACION obj = new MI_LOG_ERRORES_INTEGRACION();
+                        var st = new StackTrace(e, true);
+                        var frame = st.GetFrame(0);
+                        var line = frame.GetFileLineNumber();
+                        obj.insertaConstanciaFirmada(e.StackTrace.ToString() + ": " + e.Message.ToString() + ": linea: " + line, "DescargarArchivoConstanciaSinFirmar(string hogcodigo) "+ hogcodigo);
                         return View("DescargarConstanciaSAAH");
                     }
                     ViewBag.Mensaje = "";
@@ -458,6 +471,13 @@ namespace IgedEncuesta.Controllers
                 Session["NombrePDF"] = fileName;
             } catch (Exception e) {
                 Console.WriteLine(e.Message);
+                ViewBag.Mensaje = e.Message.ToString();
+                MI_LOG_ERRORES_INTEGRACION obj = new MI_LOG_ERRORES_INTEGRACION();
+                var st = new StackTrace(e, true);
+                var frame = st.GetFrame(0);
+                var line = frame.GetFileLineNumber();
+                obj.insertaConstanciaFirmada(e.StackTrace.ToString() + ": " + e.Message.ToString() + ": linea: " + line, "ConstanciaSAAHE(String hogarcodigo) " + hogarcodigo);
+
             }            
 
             return RedirectToAction("Inicio", "ConformacionHogar");

@@ -66,7 +66,7 @@
     }
 
     @grid.GetHtml(
-                        
+
                         tableStyle: "grid-view",
                         headerStyle: "grid-view-header",
                         rowStyle: "grid-view-tr-normal",
@@ -74,22 +74,22 @@
                         footerStyle: "grid-view-pgr",
                         columns: grid.Columns(
                         grid.Column("TIPO_DOC", "TIPO DOC", style: "hdtipodoc"),
-                        
+
                         grid.Column("DOCUMENTO", "DOCUMENTO", style: "hddocumento"),
-                        
+
                         grid.Column("NOMBRES_COMPLETOS", "NOMBRE", style: "hdnombre"),
                         grid.Column("F_NACIMIENTO", "FECHA NACIMIENTO", style: "hdfnacimiento"),
-                        
+
                         grid.Column("EDAD", "EDAD", style: "hdedad"),
                         grid.Column("TIPO_VICTIMA", "ESTADO", style: "hdestado"),
-                        
+
                         grid.Column("GENERO_HOM", "GENERO", style: "hdgenero"),
                         grid.Column("HECHOS", "HECHO VICTIMIZANTE", style: "hdhecho"),
                         grid.Column("FECHA_HECHO", "FECHA HECHO", style: "hdfnacimiento"),
-
-
+                        grid.Column("RUTA_CARACTERIZACION", "RUTA", style: "hdfnacimiento"),
+                        //grid.Column(header: "RUTA", format: @item => Html.DropDownList("idTipoPersona", ViewBag.Opciones as List<SelectListItem>, new { @class = "classTipoPersona", onchange = "tiporuta(this)", id = "combotipopersona_" + @item.CONS_PERSONA + "_" + @item.F_NACIMIENTO + "_" + @item.TIPO_VICTIMA + "_" + @item.DOCUMENTO, style = "width:150px" })),
                         grid.Column(header: "INCLUIR",
-                        
+
                         format: (item =>
                         {
                             if (modeloHogar != null)
@@ -116,3 +116,15 @@
     ))         
 
 </div>
+
+<script>
+    //andrés quintero 08/112019
+    function tiporuta(objeto) {
+        var idRuta = objeto.value;
+        console.log("Ruta:: ", idRuta);
+        var idPersona = objeto.id.split("_")[1];
+        var documento = objeto.id.split("_")[4];  
+        console.log("idPersona:: ", idPersona);
+        console.log("documento:: ", documento);
+    }
+</script>

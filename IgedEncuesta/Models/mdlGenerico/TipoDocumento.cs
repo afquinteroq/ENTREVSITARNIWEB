@@ -27,6 +27,11 @@ namespace IgedEncuesta.Models.mdlGenerico
                 dsSalida = datos.ConsultarConProcedimientoAlmacenado("GIC_SPC_COMBOS", ref param);
                 return dsSalida;
             }
+            catch (Exception e)
+            {
+                //log.Error("ConformacionHogarController / Inicio , Error: " + e.Message.ToString());
+                return null;
+            }
             finally
             {
                 dsSalida.Dispose();
